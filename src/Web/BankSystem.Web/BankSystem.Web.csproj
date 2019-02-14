@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <UserSecretsId>aspnet-BankSystem.Web-664D3A45-CFBD-494E-9D86-DE3896B36D95</UserSecretsId>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\BankSystem.Common\BankSystem.Common.csproj" />
+    <ProjectReference Include="..\..\Data\BankSystem.Data\BankSystem.Data.csproj" />
+    <ProjectReference Include="..\..\Data\BankSystem.Models\BankSystem.Models.csproj" />
+    <ProjectReference Include="..\..\Services\BankSystem.Services.Models\BankSystem.Services.Models.csproj" />
+    <ProjectReference Include="..\..\Services\BankSystem.Services\BankSystem.Services.csproj" />
+  </ItemGroup>
+
+</Project>
