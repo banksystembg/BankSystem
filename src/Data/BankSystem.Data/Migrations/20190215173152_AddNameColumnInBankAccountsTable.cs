@@ -2,20 +2,21 @@
 {
     using Microsoft.EntityFrameworkCore.Migrations;
 
-    public partial class AddBalanceColumnInBankAccount : Migration
+    public partial class AddNameColumnInBankAccountsTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<decimal>(
-                name: "Balance",
+            migrationBuilder.AddColumn<string>(
+                name: "Name",
                 table: "Accounts",
-                nullable: false);
+                nullable: false,
+                defaultValue: "");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Balance",
+                name: "Name",
                 table: "Accounts");
         }
     }

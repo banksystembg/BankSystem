@@ -2,15 +2,17 @@
 namespace BankSystem.Data.Migrations
 {
     using System;
-    using Data;
+    using BankSystem.Data;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Infrastructure;
     using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
 
     [DbContext(typeof(BankSystemDbContext))]
-    partial class BankSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190215173152_AddNameColumnInBankAccountsTable")]
+    partial class AddNameColumnInBankAccountsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
