@@ -16,10 +16,11 @@
                             <th>Details</th>
                             <th>Payee Account</th>
                             <th>Debit</th>
+                            @* TODO: Add credit *@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var moneyTransfer in Model.MoneyTransfers.Concat(Model.MoneyTransfers.Concat(Model.MoneyTransfers.Concat(Model.MoneyTransfers.Concat(Model.MoneyTransfers)))))
+                        @foreach (var moneyTransfer in Model.MoneyTransfers)
                         {
                             <tr>
                                 <td>@moneyTransfer.MadeOn</td>
