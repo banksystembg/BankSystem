@@ -8,18 +8,25 @@ namespace BankSystem.Web.Controllers
     using System.Threading.Tasks;
     using AutoMapper;
     using Models.BankAccount;
+    using Models.MoneyTransfer;
     using Services.Interfaces;
     using Services.Models.BankAccount;
+    using Services.Models.MoneyTransfer;
 
     public class HomeController : Controller
     {
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
+        private readonly IMoneyTransferService moneyTransferService;
 
-        public HomeController(IBankAccountService bankAccountService, IUserService userService)
+        public HomeController(
+            IBankAccountService bankAccountService, 
+            IUserService userService, 
+            IMoneyTransferService moneyTransferService)
         {
             this.bankAccountService = bankAccountService;
             this.userService = userService;
+            this.moneyTransferService = moneyTransferService;
         }
 
         public async Task<IActionResult> Index()
@@ -28,10 +35,15 @@ namespace BankSystem.Web.Controllers
             var bankAccounts = (await this.bankAccountService.GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId))
                 .Select(Mapper.Map<BankAccountIndexViewModel>)
                 .ToList();
+            var moneyTransfers = (await this.moneyTransferService
+                    .GetAllMoneyTransfersForGivenUserByUserIdAsync<MoneyTransferListingServiceModel>(userId))
+                .Select(Mapper.Map<MoneyTransferListingViewModel>)
+                .ToList();
 
             var viewModel = new HomeViewModel
             {
                 UserBankAccounts = bankAccounts,
+                MoneyTransfers = moneyTransfers,
             };
             return this.View(viewModel);
         }

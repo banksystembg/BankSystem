@@ -7,6 +7,30 @@
 {
     <div class="container">
         <div class="row">
+            <div class="col-12 col-md-8">
+                <h3>All Transactions</h3>
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Details</th>
+                            <th>Payee Account</th>
+                            <th>Debit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var moneyTransfer in Model.MoneyTransfers.Concat(Model.MoneyTransfers.Concat(Model.MoneyTransfers.Concat(Model.MoneyTransfers.Concat(Model.MoneyTransfers)))))
+                        {
+                            <tr>
+                                <td>@moneyTransfer.MadeOn</td>
+                                <td>@moneyTransfer.Description</td>
+                                <td>@moneyTransfer.Destination</td>
+                                <td class="text-red">@moneyTransfer.Amount EUR</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
             <div class="col-12 col-md-4">
                 <div class="card mb-3">
                     <div class="card-body">
@@ -21,29 +45,6 @@
                         }
                     </div>
                 </div>
-            </div>
-            <div class="col-12 col-md-8">
-                <h3>All Transactions</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Details</th>
-                            <th>Payee</th>
-                            <th>Payee Account</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Test</td>
-                            <td>Test</td>
-                            <td>Test</td>
-                            <td>Test</td>
-                            <td>Test</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
