@@ -1,0 +1,61 @@
+[
+  {
+    "outputFileName": "wwwroot/bundle/vendor.min.css",
+    "inputFiles": [
+      "wwwroot/source/vendor/css/bootstrap.css"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/vendor.min.js",
+    "inputFiles": [
+      "wwwroot/source/vendor/js/jquery.js",
+      "wwwroot/source/vendor/js/bootstrap.js",
+      "wwwroot/source/vendor/js/moment.js",
+      "wwwroot/source/vendor/js/jquery.validate.js",
+      "wwwroot/source/vendor/js/jquery.validate.unobtrusive.js.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/main.min.css",
+    "inputFiles": [
+      "wwwroot/source/main/css/site.css"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/main.min.js",
+    "inputFiles": [
+      "wwwroot/source/main/js/moment-helper.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/datatables.min.css",
+    "inputFiles": [
+      "wwwroot/source/datatables/css/datatables.css"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/datatables.min.js",
+    "inputFiles": [
+      "wwwroot/source/datatables/js/datatables.js",
+      "wwwroot/source/datatables/js/datatables-init.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  }
+]
