@@ -13,6 +13,7 @@
     "inputFiles": [
       "wwwroot/source/vendor/js/jquery.js",
       "wwwroot/source/vendor/js/bootstrap.js",
+      "wwwroot/source/vendor/js/moment.js",
       "wwwroot/source/vendor/js/jquery.validate.js",
       "wwwroot/source/vendor/js/jquery.validate.unobtrusive.js.js"
     ],
@@ -24,6 +25,15 @@
     "outputFileName": "wwwroot/bundle/main.min.css",
     "inputFiles": [
       "wwwroot/source/main/css/site.css"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/main.min.js",
+    "inputFiles": [
+      "wwwroot/source/main/js/moment-helper.js"
     ],
     "minify": {
       "enabled": true
