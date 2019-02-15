@@ -30,3 +30,7 @@ html {
         width: 25% !important;
     }
 }
+
+.text-green {
+    color: green;
+}
