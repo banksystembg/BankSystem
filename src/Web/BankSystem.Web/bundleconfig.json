@@ -38,5 +38,24 @@
     "minify": {
       "enabled": true
     }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/datatables.min.css",
+    "inputFiles": [
+      "wwwroot/source/datatables/css/datatables.css"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/datatables.min.js",
+    "inputFiles": [
+      "wwwroot/source/datatables/js/datatables.js",
+      "wwwroot/source/datatables/js/datatables-init.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
   }
 ]
