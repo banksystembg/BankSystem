@@ -2,3 +2,31 @@ html {
     position: relative;
     min-height: 100%;
 }
+
+@media (min-width: 768px) {
+    .w-md-75 {
+        width: 75% !important;
+    }
+
+    .w-md-50 {
+        width: 50% !important;
+    }
+
+    .w-md-25 {
+        width: 25% !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .w-lg-75 {
+        width: 75% !important;
+    }
+
+    .w-lg-50 {
+        width: 50% !important;
+    }
+
+    .w-lg-25 {
+        width: 25% !important;
+    }
+}
