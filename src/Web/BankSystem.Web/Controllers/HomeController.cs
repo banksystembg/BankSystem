@@ -7,6 +7,7 @@ namespace BankSystem.Web.Controllers
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Microsoft.AspNetCore.Authorization;
     using Models.BankAccount;
     using Models.MoneyTransfer;
     using Services.Interfaces;
@@ -20,8 +21,8 @@ namespace BankSystem.Web.Controllers
         private readonly IMoneyTransferService moneyTransferService;
 
         public HomeController(
-            IBankAccountService bankAccountService, 
-            IUserService userService, 
+            IBankAccountService bankAccountService,
+            IUserService userService,
             IMoneyTransferService moneyTransferService)
         {
             this.bankAccountService = bankAccountService;
@@ -29,6 +30,7 @@ namespace BankSystem.Web.Controllers
             this.moneyTransferService = moneyTransferService;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var userId = await this.userService.GetUserIdAsyncByUsername(this.User.Identity.Name);
@@ -46,6 +48,11 @@ namespace BankSystem.Web.Controllers
                 MoneyTransfers = moneyTransfers,
             };
             return this.View(viewModel);
+        }
+        
+        public IActionResult IndexGuest()
+        {
+            return this.View();
         }
 
         public IActionResult Privacy()

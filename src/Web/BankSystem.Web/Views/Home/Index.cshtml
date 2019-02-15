@@ -2,58 +2,47 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
-@if (User.Identity.IsAuthenticated)
-{
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-md-8">
-                <h3>All Transactions</h3>
-                <table class="table table-hover table-bordered">
-                    <thead>
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <h3>All Transactions</h3>
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Details</th>
+                        <th>Payee Account</th>
+                        <th>Debit</th>
+                        @* TODO: Add credit *@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var moneyTransfer in Model.MoneyTransfers)
+                    {
                         <tr>
-                            <th>Date</th>
-                            <th>Details</th>
-                            <th>Payee Account</th>
-                            <th>Debit</th>
-                            @* TODO: Add credit *@
+                            <td>@moneyTransfer.MadeOn</td>
+                            <td>@moneyTransfer.Description</td>
+                            <td>@moneyTransfer.Destination</td>
+                            <td class="text-red">@moneyTransfer.Amount EUR</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var moneyTransfer in Model.MoneyTransfers)
-                        {
-                            <tr>
-                                <td>@moneyTransfer.MadeOn</td>
-                                <td>@moneyTransfer.Description</td>
-                                <td>@moneyTransfer.Destination</td>
-                                <td class="text-red">@moneyTransfer.Amount EUR</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Your Accounts</h5>
-                        @foreach (var account in Model.UserBankAccounts)
-                        {
-                            <div class="row">
-                                @* TODO: Redirect to my accounts details when we implement it *@
-                                <p class="col-6 card-text"><a href="">@account.UniqueId</a></p>
-                                <p class="col-6 card-text text-green text-right">@account.Balance EUR</p>
-                            </div>
-                        }
-                    </div>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Your Accounts</h5>
+                    @foreach (var account in Model.UserBankAccounts)
+                    {
+                        <div class="row">
+                            @* TODO: Redirect to my accounts details when we implement it *@
+                            <p class="col-6 card-text"><a href="">@account.UniqueId</a></p>
+                            <p class="col-6 card-text text-green text-right">@account.Balance EUR</p>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
-}
-else
-{
-    <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    </div>
-}
+</div>
