@@ -3,7 +3,7 @@
     using BankSystem.Models;
     using Common.AutoMapping.Interfaces;
 
-    public class MoneyTransferBaseServiceModel : IMapWith<MoneyTransfer>
+    public abstract class MoneyTransferBaseServiceModel : IMapWith<MoneyTransfer>
     {
         public string Id { get; set; }
     }
