@@ -15,59 +15,87 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BankSystem</a>
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav mx-auto text-uppercase">
-                        <li class="nav-item dropdown auto-dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button">
-                                Your Accounts
-                            </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item">
-                                    Account Balance
-                                </a>
-                                <a class="dropdown-item">
-                                    Account Statements in PDF
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown auto-dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button">
-                                Cards
-                            </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item">
-                                    Bank Cards
-                                </a>
-                                <a class="dropdown-item">
-                                    Card transactions
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown auto-dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button">
-                                Payment Orders
-                            </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item">
-                                    New Payment
-                                </a>
-                                <a class="dropdown-item">
-                                    Archives
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1"></ul>
+                <div class="collapse navbar-collapse">
+                    @if (this.User.Identity.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav mx-auto text-uppercase">
+                            <li class="nav-item dropdown auto-dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button">
+                                    Your Accounts
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item">
+                                        Account Balance
+                                    </a>
+                                    <a class="dropdown-item">
+                                        Account Statements in PDF
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown auto-dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button">
+                                    Cards
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item">
+                                        Bank Cards
+                                    </a>
+                                    <a class="dropdown-item">
+                                        Card transactions
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown auto-dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button">
+                                    Payment Orders
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item">
+                                        New Payment
+                                    </a>
+                                    <a class="dropdown-item">
+                                        Archives
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown auto-dropdown">
+                                <a class="nav-link dropdown-toggle" href="#"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-user-circle"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <h5 class="dropdown-header">
+                                        @User.Identity.Name
+                                    </h5>
+                                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">My Account</a>
+                                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
+                                        <button type="submit" class="btn btn-link text-danger dropdown-item ">Logout</button>
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                            </li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>
