@@ -35,11 +35,11 @@
                 var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
                 var bankAccounts = (await this.bankAccountService.GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId))
                     .Select(Mapper.Map<BankAccountIndexViewModel>)
-                    .ToList();
+                    .ToArray();
                 var moneyTransfers = (await this.moneyTransferService
-                        .GetAllMoneyTransfersForGivenUserByUserIdAsync<MoneyTransferListingServiceModel>(userId))
+                        .GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(userId))
                     .Select(Mapper.Map<MoneyTransferListingViewModel>)
-                    .ToList();
+                    .ToArray();
 
                 var viewModel = new HomeViewModel
                 {

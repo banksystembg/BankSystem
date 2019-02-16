@@ -16,12 +16,13 @@
         {
         }
 
-        public async Task<IEnumerable<T>> GetAllMoneyTransfersForGivenUserByUserIdAsync<T>(string userId)
+        public async Task<IEnumerable<T>> GetLast10MoneyTransfersForUserAsync<T>(string userId)
             where T : MoneyTransferBaseServiceModel
             => await this.Context
                 .Transfers
                 .Where(mt => mt.Account.UserId == userId)
                 .ProjectTo<T>()
+                .Take(10)
                 .ToListAsync();
     }
 }
