@@ -7,7 +7,6 @@ namespace BankSystem.Web.Controllers
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Microsoft.AspNetCore.Authorization;
     using Models.BankAccount;
     using Models.MoneyTransfer;
     using Services.Interfaces;
@@ -29,30 +28,30 @@ namespace BankSystem.Web.Controllers
             this.userService = userService;
             this.moneyTransferService = moneyTransferService;
         }
-
-        [Authorize]
+        
         public async Task<IActionResult> Index()
         {
-            var userId = await this.userService.GetUserIdAsyncByUsername(this.User.Identity.Name);
-            var bankAccounts = (await this.bankAccountService.GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId))
-                .Select(Mapper.Map<BankAccountIndexViewModel>)
-                .ToList();
-            var moneyTransfers = (await this.moneyTransferService
-                    .GetAllMoneyTransfersForGivenUserByUserIdAsync<MoneyTransferListingServiceModel>(userId))
-                .Select(Mapper.Map<MoneyTransferListingViewModel>)
-                .ToList();
-
-            var viewModel = new HomeViewModel
+            if (this.User.Identity.IsAuthenticated)
             {
-                UserBankAccounts = bankAccounts,
-                MoneyTransfers = moneyTransfers,
-            };
-            return this.View(viewModel);
-        }
-        
-        public IActionResult IndexGuest()
-        {
-            return this.View();
+                var userId = await this.userService.GetUserIdAsyncByUsername(this.User.Identity.Name);
+                var bankAccounts = (await this.bankAccountService.GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId))
+                    .Select(Mapper.Map<BankAccountIndexViewModel>)
+                    .ToList();
+                var moneyTransfers = (await this.moneyTransferService
+                        .GetAllMoneyTransfersForGivenUserByUserIdAsync<MoneyTransferListingServiceModel>(userId))
+                    .Select(Mapper.Map<MoneyTransferListingViewModel>)
+                    .ToList();
+
+                var viewModel = new HomeViewModel
+                {
+                    UserBankAccounts = bankAccounts,
+                    MoneyTransfers = moneyTransfers,
+                };
+                return this.View(viewModel);
+            }
+
+            return this.View("IndexGuest");
+
         }
 
         public IActionResult Privacy()

@@ -110,7 +110,7 @@
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=IndexGuest}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
 
             app.InitializeDatabase();
