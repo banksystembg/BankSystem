@@ -43,7 +43,7 @@
 
             services
                 .Configure<CookieTempDataProviderOptions>(options => { options.Cookie.IsEssential = true; });
-
+            
             services.AddIdentity<BankUser, IdentityRole>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -54,6 +54,13 @@
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<BankSystemDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                options.SlidingExpiration = true;
+            });
 
             services
                 .AddDomainServices()
