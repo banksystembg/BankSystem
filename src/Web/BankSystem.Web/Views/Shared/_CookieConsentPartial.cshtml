@@ -22,14 +22,12 @@
     </div>
     <script>
         (function() {
-                    document.getElementById("cookieAcceptButton").addEventListener("click",
-                        function(el) {
-                            document.cookie = el.target.dataset.cookieString;
-                            $("#cookieConsentBanner").alert('close');
-                        },
-                        false);
-                }
-            )
-            ();
+            document.getElementById("cookieAcceptButton").addEventListener("click",
+                function(el) {
+                    document.cookie = el.target.dataset.cookieString;
+                    $("#cookieConsentBanner").alert('close');
+                },
+                false);
+        })();
     </script>
 }
