@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using BankSystem.Web.Models;
-using Microsoft.AspNetCore.Mvc;
-
 namespace BankSystem.Web.Controllers
 {
+    using System.Diagnostics;
+    using BankSystem.Web.Models;
+    using Microsoft.AspNetCore.Mvc;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
@@ -13,7 +12,7 @@ namespace BankSystem.Web.Controllers
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
 
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;

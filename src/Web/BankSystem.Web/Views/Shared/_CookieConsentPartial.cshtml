@@ -8,18 +8,26 @@
 
 @if (showBanner)
 {
-    <div id="cookieConsent" class="alert alert-info alert-dismissible fade show" role="alert">
-        Use this space to summarize your privacy and cookie use policy. <a asp-area="" asp-controller="Home" asp-action="Privacy">Learn More</a>.
-        <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString">
-            <span aria-hidden="true">Accept</span>
-        </button>
+    <div class="alert alert-info fade show mb-0" role="alert" id="cookieConsentBanner">
+        <div class="container d-flex flex-row flex-wrap">
+            <i class="fas fa-cookie-bite fa-2x align-self-center mr-3"></i>
+            <div class="my-2">
+                <strong>We use cookies to provide you with a better experience.</strong>
+                <p class="mb-0">By continuing to use this website, you consent to the use of cookies.</p>
+            </div>
+            <div class="align-self-center ml-auto">
+                <button type="button" class="btn btn-secondary" id="cookieAcceptButton" data-cookie-string="@cookieString">Accept</button>
+            </div>
+        </div>
     </div>
     <script>
-        (function () {
-            var button = document.querySelector("#cookieConsent button[data-cookie-string]");
-            button.addEventListener("click", function (event) {
-                document.cookie = button.dataset.cookieString;
-            }, false);
+        (function() {
+            document.getElementById("cookieAcceptButton").addEventListener("click",
+                function(el) {
+                    document.cookie = el.target.dataset.cookieString;
+                    $("#cookieConsentBanner").alert('close');
+                },
+                false);
         })();
     </script>
 }
