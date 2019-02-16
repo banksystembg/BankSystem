@@ -102,7 +102,7 @@
                     {
                         const int cacheDurationInSeconds = 60 * 60 * 24 * 365; // 1 year
                         ctx.Context.Response.Headers[HeaderNames.CacheControl] =
-                            "public,max-age=" + cacheDurationInSeconds;
+                            $"public,max-age={cacheDurationInSeconds}";
                     }
                 });
             app.UseCookiePolicy();
