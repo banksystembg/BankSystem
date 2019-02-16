@@ -11,7 +11,7 @@ function getFriendlyDate(momentTime) {
 }
 
 function getFormattedDate(momentTime) {
-    return momentTime.format('DD/MM/YYYY HH:mm');
+    return momentTime.format('MMMM Do YYYY, h:mm:ss a');
 }
 
 $('.auto-friendly-date').each(function () {
