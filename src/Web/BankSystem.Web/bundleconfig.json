@@ -33,7 +33,8 @@
   {
     "outputFileName": "wwwroot/bundle/main.min.js",
     "inputFiles": [
-      "wwwroot/source/main/js/moment-helper.js"
+      "wwwroot/source/main/js/moment-helper.js",
+      "wwwroot/source/main/js/auto-dropdown.js"
     ],
     "minify": {
       "enabled": true

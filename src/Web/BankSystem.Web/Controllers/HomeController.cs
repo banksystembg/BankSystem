@@ -1,11 +1,11 @@
-namespace BankSystem.Web.Controllers
+﻿namespace BankSystem.Web.Controllers
 {
     using System.Diagnostics;
-    using BankSystem.Web.Models;
-    using Microsoft.AspNetCore.Mvc;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Microsoft.AspNetCore.Mvc;
+    using Models;
     using Models.BankAccount;
     using Models.MoneyTransfer;
     using Services.Interfaces;
@@ -27,7 +27,7 @@ namespace BankSystem.Web.Controllers
             this.userService = userService;
             this.moneyTransferService = moneyTransferService;
         }
-        
+
         public async Task<IActionResult> Index()
         {
             if (this.User.Identity.IsAuthenticated)
