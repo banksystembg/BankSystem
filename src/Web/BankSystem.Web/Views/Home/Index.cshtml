@@ -11,20 +11,28 @@
                     <tr>
                         <th>Date</th>
                         <th>Details</th>
-                        <th>Payee Account</th>
-                        <th>Debit</th>
-                        @* TODO: Add credit *@
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var moneyTransfer in Model.MoneyTransfers)
                     {
-                        <tr>
-                            <td>@moneyTransfer.MadeOn</td>
-                            <td>@moneyTransfer.Description</td>
-                            <td>@moneyTransfer.Destination</td>
+                    <tr>
+                        <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
+                        <td>@moneyTransfer.Description</td>
+                        <td>@moneyTransfer.Source</td>
+                        <td>@moneyTransfer.Destination</td>
+                        @if (moneyTransfer.Amount < 0)
+                        {
                             <td class="text-red">@moneyTransfer.Amount EUR</td>
-                        </tr>
+                        }
+                        else
+                        {
+                            <td class="text-green">+@moneyTransfer.Amount EUR</td>
+                        }
+                    </tr>
                     }
                 </tbody>
             </table>
