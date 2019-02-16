@@ -6,10 +6,10 @@
     <title>@ViewData["Title"] - BankSystem.Web</title>
 
     <link rel="stylesheet" href="~/bundle/vendor.min.css" asp-append-version="true" />
-    
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" 
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    
+
     <link rel="stylesheet" href="~/bundle/main.min.css" asp-append-version="true" />
 
 </head>
@@ -18,6 +18,49 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BankSystem</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mx-auto text-uppercase">
+                        <li class="nav-item dropdown auto-dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button">
+                                Your Accounts
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item">
+                                    Account Balance
+                                </a>
+                                <a class="dropdown-item">
+                                    Account Statements in PDF
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown auto-dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button">
+                                Cards
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item">
+                                    Bank Cards
+                                </a>
+                                <a class="dropdown-item">
+                                    Card transactions
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown auto-dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button">
+                                Payment Orders
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item">
+                                    New Payment
+                                </a>
+                                <a class="dropdown-item">
+                                    Archives
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -28,9 +71,9 @@
                 </div>
             </div>
         </nav>
-        
+
         <partial name="_CookieConsentPartial" />
-        
+
         @if (TempData.ContainsKey(GlobalConstants.TempDataSuccessMessageKey))
         {
             <div class="alert alert-primary fade show mb-0" role="alert">
@@ -60,7 +103,7 @@
                 </div>
             </div>
         }
-        
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
