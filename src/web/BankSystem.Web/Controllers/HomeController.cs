@@ -1,19 +1,18 @@
-﻿using System.Diagnostics;
-using BankSystem.Web.Models;
-using Microsoft.AspNetCore.Mvc;
-
-namespace BankSystem.Web.Controllers
+﻿namespace BankSystem.Web.Controllers
 {
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Microsoft.AspNetCore.Mvc;
+    using Models;
     using Models.BankAccount;
     using Models.MoneyTransfer;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
 
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
@@ -28,7 +27,7 @@ namespace BankSystem.Web.Controllers
             this.userService = userService;
             this.moneyTransferService = moneyTransferService;
         }
-        
+
         public async Task<IActionResult> Index()
         {
             if (this.User.Identity.IsAuthenticated)
