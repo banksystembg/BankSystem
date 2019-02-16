@@ -8,7 +8,7 @@ using BankSystem.Web.Models;
 
 namespace BankSystem.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public IActionResult Index()
         {

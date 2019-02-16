@@ -6,6 +6,10 @@
     <title>@ViewData["Title"] - BankSystem.Web</title>
 
     <link rel="stylesheet" href="~/bundle/vendor.min.css" asp-append-version="true" />
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" 
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    
     <link rel="stylesheet" href="~/bundle/main.min.css" asp-append-version="true" />
     
 </head>
@@ -31,9 +35,41 @@
                 </div>
             </div>
         </nav>
+        
+        <partial name="_CookieConsentPartial" />
+        
+        @if (TempData.ContainsKey(GlobalConstants.TempDataSuccessMessageKey))
+        {
+            <div class="alert alert-primary fade show mb-0" role="alert">
+                <div class="container d-flex flex-row">
+                    <i class="fas fa-check fa-2x align-self-center"></i>
+                    <p class="pl-3 my-2" style="font-size: large;">@TempData[GlobalConstants.TempDataSuccessMessageKey]</p>
+                    <div class="ml-auto">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (TempData.ContainsKey(GlobalConstants.TempDataErrorMessageKey))
+        {
+            <div class="alert alert-danger fade show mb-0" role="alert">
+                <div class="container d-flex flex-row">
+                    <i class="fas fa-exclamation-circle fa-2x align-self-center"></i>
+                    <p class="pl-3 my-2" style="font-size: large;">@TempData[GlobalConstants.TempDataErrorMessageKey]</p>
+                    <div class="ml-auto">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+        
     </header>
     <div class="container">
-        <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
