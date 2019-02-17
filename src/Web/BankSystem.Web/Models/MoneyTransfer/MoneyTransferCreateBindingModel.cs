@@ -11,8 +11,7 @@
         [Required]
         [Display(Name = "Destination account")]
         public string Destination { get; set; }
-
-        [Required]
+        
         [Display(Name = "Details of Payment")]
         public string Description { get; set; }
 

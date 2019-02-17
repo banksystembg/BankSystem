@@ -5,7 +5,6 @@
 
     public class MoneyTransferCreateServiceModel : MoneyTransferBaseServiceModel
     {
-        [Required]
         public string Description { get; set; }
 
         [Required]
