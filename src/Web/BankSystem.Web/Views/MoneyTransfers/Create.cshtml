@@ -1,0 +1,55 @@
+﻿@model MoneyTransferCreateBindingModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container">
+    <h3 class="mb-3">Payment order (Other Bank Payment in EUR)</h3>
+    <form method="post">
+        <div class="form-group row">
+            <div class="col-sm-2">
+                <label asp-for="AccountId"></label>
+            </div>
+            <div class="col-sm-10">
+                <select class="form-control" title="Select one account..." asp-for="AccountId" asp-items="Model.UserAccounts"></select>
+                <span asp-validation-for="AccountId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-2">
+                <label asp-for="Destination"></label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" asp-for="Destination" />
+                <span asp-validation-for="Destination" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-2">
+                <label asp-for="Details"></label>
+            </div>
+            <div class="col-sm-8">
+                <textarea asp-for="Details" class="form-control"></textarea>
+                <span asp-validation-for="Details" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-2">
+                <label asp-for="Amount"></label>
+            </div>
+            <div class="col-sm-3">
+                <div class="input-group mb-2">
+                    <input class="form-control mr-1" asp-for="Amount" />
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">EUR</div>
+                    </div>
+                </div>
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group text-right">
+            <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Cancel</a>
+            <button type="submit" class="btn btn-primary">Pay</button>
+        </div>
+    </form>
+</div>
