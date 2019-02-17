@@ -29,18 +29,20 @@
             if (userId == null)
             {
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
-                return this.RedirectToAction("Index", "Home");
+                return this.RedirectToHome();
             }
             var userAccounts = await this.GetAllUserAccountsAsync(userId);
             if (!userAccounts.Any())
             {
                 this.ShowErrorMessage(NotificationMessages.NoAccountsError);
-                return this.RedirectToAction("Index", "Home");
+                return this.RedirectToHome();
             }
+
             var model = new MoneyTransferCreateBindingModel
             {
                 UserAccounts = userAccounts,
             };
+
             return this.View(model);
         }
 
