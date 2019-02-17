@@ -25,8 +25,6 @@ namespace BankSystem.Services.Implementations
             this.bankConfiguration = bankConfigurationOptions.Value;
         }
 
-        public string GetUniqueBankIdentifier() => this.bankConfiguration.UniqueIdentifier;
-
         public string GenerateAccountUniqueId()
         {
             if (this.random == null)
