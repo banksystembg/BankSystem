@@ -4,6 +4,8 @@
     using AutoMapper;
     using BankSystem.Models;
     using Common.AutoMapping.Profiles;
+    using Common.Configuration;
+    using Common.Utils;
     using Data;
     using Infrastructure;
     using Microsoft.AspNetCore.Builder;
@@ -43,7 +45,7 @@
 
             services
                 .Configure<CookieTempDataProviderOptions>(options => { options.Cookie.IsEssential = true; });
-            
+
             services.AddIdentity<BankUser, IdentityRole>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -74,6 +76,17 @@
 
             services
                 .Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
+            services.Configure<BankConfiguration>(
+                this.Configuration.GetSection(nameof(BankConfiguration)));
+            
+            services.PostConfigure<BankConfiguration>(settings =>
+            {
+                if (!ValidationUtil.IsObjectValid(settings))
+                {
+                    throw new ApplicationException("BankConfiguration is invalid");
+                }
+            });
 
             services
                 .AddResponseCompression(options => options.EnableForHttps = true);

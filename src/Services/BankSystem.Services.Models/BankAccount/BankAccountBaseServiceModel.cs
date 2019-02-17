@@ -3,8 +3,7 @@
     using BankSystem.Models;
     using Common.AutoMapping.Interfaces;
 
-    public class BankAccountBaseServiceModel : IMapWith<BankAccount>
+    public abstract class BankAccountBaseServiceModel : IMapWith<BankAccount>
     {
-        public string Id { get; set; }
     }
 }

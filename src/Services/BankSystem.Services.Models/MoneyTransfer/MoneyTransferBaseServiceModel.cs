@@ -5,6 +5,5 @@
 
     public abstract class MoneyTransferBaseServiceModel : IMapWith<MoneyTransfer>
     {
-        public string Id { get; set; }
     }
 }
