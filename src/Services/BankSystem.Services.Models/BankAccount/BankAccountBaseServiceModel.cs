@@ -5,6 +5,5 @@
 
     public abstract class BankAccountBaseServiceModel : IMapWith<BankAccount>
     {
-        public string Id { get; set; }
     }
 }
