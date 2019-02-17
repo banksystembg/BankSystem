@@ -12,6 +12,6 @@ namespace BankSystem.Services.Models.BankAccount
         public string UserId { get; set; }
 
         [Required]
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     }
 }

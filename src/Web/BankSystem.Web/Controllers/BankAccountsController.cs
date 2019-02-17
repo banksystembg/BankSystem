@@ -39,8 +39,6 @@ namespace BankSystem.Web.Controllers
 
             serviceModel.UserId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
             
-            serviceModel.CreatedOn = DateTime.UtcNow;
-
             var accountId = await this.bankAccountService.CreateAsync(serviceModel);
 
             if (accountId == null)
