@@ -42,11 +42,9 @@
             }
 
             var dbModel = Mapper.Map<BankAccount>(model);
-
             dbModel.UniqueId = generatedUniqueId;
 
             await this.Context.Accounts.AddAsync(dbModel);
-
             await this.Context.SaveChangesAsync();
 
             return dbModel.Id;

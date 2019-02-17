@@ -1,6 +1,7 @@
 namespace BankSystem.Services.Implementations
 {
     using System;
+    using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using Common.Configuration;
     using Interfaces;
@@ -41,18 +42,10 @@ namespace BankSystem.Services.Implementations
 
             for (int i = 0; i < 8; i++)
             {
-                generated[i + 4] = (char) ('0' + this.random.Next(10));
+                generated[i + 4] = (char)('0' + this.random.Next(10));
             }
 
-            int weightedSum = 0;
-
-            for (int i = 0; i < generated.Length; i++)
-            {
-                weightedSum += (i + 1) * generated[i];
-            }
-
-            generated[3] = (char) ('A' + weightedSum % 26);
-
+            generated[3] = GenerateCheckCharacter(generated);
             return string.Join("", generated);
         }
 
@@ -65,23 +58,26 @@ namespace BankSystem.Services.Implementations
                 return false;
             }
 
-            int weightedSum = 0;
+            char expectedCheckChar = GenerateCheckCharacter(id.ToCharArray());
+            char actualCheckChar = id[3];
 
-            for (int i = 0; i < id.Length; i++)
+            return actualCheckChar == expectedCheckChar;
+        }
+
+        private static char GenerateCheckCharacter(IReadOnlyList<char> uniqueId)
+        {
+            int sum = 0;
+            for (int i = 0; i < uniqueId.Count; i++)
             {
                 if (i == 3)
                 {
                     continue;
                 }
 
-                weightedSum += (i + 1) * id[i];
+                sum += (i + 1) * uniqueId[i];
             }
 
-            char expectedCheckChar = (char) ('A' + weightedSum % 26);
-
-            char actualCheckChar = id[3];
-
-            return actualCheckChar == expectedCheckChar;
+            return (char)('A' + sum % 26);
         }
     }
 }
