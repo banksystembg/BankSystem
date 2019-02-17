@@ -8,5 +8,7 @@
     {
         Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId)
             where T : BankAccountBaseServiceModel;
+
+        Task<string> CreateAsync(BankAccountCreateServiceModel model);
     }
 }
