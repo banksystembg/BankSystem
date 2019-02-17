@@ -5,12 +5,12 @@ namespace BankSystem.Web.Controllers
 
     public abstract class BaseController : Controller
     {
-        protected void Error(string message)
+        protected void ShowErrorMessage(string message)
         {
             this.TempData[GlobalConstants.TempDataErrorMessageKey] = message;
         }
 
-        protected void Success(string message)
+        protected void ShowSuccessMessage(string message)
         {
             this.TempData[GlobalConstants.TempDataSuccessMessageKey] = message;
         }

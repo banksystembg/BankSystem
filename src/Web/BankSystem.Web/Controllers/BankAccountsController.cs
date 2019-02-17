@@ -1,6 +1,5 @@
 namespace BankSystem.Web.Controllers
 {
-    using System;
     using System.Threading.Tasks;
     using AutoMapper;
     using Common;
@@ -43,12 +42,12 @@ namespace BankSystem.Web.Controllers
 
             if (accountId == null)
             {
-                this.Error(NotificationMessages.BankAccountCreateError);
+                this.ShowErrorMessage(NotificationMessages.BankAccountCreateError);
 
                 return this.View(model);
             }
 
-            this.Success(NotificationMessages.BankAccountCreated);
+            this.ShowSuccessMessage(NotificationMessages.BankAccountCreated);
 
             // TODO Redirect to account details page
             return this.RedirectToAction("Index", "Home");
