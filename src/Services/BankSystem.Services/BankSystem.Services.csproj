@@ -10,8 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\BankSystem.Common\BankSystem.Common.csproj" />
-    <ProjectReference Include="..\..\Data\BankSystem.Data\BankSystem.Data.csproj" />
-    <ProjectReference Include="..\..\Data\BankSystem.Models\BankSystem.Models.csproj" />
     <ProjectReference Include="..\BankSystem.Services.Models\BankSystem.Services.Models.csproj" />
   </ItemGroup>
 

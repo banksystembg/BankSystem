@@ -6,7 +6,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\BankSystem.Common\BankSystem.Common.csproj" />
-    <ProjectReference Include="..\..\Data\BankSystem.Models\BankSystem.Models.csproj" />
+    <ProjectReference Include="..\..\Data\BankSystem\BankSystem.Data\BankSystem.Data.csproj" />
+    <ProjectReference Include="..\..\Data\BankSystem\BankSystem.Models\BankSystem.Models.csproj" />
   </ItemGroup>
 
 </Project>
