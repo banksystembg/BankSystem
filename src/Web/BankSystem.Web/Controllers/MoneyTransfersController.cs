@@ -1,5 +1,6 @@
 ﻿namespace BankSystem.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -14,24 +15,23 @@
     [Authorize]
     public class MoneyTransfersController : BaseController
     {
+        private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
 
-        public MoneyTransfersController(IBankAccountService bankAccountService, IUserService userService)
+        public MoneyTransfersController(
+            IMoneyTransferService moneyTransferService,
+            IBankAccountService bankAccountService,
+            IUserService userService)
         {
+            this.moneyTransferService = moneyTransferService;
             this.bankAccountService = bankAccountService;
             this.userService = userService;
         }
 
         public async Task<IActionResult> Create()
         {
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
-            if (userId == null)
-            {
-                this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
-                return this.RedirectToHome();
-            }
-            var userAccounts = await this.GetAllUserAccountsAsync(userId);
+            var userAccounts = await this.GetAllUserAccountsAsync();
             if (!userAccounts.Any())
             {
                 this.ShowErrorMessage(NotificationMessages.NoAccountsError);
@@ -46,8 +46,15 @@
             return this.View(model);
         }
 
-        private async Task<IEnumerable<SelectListItem>> GetAllUserAccountsAsync(string userId)
+        [HttpPost]
+        public async Task<IActionResult> Create(MoneyTransferCreateBindingModel model)
         {
+            throw new NotImplementedException();
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetAllUserAccountsAsync()
+        {
+            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
             var userAccounts = await this.bankAccountService
                 .GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId);
 
