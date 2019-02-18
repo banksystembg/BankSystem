@@ -9,6 +9,18 @@
     public class MoneyTransferCreateBindingModel : IMapWith<MoneyTransferCreateServiceModel>
     {
         [Required]
+        [Display(Name = "Destination bank swift code")]
+        public string DestinationBankSwiftCode { get; set; }
+
+        [Required]
+        [Display(Name = "Destination bank name")]
+        public string DestinationBankName { get; set; }
+
+        [Required]
+        [Display(Name = "Destination bank country")]
+        public string DestinationBankCountry { get; set; }
+
+        [Required]
         [Display(Name = "Destination account")]
         public string Destination { get; set; }
 
