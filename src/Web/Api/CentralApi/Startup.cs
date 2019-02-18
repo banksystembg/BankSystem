@@ -1,6 +1,7 @@
 ﻿namespace CentralApi
 {
     using Data;
+    using Infrastructure;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -43,6 +44,8 @@
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            app.SeedData();
         }
     }
 }
