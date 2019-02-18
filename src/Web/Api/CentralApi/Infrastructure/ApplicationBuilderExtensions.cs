@@ -30,7 +30,7 @@
                     Location = "Bulgaria",
                     Name = "Bank system",
                     ShortName = "BS",
-                    UniqueIdentifier = "ABC",
+                    SwiftCode = "ABC",
                     ApiKey = GenerateApiKey(),
                     AppId = Guid.NewGuid().ToString(),
 
@@ -40,7 +40,7 @@
                     Location = "Bulgaria",
                     Name = "Bank System 2",
                     ShortName = "BS2",
-                    UniqueIdentifier = "ABC2",
+                    SwiftCode = "ABC2",
                     ApiKey = GenerateApiKey(),
                     AppId = Guid.NewGuid().ToString(),
                 });

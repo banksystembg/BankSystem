@@ -8,7 +8,7 @@ namespace CentralApi.Data.Migrations
     using Microsoft.EntityFrameworkCore.Migrations;
 
     [DbContext(typeof(CentralApiDbContext))]
-    [Migration("20190218165953_Initial")]
+    [Migration("20190218174913_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,7 @@ namespace CentralApi.Data.Migrations
                     b.Property<string>("ShortName")
                         .IsRequired();
 
-                    b.Property<string>("UniqueIdentifier")
+                    b.Property<string>("SwiftCode")
                         .IsRequired();
 
                     b.HasKey("Id");

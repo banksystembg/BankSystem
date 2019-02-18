@@ -37,7 +37,7 @@ namespace CentralApi.Data.Migrations
                     b.Property<string>("ShortName")
                         .IsRequired();
 
-                    b.Property<string>("UniqueIdentifier")
+                    b.Property<string>("SwiftCode")
                         .IsRequired();
 
                     b.HasKey("Id");

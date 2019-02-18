@@ -13,7 +13,7 @@
         public string Name { get; set; }
 
         [Required]
-        public string UniqueIdentifier { get; set; }
+        public string SwiftCode { get; set; }
 
         [Required]
         public string Location { get; set; }
