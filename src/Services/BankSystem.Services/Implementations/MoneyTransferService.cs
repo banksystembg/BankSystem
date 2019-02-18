@@ -24,5 +24,11 @@
                 .ProjectTo<T>()
                 .Take(10)
                 .ToListAsync();
+
+        public async Task<bool> TransferMoneyAsync<T>(T model) 
+            where T : MoneyTransferBaseServiceModel
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
