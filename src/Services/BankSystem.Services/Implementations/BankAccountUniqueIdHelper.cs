@@ -26,6 +26,10 @@ namespace BankSystem.Services.Implementations
             this.bankConfiguration = bankConfigurationOptions.Value;
         }
 
+        public string AppId => this.bankConfiguration.AppId;
+
+        public string ApiKey => this.bankConfiguration.ApiKey;
+
         public string GenerateAccountUniqueId()
         {
             if (this.random == null)
