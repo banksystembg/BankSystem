@@ -11,18 +11,18 @@
         [Required]
         [Display(Name = "Destination account")]
         public string Destination { get; set; }
-        
+
         [Display(Name = "Details of Payment")]
         public string Description { get; set; }
 
         [Required]
-        [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
+        [Range(typeof(decimal), "0.01", "79228162514264337593543950335", ErrorMessage = "The Amount field cannot be lower than 0.01")]
         public decimal Amount { get; set; }
 
         [Required]
         [Display(Name = "From Account")]
         public string AccountId { get; set; }
-        
+
         public IEnumerable<SelectListItem> UserAccounts { get; set; }
     }
 }
