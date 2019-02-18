@@ -8,7 +8,7 @@ namespace CentralApi.Data.Migrations
     using Microsoft.EntityFrameworkCore.Migrations;
 
     [DbContext(typeof(CentralApiDbContext))]
-    [Migration("20190218164602_Initial")]
+    [Migration("20190218165953_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,12 @@ namespace CentralApi.Data.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApiKey")
+                        .IsRequired();
+
+                    b.Property<string>("AppId")
+                        .IsRequired();
 
                     b.Property<string>("Location")
                         .IsRequired();
