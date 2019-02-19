@@ -70,9 +70,16 @@
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
                 return this.RedirectToHome();
             }
-            var serviceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
-            //bool isSuccessfull = await this.moneyTransferService.TransferMoney(model);
 
+            // If we got this far the payment process was successful and we can store the data in database
+            var serviceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
+            var isSuccessful = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);
+            if (!isSuccessful)
+            {
+                this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
+            }
+
+            this.ShowSuccessMessage(NotificationMessages.SuccessfulMoneyTransfer);
             return this.RedirectToHome();
         }
 
