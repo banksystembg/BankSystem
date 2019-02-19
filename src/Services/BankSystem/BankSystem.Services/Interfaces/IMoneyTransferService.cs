@@ -9,7 +9,7 @@
         Task<IEnumerable<T>> GetLast10MoneyTransfersForUserAsync<T>(string userId)
             where T : MoneyTransferBaseServiceModel;
 
-        Task<bool> TransferMoneyAsync<T>(T model)
+        Task<bool> CreateMoneyTransferAsync<T>(T model)
             where T : MoneyTransferBaseServiceModel;
     }
 }

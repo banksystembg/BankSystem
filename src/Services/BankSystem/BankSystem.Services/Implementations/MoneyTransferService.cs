@@ -3,7 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoMapper;
     using AutoMapper.QueryableExtensions;
+    using BankSystem.Models;
     using Data;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
@@ -25,10 +27,20 @@
                 .Take(10)
                 .ToListAsync();
 
-        public async Task<bool> TransferMoneyAsync<T>(T model) 
+        public async Task<bool> CreateMoneyTransferAsync<T>(T model)
             where T : MoneyTransferBaseServiceModel
         {
-            throw new System.NotImplementedException();
+            if (!this.IsEntityStateValid(model))
+            {
+                return false;
+            }
+
+            var dbModel = Mapper.Map<MoneyTransfer>(model);
+
+            await this.Context.Transfers.AddAsync(dbModel);
+            await this.Context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
