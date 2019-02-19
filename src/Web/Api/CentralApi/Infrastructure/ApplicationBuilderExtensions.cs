@@ -1,6 +1,7 @@
 ﻿namespace CentralApi.Infrastructure
 {
     using System;
+    using System.Linq;
     using System.Security.Cryptography;
     using Data;
     using Microsoft.AspNetCore.Builder;
@@ -22,29 +23,32 @@
             }
         }
 
-        private static void SeedAvailableBanks(DbContext dbContext)
+        private static void SeedAvailableBanks(CentralApiDbContext dbContext)
         {
-            dbContext.AddRange(
-                new Bank
-                {
-                    Location = "Bulgaria",
-                    Name = "Bank system",
-                    ShortName = "BS",
-                    SwiftCode = "ABC",
-                    ApiKey = GenerateApiKey(),
-                    AppId = Guid.NewGuid().ToString(),
+            if (!dbContext.Banks.Any())
+            {
+                dbContext.AddRange(
+                    new Bank
+                    {
+                        Location = "Bulgaria",
+                        Name = "Bank system",
+                        ShortName = "BS",
+                        SwiftCode = "ABC",
+                        ApiKey = GenerateApiKey(),
+                        AppId = Guid.NewGuid().ToString(),
 
-                },
-                new Bank
-                {
-                    Location = "Bulgaria",
-                    Name = "Bank System 2",
-                    ShortName = "BS2",
-                    SwiftCode = "ABC2",
-                    ApiKey = GenerateApiKey(),
-                    AppId = Guid.NewGuid().ToString(),
-                });
-            dbContext.SaveChanges();
+                    },
+                    new Bank
+                    {
+                        Location = "Bulgaria",
+                        Name = "Bank System 2",
+                        ShortName = "BS2",
+                        SwiftCode = "ABC2",
+                        ApiKey = GenerateApiKey(),
+                        AppId = Guid.NewGuid().ToString(),
+                    });
+                dbContext.SaveChanges();
+            }
         }
 
         private static string GenerateApiKey()
