@@ -64,7 +64,7 @@
             // Contact central api
             var handler = new CustomDelegatingHandler(this.bankConfigurationHelper.AppId, this.bankConfigurationHelper.ApiKey);
             var client = HttpClientFactory.Create(handler);
-            var response = await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveWorldwideTransactions", model);
+            var response = await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveTransactions", model);
             if (!response.IsSuccessStatusCode)
             {
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
