@@ -58,7 +58,7 @@
 
                 //Setting the values in the Authorization header using custom scheme (bsw)
                 request.Headers.Authorization = new AuthenticationHeaderValue("bsw",
-                    $"{this.appId}:{requestSignatureBase64String}:{nonce}:{requestTimeStamp}");
+                    $"{this.appId},{requestSignatureBase64String},{nonce},{requestTimeStamp}");
             }
 
             var response = await base.SendAsync(request, cancellationToken);
