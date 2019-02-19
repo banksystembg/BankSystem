@@ -1,20 +1,24 @@
 ﻿namespace BankSystem.Web.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Common;
+    using Infrastructure.Handlers;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.MoneyTransfer;
     using Services.Interfaces;
     using Services.Models.BankAccount;
+    using Services.Models.MoneyTransfer;
 
     [Authorize]
     public class MoneyTransfersController : BaseController
     {
+        private readonly IBankConfigurationService bankConfigurationHelper;
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
@@ -22,11 +26,13 @@
         public MoneyTransfersController(
             IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
-            IUserService userService)
+            IUserService userService,
+            IBankConfigurationService bankConfigurationHelper)
         {
             this.moneyTransferService = moneyTransferService;
             this.bankAccountService = bankAccountService;
             this.userService = userService;
+            this.bankConfigurationHelper = bankConfigurationHelper;
         }
 
         public async Task<IActionResult> Create()
@@ -49,7 +55,25 @@
         [HttpPost]
         public async Task<IActionResult> Create(MoneyTransferCreateBindingModel model)
         {
-            throw new NotImplementedException();
+            if (!this.TryValidateModel(model))
+            {
+                model.UserAccounts = await this.GetAllUserAccountsAsync();
+                return this.View(model);
+            }
+
+            // Contact central api
+            var handler = new CustomDelegatingHandler(this.bankConfigurationHelper.AppId, this.bankConfigurationHelper.ApiKey);
+            var client = HttpClientFactory.Create(handler);
+            var response = await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveWorldwideTransactions", model);
+            if (!response.IsSuccessStatusCode)
+            {
+                this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
+                return this.RedirectToHome();
+            }
+            var serviceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
+            //bool isSuccessfull = await this.moneyTransferService.TransferMoney(model);
+
+            return this.RedirectToHome();
         }
 
         private async Task<IEnumerable<SelectListItem>> GetAllUserAccountsAsync()
