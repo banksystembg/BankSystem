@@ -4,6 +4,6 @@
 
     public interface IBanksService
     {
-        Task<bool> CheckWhetherBankExistsAsync(string bankName, string swiftCode, string bankCountry);
+        Task<bool> GetBankAsync(string bankName, string swiftCode, string bankCountry);
     }
 }

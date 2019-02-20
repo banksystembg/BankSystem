@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\BankSystem.Common\BankSystem.Common.csproj" />
     <ProjectReference Include="..\..\..\Data\CentralApi\CentralApi.Data\CentralApi.Data.csproj" />
     <ProjectReference Include="..\..\..\Services\CentralApi\CentralApi.Services\CentralApi.Services.csproj" />
   </ItemGroup>

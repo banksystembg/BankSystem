@@ -1,10 +1,9 @@
-﻿namespace CentralApi.Models
+﻿namespace BankSystem.Web.Models.MoneyTransfer
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
+    using Common.AutoMapping.Interfaces;
 
-    [Serializable]
-    public class ReceiveTransactionModel
+    public class MoneyTransferCentralApiBindingModel : IMapWith<MoneyTransferCreateBindingModel>
     {
         [Required]
         public string DestinationBankSwiftCode { get; set; }
@@ -17,7 +16,7 @@
 
         [Required]
         public string Destination { get; set; }
-
+        
         public string Description { get; set; }
 
         [Required]

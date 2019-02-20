@@ -8,6 +8,8 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Services.Implementations;
+    using Services.Interfaces;
 
     public class Startup
     {
@@ -24,6 +26,7 @@
             services.AddDbContext<CentralApiDbContext>(options =>
                 options.UseSqlServer(
                     this.Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IBanksService, BankService>();
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

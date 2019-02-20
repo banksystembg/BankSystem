@@ -34,7 +34,7 @@
         [Required]
         [Display(Name = "From Account")]
         public string AccountId { get; set; }
-
+        
         public IEnumerable<SelectListItem> UserAccounts { get; set; }
     }
 }

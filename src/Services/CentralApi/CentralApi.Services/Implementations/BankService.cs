@@ -14,7 +14,7 @@
         {
         }
 
-        public async Task<bool> CheckWhetherBankExistsAsync(string bankName, string swiftCode, string bankCountry)
+        public async Task<bool> GetBankAsync(string bankName, string swiftCode, string bankCountry)
         {
             var bank = await this.Context
                 .Banks

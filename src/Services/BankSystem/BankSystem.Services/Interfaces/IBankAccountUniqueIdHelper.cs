@@ -5,9 +5,5 @@ namespace BankSystem.Services.Interfaces
         string GenerateAccountUniqueId();
 
         bool IsUniqueIdValid(string id);
-
-        string AppId { get; }
-
-        string ApiKey { get; }
     }
 }

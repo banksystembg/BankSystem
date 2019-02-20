@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Security.Cryptography;
     using Data;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.EntityFrameworkCore;
@@ -34,31 +33,11 @@
                         Name = "Bank system",
                         ShortName = "BS",
                         SwiftCode = "ABC",
-                        ApiKey = GenerateApiKey(),
+                        ApiKey = "<RSAKeyValue><Modulus>uBJGDt7UVg068eAXtaJ8wxbTLtxJWubChoTCCljt4t8eCcUQTjbVjmiX4n9q01PyfP3Xe2MqKx0HhSygSQr4GTsPhUo44EEJr9E6ZgAjQcBJTbRop4i06BFk+u0x0P/9nZtjQQqFhKrTdVPP9rSc8CYYDsEVzsQTtjKZdtUkPFITfz6fwJHQm2Zswqwu9sSlIIwknz0jKG7lnbEwxrqQy57jjxM7ZujYCop+N20KvBIHLquuH3wkTIxmj4nZLscYBbAE7J4JhuHVE/fCJFIA+M9JgKVvEHeC5HIqshMSaAGRv9Th6HHk0v4QFm3NdpZsVf2Qhu0iOap3fHHoAypFZQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>",
                         AppId = Guid.NewGuid().ToString(),
 
-                    },
-                    new Bank
-                    {
-                        Location = "Bulgaria",
-                        Name = "Bank System 2",
-                        ShortName = "BS2",
-                        SwiftCode = "ABC2",
-                        ApiKey = GenerateApiKey(),
-                        AppId = Guid.NewGuid().ToString(),
                     });
                 dbContext.SaveChanges();
-            }
-        }
-
-        private static string GenerateApiKey()
-        {
-            using (var cryptoProvider = new RNGCryptoServiceProvider())
-            {
-                //256 bit
-                var secretKeyByteArray = new byte[32];
-                cryptoProvider.GetBytes(secretKeyByteArray);
-                return Convert.ToBase64String(secretKeyByteArray);
             }
         }
     }

@@ -9,9 +9,6 @@ namespace BankSystem.Common.Configuration
         public string UniqueIdentifier { get; set; }
 
         [Required]
-        public string AppId { get; set; }
-
-        [Required]
-        public string ApiKey { get; set; }
+        public string Key { get; set; }
     }
 }

@@ -5,16 +5,18 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
-    using System.Web;
+    using BankSystem.Common;
     using Data;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Http.Extensions;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.EntityFrameworkCore;
+    using Models;
+    using Newtonsoft.Json;
 
     public class EnsureRequestIsValid : ActionFilterAttribute
     {
+        private const string Id = "model";
         private const string AuthenticationScheme = "bsw";
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -25,57 +27,65 @@
                     .Contains(AuthenticationScheme, StringComparison.Ordinal))
             {
                 context.Result = new ForbidResult();
+                return;
             }
 
             var authHeader = request.Headers.GetCommaSeparatedValues("Authorization");
             if (authHeader != null)
             {
-                var appId = authHeader[0].Remove(0, AuthenticationScheme.Length).Trim();
-                var incomingBase64Signature = authHeader[1];
+                var bankName = authHeader[0].Remove(0, AuthenticationScheme.Length).Trim();
+                var bankSwiftCode = authHeader[1];
+                var incomingBase64Signature = authHeader[2];
 
-                var isValid = this.IsValidRequest(context, appId, incomingBase64Signature).GetAwaiter().GetResult();
+                var isValid = this.IsValidRequest(context, bankName, bankSwiftCode, incomingBase64Signature).GetAwaiter().GetResult();
 
                 if (!isValid)
                 {
                     context.Result = new ForbidResult();
+                    return;
                 }
             }
 
             base.OnActionExecuting(context);
         }
 
-        private async Task<bool> IsValidRequest(ActionContext context, string appId, string incomingBase64Signature)
+        private async Task<bool> IsValidRequest(ActionExecutingContext context, string bankName, string bankSwiftCode, string incomingBase64Signature)
         {
             var request = context.HttpContext.Request;
-            var requestUri = HttpUtility.UrlEncode(request.GetEncodedUrl().ToLower());
-            var requestHttpMethod = request.Method;
             var dbContext = request.HttpContext.RequestServices.GetService(typeof(CentralApiDbContext)) as CentralApiDbContext;
 
-            var bankApiKey = await dbContext.Banks
-                .Where(b => b.AppId == appId)
-                .Select(b => b.ApiKey)
-                .SingleOrDefaultAsync();
-
-            if (bankApiKey == null)
+            var actionArguments = context.ActionArguments;
+            if (actionArguments.ContainsKey(Id))
             {
-                return false;
+                var model = actionArguments[Id] as ReceiveTransactionModel;
+
+                var bankApiKey = await dbContext.Banks
+                    .Where(b => string.Equals(b.Name, bankName, StringComparison.CurrentCultureIgnoreCase) &&
+                                string.Equals(b.SwiftCode, bankSwiftCode, StringComparison.CurrentCultureIgnoreCase))
+                    .Select(b => b.ApiKey)
+                    .SingleOrDefaultAsync();
+
+                if (bankApiKey == null)
+                {
+                    return false;
+                }
+
+                var test = JsonConvert.SerializeObject(model);
+                var content = Encoding.UTF8.GetBytes(test);
+                var requestContentBase64String = Convert.ToBase64String(content);
+
+                var signature = Encoding.UTF8.GetBytes(requestContentBase64String);
+                var requestSignatureBase64String = Convert.FromBase64String(incomingBase64Signature);
+
+                var rsa = RSA.Create();
+                RsaExtensions.FromXmlString(rsa, bankApiKey);
+
+                var isVerified = rsa.VerifyData(signature, requestSignatureBase64String, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+                return isVerified;
             }
 
-            // TODO: Add security for MITM attacks
-
-            var data = $"{appId}{requestHttpMethod}{requestUri}";
-
-            var secretKeyBytes = Convert.FromBase64String(bankApiKey);
-            var signature = Encoding.UTF8.GetBytes(data);
-
-            using (var hmac = new HMACSHA256(secretKeyBytes))
-            {
-                var signatureBytes = hmac.ComputeHash(signature);
-                var requestSignatureBase64String = Convert.ToBase64String(signatureBytes);
-
-                return incomingBase64Signature.Equals(requestSignatureBase64String, StringComparison.Ordinal);
-            }
-
+            return false;
         }
     }
 }

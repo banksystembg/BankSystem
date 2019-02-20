@@ -14,7 +14,6 @@
         }
 
         public string UniqueIdentifier => this.bankConfiguration.UniqueIdentifier;
-        public string AppId => this.bankConfiguration.AppId;
-        public string ApiKey => this.bankConfiguration.ApiKey;
+        public string Key => this.bankConfiguration.Key;
     }
 }

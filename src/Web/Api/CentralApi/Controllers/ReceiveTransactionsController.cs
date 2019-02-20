@@ -22,13 +22,21 @@
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ReceiveTransactionModel model)
         {
-            bool exists = await this.banksService.CheckWhetherBankExistsAsync(model.DestinationBankName, model.DestinationBankSwiftCode,
+            if (!this.TryValidateModel(model))
+            {
+                return this.NoContent();
+            }
+
+            bool exists = await this.banksService.GetBankAsync(model.DestinationBankName, model.DestinationBankSwiftCode,
                 model.DestinationBankCountry);
 
             if (!exists)
             {
-                return this.NotFound();
+                return this.NotFound(model.DestinationBankName);
             }
+
+            // TODO: Contact destination bank
+
 
             return this.Ok();
         }

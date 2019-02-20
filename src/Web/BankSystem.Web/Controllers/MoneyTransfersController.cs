@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using Common;
-    using Infrastructure.Handlers;
+    using Common.Utils.CustomHandlers;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -62,9 +62,11 @@
             }
 
             // Contact central api
-            var handler = new CustomDelegatingHandler(this.bankConfigurationHelper.AppId, this.bankConfigurationHelper.ApiKey);
-            var client = HttpClientFactory.Create(handler);
-            var response = await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveTransactions", model);
+            var customHandler = new CustomDelegatingHandler(this.bankConfigurationHelper.Key, WebConstants.BankName, this.bankConfigurationHelper.UniqueIdentifier);
+            var client = HttpClientFactory.Create(customHandler);
+
+            var centralApiModel = Mapper.Map<MoneyTransferCentralApiBindingModel>(model);
+            var response = await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveTransactions", centralApiModel);
             if (!response.IsSuccessStatusCode)
             {
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
