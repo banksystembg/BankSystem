@@ -20,5 +20,14 @@
 
             return user?.Id;
         }
+
+        public async Task<string> GetUserFullnameAsync(string userId)
+        {
+            var user = await this.Context
+                .Users
+                .SingleOrDefaultAsync(u => u.Id == userId);
+
+            return user?.FullName;
+        }
     }
 }
