@@ -16,7 +16,8 @@
                     SwiftCode = table.Column<string>(nullable: false),
                     Location = table.Column<string>(nullable: false),
                     AppId = table.Column<string>(nullable: false),
-                    ApiKey = table.Column<string>(nullable: false)
+                    ApiKey = table.Column<string>(nullable: false),
+                    ApiAddress = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {

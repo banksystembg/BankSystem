@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Data\CentralApi\CentralApi.Data\CentralApi.Data.csproj" />
+    <ProjectReference Include="..\CentralApi.Services.Models\CentralApi.Services.Models.csproj" />
   </ItemGroup>
 
 </Project>

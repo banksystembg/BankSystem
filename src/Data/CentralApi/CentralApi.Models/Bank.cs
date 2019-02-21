@@ -23,5 +23,8 @@
 
         [Required]
         public string ApiKey { get; set; }
+
+        [Required]
+        public string ApiAddress { get; set; }
     }
 }

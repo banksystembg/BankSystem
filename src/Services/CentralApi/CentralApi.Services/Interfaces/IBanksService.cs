@@ -1,9 +1,11 @@
 ﻿namespace CentralApi.Services.Interfaces
 {
     using System.Threading.Tasks;
+    using Models.Banks;
 
     public interface IBanksService
     {
-        Task<bool> GetBankAsync(string bankName, string swiftCode, string bankCountry);
+        Task<T> GetBankAsync<T>(string bankName, string swiftCode, string bankCountry)
+            where T : BankBaseServiceModel;
     }
 }

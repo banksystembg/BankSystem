@@ -1,7 +1,7 @@
 ﻿namespace CentralApi.Data
 {
-    using CentralApi.Models;
     using Microsoft.EntityFrameworkCore;
+    using Models;
 
     public class CentralApiDbContext : DbContext
     {

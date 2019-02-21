@@ -22,6 +22,9 @@ namespace CentralApi.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("ApiAddress")
+                        .IsRequired();
+
                     b.Property<string>("ApiKey")
                         .IsRequired();
 
