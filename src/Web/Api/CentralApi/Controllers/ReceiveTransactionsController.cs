@@ -1,10 +1,15 @@
 ﻿namespace CentralApi.Controllers
 {
+    using System.Net.Http;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Infrastructure.Filters;
+    using Infrastructure.Handlers;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
     using Models;
     using Services.Interfaces;
+    using Services.Models.Banks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -12,10 +17,12 @@
     public class ReceiveTransactionsController : ControllerBase
     {
         private readonly IBanksService banksService;
+        private readonly IConfiguration configuration;
 
-        public ReceiveTransactionsController(IBanksService banksService)
+        public ReceiveTransactionsController(IBanksService banksService, IConfiguration configuration)
         {
             this.banksService = banksService;
+            this.configuration = configuration;
         }
 
         // POST api/values
@@ -27,16 +34,22 @@
                 return this.NoContent();
             }
 
-            bool exists = await this.banksService.GetBankAsync(model.DestinationBankName, model.DestinationBankSwiftCode,
+            var bank = await this.banksService.GetBankAsync<BankServiceModel>(model.DestinationBankName, model.DestinationBankSwiftCode,
                 model.DestinationBankCountry);
 
-            if (!exists)
+            if (bank == null)
             {
-                return this.NotFound(model.DestinationBankName);
+                return this.NotFound($"{model.DestinationBankName} was not found.");
             }
 
-            // TODO: Contact destination bank
-
+            var customHandler = new CustomCentralApiDelegatingHandler(this.configuration.GetSection("CentralApiConfiguration:Key").Value, bank.ApiKey);
+            var client = HttpClientFactory.Create(customHandler);
+            var sendModel = Mapper.Map<SendTransactionModel>(model);
+            var response = await client.PostAsJsonAsync(bank.ApiKey, sendModel);
+            if (!response.IsSuccessStatusCode)
+            {
+                return this.NotFound();
+            }
 
             return this.Ok();
         }
