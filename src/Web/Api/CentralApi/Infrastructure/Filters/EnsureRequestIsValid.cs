@@ -11,6 +11,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
     using Models;
     using Newtonsoft.Json;
 
@@ -53,6 +54,7 @@
         {
             var request = context.HttpContext.Request;
             var dbContext = request.HttpContext.RequestServices.GetService(typeof(CentralApiDbContext)) as CentralApiDbContext;
+            var configuration = request.HttpContext.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
 
             var actionArguments = context.ActionArguments;
             if (actionArguments.ContainsKey(Id))
@@ -70,19 +72,24 @@
                     return false;
                 }
 
-                var test = JsonConvert.SerializeObject(model);
-                var content = Encoding.UTF8.GetBytes(test);
-                var requestContentBase64String = Convert.ToBase64String(content);
+                var serializedModel = JsonConvert.SerializeObject(model);
+                var signature = Encoding.UTF8.GetBytes(serializedModel);
 
-                var signature = Encoding.UTF8.GetBytes(requestContentBase64String);
-                var requestSignatureBase64String = Convert.FromBase64String(incomingBase64Signature);
+                // Decrypt data with the central api private key
+                byte[] decryptedIncomingSignature;
+                using (var rsa = RSA.Create())
+                {
+                    RsaExtensions.FromXmlString(rsa, configuration.GetSection("CentralApiConfiguration:Key").Value);
+                    decryptedIncomingSignature = rsa.Decrypt(Convert.FromBase64String(incomingBase64Signature), RSAEncryptionPadding.Pkcs1);
+                }
 
-                var rsa = RSA.Create();
-                RsaExtensions.FromXmlString(rsa, bankApiKey);
-
-                var isVerified = rsa.VerifyData(signature, requestSignatureBase64String, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-
-                return isVerified;
+                // Verify signature with bank api key
+                using (var rsa = RSA.Create())
+                {
+                    RsaExtensions.FromXmlString(rsa, bankApiKey);
+                    var isVerified = rsa.VerifyData(signature, decryptedIncomingSignature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    return isVerified;
+                }
             }
 
             return false;
