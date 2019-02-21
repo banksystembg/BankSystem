@@ -12,5 +12,7 @@
         Task<string> CreateAsync(BankAccountCreateServiceModel model);
 
         Task<decimal> GetUserAccountBalanceAsync(string accountId);
+
+        Task<string> GetUserAccountUniqueId(string accountId);
     }
 }

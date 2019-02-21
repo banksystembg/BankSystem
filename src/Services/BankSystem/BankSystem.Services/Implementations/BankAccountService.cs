@@ -28,7 +28,7 @@
             {
                 return null;
             }
-            
+
             string generatedUniqueId;
 
             do
@@ -57,7 +57,14 @@
                 .Select(b => b.Balance)
                 .SingleOrDefaultAsync();
 
-        public async Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId) 
+        public async Task<string> GetUserAccountUniqueId(string accountId)
+            => await this.Context
+                .Accounts
+                .Where(a => a.Id == accountId)
+                .Select(a => a.UniqueId)
+                .SingleOrDefaultAsync();
+
+        public async Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId)
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
