@@ -19,9 +19,6 @@
         public string Location { get; set; }
 
         [Required]
-        public string AppId { get; set; }
-
-        [Required]
         public string ApiKey { get; set; }
 
         [Required]
