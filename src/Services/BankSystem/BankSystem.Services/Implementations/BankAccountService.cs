@@ -50,6 +50,13 @@
             return dbModel.Id;
         }
 
+        public async Task<decimal> GetUserAccountBalanceAsync(string accountId)
+            => await this.Context
+                .Accounts
+                .Where(b => b.Id == accountId)
+                .Select(b => b.Balance)
+                .SingleOrDefaultAsync();
+
         public async Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId) 
             where T : BankAccountBaseServiceModel
             => await this.Context

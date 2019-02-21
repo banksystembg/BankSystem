@@ -10,5 +10,7 @@
             where T : BankAccountBaseServiceModel;
 
         Task<string> CreateAsync(BankAccountCreateServiceModel model);
+
+        Task<decimal> GetUserAccountBalanceAsync(string accountId);
     }
 }
