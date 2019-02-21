@@ -1,4 +1,4 @@
-﻿@model MoneyTransferCreateBindingModel
+﻿@model BankSystem.Web.Models.MoneyTransfer.Create.MoneyTransferCreateBindingModel
 @{
     ViewData["Title"] = "Create";
 }
@@ -334,11 +334,11 @@
             </div>
             <div class="form-group row">
                 <div class="col-sm-2">
-                    <label asp-for="@Model.DestinationBank.Account.Id"></label>
+                    <label asp-for="@Model.DestinationBank.Account.UniqueId"></label>
                 </div>
                 <div class="col-sm-6">
-                    <input class="form-control" asp-for="@Model.DestinationBank.Account.Id" />
-                    <span asp-validation-for="@Model.DestinationBank.Account.Id" class="text-danger"></span>
+                    <input class="form-control" asp-for="@Model.DestinationBank.Account.UniqueId" />
+                    <span asp-validation-for="@Model.DestinationBank.Account.UniqueId" class="text-danger"></span>
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
+    using Create;
 
     public class MoneyTransferCentralApiBindingModel : IMapWith<MoneyTransferCreateBindingModel>
     {
@@ -15,7 +16,7 @@
         public string DestinationBankCountry { get; set; }
 
         [Required]
-        public string DestinationBankAccountId { get; set; }
+        public string DestinationBankAccountUniqueId { get; set; }
         
         public string Description { get; set; }
 

@@ -1,9 +1,8 @@
-﻿namespace BankSystem.Web.Models.MoneyTransfer
+﻿namespace BankSystem.Web.Models.MoneyTransfer.Create
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
-    using Create;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Services.Models.MoneyTransfer;
 
@@ -12,6 +11,7 @@
         [Required]
         public MoneyTransferCreateDestinationBankDto DestinationBank { get; set; }
 
+        [MaxLength(150)]
         [Display(Name = "Details of Payment")]
         public string Description { get; set; }
 

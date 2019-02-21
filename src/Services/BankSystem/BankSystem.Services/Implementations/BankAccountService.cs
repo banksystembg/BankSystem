@@ -64,6 +64,13 @@
                 .Select(a => a.UniqueId)
                 .SingleOrDefaultAsync();
 
+        public async Task<string> GetAccountIdAsync(string uniqueId)
+            => await this.Context
+                .Accounts
+                .Where(a => a.Id == uniqueId)
+                .Select(a => a.Id)
+                .SingleOrDefaultAsync();
+
         public async Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId)
             where T : BankAccountBaseServiceModel
             => await this.Context

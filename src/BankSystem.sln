@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CentralApi", "CentralApi", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralApi.Services", "Services\CentralApi\CentralApi.Services\CentralApi.Services.csproj", "{7B0D1F2A-D4DC-42DE-82E3-162E9CB9FA0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentralApi.Services.Models", "Services\CentralApi\CentralApi.Services.Models\CentralApi.Services.Models.csproj", "{308141D9-3410-4FF7-BFA1-1C05BC82692B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralApi.Services.Models", "Services\CentralApi\CentralApi.Services.Models\CentralApi.Services.Models.csproj", "{308141D9-3410-4FF7-BFA1-1C05BC82692B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralApi.Models", "Data\CentralApi\CentralApi.Models\CentralApi.Models.csproj", "{7C53E472-623C-4D2D-88F9-8AD11B8CE9DF}"
 EndProject

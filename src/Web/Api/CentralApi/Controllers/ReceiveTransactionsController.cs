@@ -45,7 +45,7 @@
             var customHandler = new CustomCentralApiDelegatingHandler(this.configuration.GetSection("CentralApiConfiguration:Key").Value, bank.ApiKey);
             var client = HttpClientFactory.Create(customHandler);
             var sendModel = Mapper.Map<SendTransactionModel>(model);
-            var response = await client.PostAsJsonAsync(bank.ApiKey, sendModel);
+            var response = await client.PostAsJsonAsync(bank.ApiAddress, sendModel);
             if (!response.IsSuccessStatusCode)
             {
                 return this.NotFound();

@@ -2,8 +2,11 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using AutoMapper;
+    using BankSystem.Models;
+    using Common.AutoMapping.Interfaces;
 
-    public class MoneyTransferCreateServiceModel : MoneyTransferBaseServiceModel
+    public class MoneyTransferCreateServiceModel : MoneyTransferBaseServiceModel, IHaveCustomMapping
     {
         public string Description { get; set; }
 
@@ -21,6 +24,12 @@
         public string Source => this.AccountId;
 
         [Required]
-        public string Destination { get; set; }
+        public string DestinationBankAccountUniqueId { get; set; }
+
+        public void ConfigureMapping(Profile mapper)
+        {
+            mapper.CreateMap<MoneyTransferCreateServiceModel, MoneyTransfer>()
+                .ForMember(dest => dest.Destination, opt => opt.MapFrom(src => src.DestinationBankAccountUniqueId));
+        }
     }
 }

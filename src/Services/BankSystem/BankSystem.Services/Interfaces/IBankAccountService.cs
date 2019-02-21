@@ -14,5 +14,7 @@
         Task<decimal> GetUserAccountBalanceAsync(string accountId);
 
         Task<string> GetUserAccountUniqueId(string accountId);
+
+        Task<string> GetAccountIdAsync(string uniqueId);
     }
 }

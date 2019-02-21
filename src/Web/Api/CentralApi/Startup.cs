@@ -1,5 +1,7 @@
 ﻿namespace CentralApi
 {
+    using AutoMapper;
+    using BankSystem.Common.AutoMapping.Profiles;
     using Data;
     using Infrastructure;
     using Microsoft.AspNetCore.Builder;
@@ -35,6 +37,8 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            Mapper.Initialize(config => config.AddProfile<DefaultProfile>());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
