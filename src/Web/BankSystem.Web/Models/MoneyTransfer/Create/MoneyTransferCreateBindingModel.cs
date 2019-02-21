@@ -3,26 +3,14 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
+    using Create;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Services.Models.MoneyTransfer;
 
     public class MoneyTransferCreateBindingModel : IMapWith<MoneyTransferCreateServiceModel>
     {
         [Required]
-        [Display(Name = "Destination bank swift code")]
-        public string DestinationBankSwiftCode { get; set; }
-
-        [Required]
-        [Display(Name = "Destination bank name")]
-        public string DestinationBankName { get; set; }
-
-        [Required]
-        [Display(Name = "Destination bank country")]
-        public string DestinationBankCountry { get; set; }
-
-        [Required]
-        [Display(Name = "Destination account")]
-        public string Destination { get; set; }
+        public MoneyTransferCreateDestinationBankDto DestinationBank { get; set; }
 
         [Display(Name = "Details of Payment")]
         public string Description { get; set; }
@@ -34,6 +22,9 @@
         [Required]
         [Display(Name = "From Account")]
         public string AccountId { get; set; }
+        
+        [Display(Name = "Name")]
+        public string SenderName { get; set; }
 
         public IEnumerable<SelectListItem> UserAccounts { get; set; }
     }

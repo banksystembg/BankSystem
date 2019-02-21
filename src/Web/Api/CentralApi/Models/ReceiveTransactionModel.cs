@@ -16,7 +16,7 @@
         public string DestinationBankCountry { get; set; }
 
         [Required]
-        public string Destination { get; set; }
+        public string DestinationBankAccountId { get; set; }
 
         public string Description { get; set; }
 
@@ -24,6 +24,9 @@
         public decimal Amount { get; set; }
 
         [Required]
-        public string AccountId { get; set; }
+        public string SenderName { get; set; }
+
+        [Required]
+        public string SenderAccountUniqueId { get; set; }
     }
 }

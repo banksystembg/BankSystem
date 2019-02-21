@@ -37,7 +37,8 @@
 
         public async Task<IActionResult> Create()
         {
-            var userAccounts = await this.GetAllUserAccountsAsync();
+            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            var userAccounts = await this.GetAllUserAccountsAsync(userId);
             if (!userAccounts.Any())
             {
                 this.ShowErrorMessage(NotificationMessages.NoAccountsError);
@@ -46,7 +47,8 @@
 
             var model = new MoneyTransferCreateBindingModel
             {
-                UserAccounts = userAccounts
+                UserAccounts = userAccounts,
+                SenderName = await this.userService.GetUserFullnameAsync(userId),
             };
 
             return this.View(model);
@@ -55,9 +57,11 @@
         [HttpPost]
         public async Task<IActionResult> Create(MoneyTransferCreateBindingModel model)
         {
+            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
             if (!this.TryValidateModel(model))
             {
-                model.UserAccounts = await this.GetAllUserAccountsAsync();
+                model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
+                model.SenderName = await this.userService.GetUserFullnameAsync(userId);
                 return this.View(model);
             }
 
@@ -66,7 +70,8 @@
             if (account < model.Amount)
             {
                 this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
-                model.UserAccounts = await this.GetAllUserAccountsAsync();
+                model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
+                model.SenderName = await this.userService.GetUserFullnameAsync(userId);
                 return this.View(model);
             }
 
@@ -75,7 +80,9 @@
                 WebConstants.BankName, this.bankConfigurationHelper.UniqueIdentifier);
             var client = HttpClientFactory.Create(customHandler);
 
+            var senderAccountUniqueId = await this.bankAccountService.GetUserAccountUniqueId(model.AccountId);
             var centralApiModel = Mapper.Map<MoneyTransferCentralApiBindingModel>(model);
+            centralApiModel.SenderAccountUniqueId = senderAccountUniqueId;
             var response = await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveTransactions", centralApiModel);
             if (!response.IsSuccessStatusCode)
             {
@@ -95,9 +102,8 @@
             return this.RedirectToHome();
         }
 
-        private async Task<IEnumerable<SelectListItem>> GetAllUserAccountsAsync()
+        private async Task<IEnumerable<SelectListItem>> GetAllUserAccountsAsync(string userId)
         {
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
             var userAccounts = await this.bankAccountService
                 .GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId);
 
