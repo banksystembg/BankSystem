@@ -46,7 +46,7 @@
 
             var model = new MoneyTransferCreateBindingModel
             {
-                UserAccounts = userAccounts,
+                UserAccounts = userAccounts
             };
 
             return this.View(model);
@@ -61,8 +61,18 @@
                 return this.View(model);
             }
 
+            // Check whether user have sufficient balance to make the payment
+            var account = await this.bankAccountService.GetUserAccountBalanceAsync(model.AccountId);
+            if (account < model.Amount)
+            {
+                this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
+                model.UserAccounts = await this.GetAllUserAccountsAsync();
+                return this.View(model);
+            }
+
             // Contact central api
-            var customHandler = new CustomDelegatingHandler(this.bankConfigurationHelper.Key, WebConstants.BankName, this.bankConfigurationHelper.UniqueIdentifier);
+            var customHandler = new CustomDelegatingHandler(this.bankConfigurationHelper.CentralApiPublicKey, this.bankConfigurationHelper.Key,
+                WebConstants.BankName, this.bankConfigurationHelper.UniqueIdentifier);
             var client = HttpClientFactory.Create(customHandler);
 
             var centralApiModel = Mapper.Map<MoneyTransferCentralApiBindingModel>(model);
@@ -73,9 +83,9 @@
                 return this.RedirectToHome();
             }
 
-            // If we got this far the payment process was successful and we can store the data in database
+            // If we got this far, the payment process is successful and we can store the data in database
             var serviceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
-            var isSuccessful = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);
+            var isSuccessful = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel, true);
             if (!isSuccessful)
             {
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
@@ -92,7 +102,7 @@
                 .GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId);
 
             return userAccounts
-                .Select(a => new SelectListItem { Text = a.Name, Value = a.Id })
+                .Select(a => new SelectListItem { Text = $"{a.Name} - ({a.Balance} EUR)", Value = a.Id })
                 .ToArray();
         }
     }
