@@ -5,7 +5,7 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
-    using BankSystem.Common;
+    using BankSystem.Common.Utils;
     using Data;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
