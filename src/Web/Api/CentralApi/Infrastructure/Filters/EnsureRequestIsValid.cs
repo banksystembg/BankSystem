@@ -36,9 +36,11 @@
             {
                 var bankName = authHeader[0].Remove(0, AuthenticationScheme.Length).Trim();
                 var bankSwiftCode = authHeader[1];
-                var incomingBase64Signature = authHeader[2];
+                var encryptedKey = authHeader[2];
+                var encryptedIV = authHeader[3];
+                var incomingBase64Signature = authHeader[4];
 
-                var isValid = this.IsValidRequest(context, bankName, bankSwiftCode, incomingBase64Signature).GetAwaiter().GetResult();
+                var isValid = this.IsValidRequest(context, bankName, bankSwiftCode, encryptedKey, encryptedIV, incomingBase64Signature).GetAwaiter().GetResult();
 
                 if (!isValid)
                 {
@@ -50,7 +52,9 @@
             base.OnActionExecuting(context);
         }
 
-        private async Task<bool> IsValidRequest(ActionExecutingContext context, string bankName, string bankSwiftCode, string incomingBase64Signature)
+        private async Task<bool> IsValidRequest(ActionExecutingContext context, string bankName, string bankSwiftCode, string encryptedKey,
+            string encryptedIV,
+            string incomingBase64Signature)
         {
             var request = context.HttpContext.Request;
             var dbContext = request.HttpContext.RequestServices.GetService(typeof(CentralApiDbContext)) as CentralApiDbContext;
@@ -75,19 +79,23 @@
                 var serializedModel = JsonConvert.SerializeObject(model);
                 var signature = Encoding.UTF8.GetBytes(serializedModel);
 
-                // Decrypt data with the central api private key
-                byte[] decryptedIncomingSignature;
+                // Decrypt
+                string decrypted;
                 using (var rsa = RSA.Create())
                 {
                     RsaExtensions.FromXmlString(rsa, configuration.GetSection("CentralApiConfiguration:Key").Value);
-                    decryptedIncomingSignature = rsa.Decrypt(Convert.FromBase64String(incomingBase64Signature), RSAEncryptionPadding.Pkcs1);
+                    var decryptedKey = rsa.Decrypt(Convert.FromBase64String(encryptedKey), RSAEncryptionPadding.Pkcs1);
+                    var decryptedIV = rsa.Decrypt(Convert.FromBase64String(encryptedIV), RSAEncryptionPadding.Pkcs1);
+
+                    decrypted = CryptographyExtensions.Decrypt(Convert.FromBase64String(incomingBase64Signature), decryptedKey, decryptedIV);
                 }
 
                 // Verify signature with bank api key
                 using (var rsa = RSA.Create())
                 {
                     RsaExtensions.FromXmlString(rsa, bankApiKey);
-                    var isVerified = rsa.VerifyData(signature, decryptedIncomingSignature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    var decrypt = Convert.FromBase64String(decrypted);
+                    var isVerified = rsa.VerifyData(signature, decrypt, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
                     return isVerified;
                 }
             }

@@ -22,29 +22,33 @@
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             // Sign data with api private key
-            string requestSignedData;
             using (var rsa = RSA.Create())
             {
                 RsaExtensions.FromXmlString(rsa, this.apiSigningKey);
+                var aesParams = CryptographyExtensions.GenerateKey();
+                var key = Convert.FromBase64String(aesParams[0]);
+                var IV = Convert.FromBase64String(aesParams[1]);
 
                 var content = await request.Content.ReadAsByteArrayAsync();
                 var signedData = rsa.SignData(content, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-
-                // Encrypt data with bank public key
-                // We might use AES because the data might exceed the limit (490-500 bytes) and it will not be able to encrypt correctly
+                var requestSignedData = CryptographyExtensions.Encrypt(Convert.ToBase64String(signedData), key, IV);
+                
+                string encryptedKey;
+                string encryptedIV;
                 using (var encryptionRsa = RSA.Create())
                 {
                     RsaExtensions.FromXmlString(encryptionRsa, this.bankKey);
-                    requestSignedData = Convert.ToBase64String(encryptionRsa.Encrypt(signedData, RSAEncryptionPadding.Pkcs1));
+                    encryptedKey = Convert.ToBase64String(encryptionRsa.Encrypt(Convert.FromBase64String(aesParams[0]), RSAEncryptionPadding.Pkcs1));
+                    encryptedIV = Convert.ToBase64String(encryptionRsa.Encrypt(Convert.FromBase64String(aesParams[1]), RSAEncryptionPadding.Pkcs1));
                 }
+
+                //Setting the values in the Authorization header using custom scheme (bsw)
+                request.Headers.Authorization = new AuthenticationHeaderValue("bsw",
+                    $"{encryptedKey},{encryptedIV},{Convert.ToBase64String(requestSignedData)}");
+
+                var response = await base.SendAsync(request, cancellationToken);
+                return response;
             }
-
-            //Setting the values in the Authorization header using custom scheme (bsw)
-            request.Headers.Authorization = new AuthenticationHeaderValue("bsw",
-                $"{requestSignedData}");
-
-            var response = await base.SendAsync(request, cancellationToken);
-            return response;
         }
     }
 }
