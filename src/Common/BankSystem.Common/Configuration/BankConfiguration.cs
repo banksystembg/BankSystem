@@ -10,5 +10,8 @@ namespace BankSystem.Common.Configuration
 
         [Required]
         public string Key { get; set; }
+
+        [Required]
+        public string CentralApiPublicKey { get; set; }
     }
 }
