@@ -29,11 +29,10 @@
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ReceiveTransactionModel model)
         {
-            if (!this.TryValidateModel(model))
+            if (!this.ModelState.IsValid)
             {
-                return this.NoContent();
+                return this.BadRequest(model);
             }
-
             var bank = await this.banksService.GetBankAsync<BankServiceModel>(model.DestinationBankName, model.DestinationBankSwiftCode,
                 model.DestinationBankCountry);
 
