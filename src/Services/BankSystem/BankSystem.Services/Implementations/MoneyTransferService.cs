@@ -44,7 +44,6 @@
             if (!isSending)
             {
                 userAccount.Balance += dbModel.Amount;
-                dbModel.Amount = decimal.Parse($"{dbModel.Amount}");
                 this.Context.Update(userAccount);
             }
             else
