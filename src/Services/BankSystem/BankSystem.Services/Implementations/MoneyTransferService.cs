@@ -1,6 +1,5 @@
 ﻿namespace BankSystem.Services.Implementations
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -28,7 +27,7 @@
                 .Take(10)
                 .ToListAsync();
 
-        public async Task<bool> CreateMoneyTransferAsync<T>(T model, bool isSending)
+        public async Task<bool> CreateMoneyTransferAsync<T>(T model)
             where T : MoneyTransferBaseServiceModel
         {
             if (!this.IsEntityStateValid(model))
@@ -41,18 +40,13 @@
                 .Accounts
                 .Where(u => u.Id == dbModel.AccountId)
                 .SingleOrDefaultAsync();
-            if (!isSending)
+            if (userAccount == null)
             {
-                userAccount.Balance += dbModel.Amount;
-                this.Context.Update(userAccount);
+                return false;
             }
-            else
-            {
-                userAccount.Balance -= dbModel.Amount;
-                var negativeAmount = Math.Abs(dbModel.Amount) * (-1);
-                dbModel.Amount = negativeAmount;
-                this.Context.Update(userAccount);
-            }
+
+            userAccount.Balance += dbModel.Amount;
+            this.Context.Update(userAccount);
 
             await this.Context.Transfers.AddAsync(dbModel);
             await this.Context.SaveChangesAsync();

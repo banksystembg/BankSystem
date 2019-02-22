@@ -93,7 +93,11 @@
 
             // If we got this far, the payment process is successful and we can store the data in database
             var serviceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
-            var isSuccessful = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel, true);
+
+            // Set amount to negative because user is sending money which have to be substracted from his acc balance
+            serviceModel.Amount = model.Amount * (-1);
+
+            var isSuccessful = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);
             if (!isSuccessful)
             {
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
