@@ -5,6 +5,6 @@
     public interface IUserService
     {
         Task<string> GetUserIdByUsernameAsync(string username);
-        Task<string> GetUserFullnameAsync(string userId);
+        Task<string> GetAccountOwnerFullnameAsync(string userId);
     }
 }

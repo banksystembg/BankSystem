@@ -49,7 +49,7 @@
             var model = new MoneyTransferCreateBindingModel
             {
                 UserAccounts = userAccounts,
-                SenderName = await this.userService.GetUserFullnameAsync(userId),
+                SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId),
             };
 
             return this.View(model);
@@ -62,7 +62,7 @@
             if (!this.TryValidateModel(model))
             {
                 model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
-                model.SenderName = await this.userService.GetUserFullnameAsync(userId);
+                model.SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId);
                 return this.View(model);
             }
 
@@ -72,7 +72,7 @@
             {
                 this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
                 model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
-                model.SenderName = await this.userService.GetUserFullnameAsync(userId);
+                model.SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId);
                 return this.View(model);
             }
 

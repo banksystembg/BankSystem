@@ -21,7 +21,7 @@
             return user?.Id;
         }
 
-        public async Task<string> GetUserFullnameAsync(string userId)
+        public async Task<string> GetAccountOwnerFullnameAsync(string userId)
         {
             var user = await this.Context
                 .Users
