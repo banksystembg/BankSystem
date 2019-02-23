@@ -42,3 +42,15 @@ html {
 .background-grey {
     background: #eee;
 }
+
+.background-red {
+    background: #FF435A;
+}
+
+.background-blue {
+    background: #01e2f2;
+}
+
+.background-green {
+    background: greenyellow;
+}
