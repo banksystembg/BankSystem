@@ -9,7 +9,7 @@
     public class MoneyTransferCreateServiceModel : MoneyTransferBaseServiceModel, IHaveCustomMapping
     {
         public string Description { get; set; }
-
+        
         [Required]
         public decimal Amount { get; set; }
 
@@ -20,7 +20,7 @@
         public DateTime MadeOn { get; set; } = DateTime.UtcNow;
 
         [Required]
-        public string Source => this.AccountId;
+        public string Source { get; set; }
 
         [Required]
         public string DestinationBankAccountUniqueId { get; set; }

@@ -70,8 +70,8 @@
             }
 
             // Check whether user have sufficient balance to make the payment
-            var account = await this.bankAccountService.GetUserAccountBalanceAsync(model.AccountId);
-            if (account < model.Amount)
+            var account = await this.bankAccountService.GetBankAccountAsync<BankAccountIndexServiceModel>(model.AccountId);
+            if (account.Balance < model.Amount)
             {
                 this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
                 model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
@@ -92,7 +92,7 @@
 
             // If we got this far, the payment process is successful and we can store the data in database
             var serviceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
-
+            serviceModel.Source = account.UniqueId;
             // Set amount to negative because user is sending money which have to be substracted from his acc balance
             serviceModel.Amount = model.Amount * (-1);
 

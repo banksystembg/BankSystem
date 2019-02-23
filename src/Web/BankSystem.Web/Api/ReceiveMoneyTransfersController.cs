@@ -43,6 +43,7 @@
                 Amount = model.Amount,
                 Description = model.Description,
                 DestinationBankAccountUniqueId = model.DestinationBankAccountUniqueId,
+                Source = model.SenderAccountUniqueId,
             };
 
             var isSuccessful = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);
