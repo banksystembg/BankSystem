@@ -1,12 +1,14 @@
 ﻿namespace BankSystem.Web.Controllers
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Common.Utils.CustomHandlers;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -56,6 +58,7 @@
         }
 
         [HttpPost]
+        [EnsureOwnership]
         public async Task<IActionResult> Create(MoneyTransferCreateBindingModel model)
         {
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
@@ -77,18 +80,16 @@
             }
 
             // Contact central api
-            var customHandler = new CustomDelegatingHandler(this.bankConfigurationHelper.CentralApiPublicKey, this.bankConfigurationHelper.Key,
-                WebConstants.BankName, this.bankConfigurationHelper.UniqueIdentifier);
-            var client = HttpClientFactory.Create(customHandler);
-
-            var senderAccountUniqueId = await this.bankAccountService.GetUserAccountUniqueId(model.AccountId);
-            var centralApiModel = Mapper.Map<MoneyTransferCentralApiBindingModel>(model);
-            centralApiModel.SenderAccountUniqueId = senderAccountUniqueId;
-            var response = await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveTransactions", centralApiModel);
+            var response = await this.ContactCentralApiAsync(model);
             if (!response.IsSuccessStatusCode)
             {
-                this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
-                return this.RedirectToHome();
+                var dataStream = await response.Content.ReadAsStreamAsync();
+                using (var reader = new StreamReader(dataStream))
+                {
+                    var strResponse = reader.ReadToEnd();
+                    this.ShowErrorMessage(strResponse);
+                    return this.RedirectToHome();
+                }
             }
 
             // If we got this far, the payment process is successful and we can store the data in database
@@ -106,6 +107,18 @@
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulMoneyTransfer);
             return this.RedirectToHome();
+        }
+
+        private async Task<HttpResponseMessage> ContactCentralApiAsync(MoneyTransferCreateBindingModel model)
+        {
+            var customHandler = new CustomDelegatingHandler(this.bankConfigurationHelper.CentralApiPublicKey, this.bankConfigurationHelper.Key,
+                WebConstants.BankName, this.bankConfigurationHelper.UniqueIdentifier);
+            var client = HttpClientFactory.Create(customHandler);
+
+            var senderAccountUniqueId = await this.bankAccountService.GetUserAccountUniqueId(model.AccountId);
+            var centralApiModel = Mapper.Map<MoneyTransferCentralApiBindingModel>(model);
+            centralApiModel.SenderAccountUniqueId = senderAccountUniqueId;
+            return await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveTransactions", centralApiModel);
         }
 
         private async Task<IEnumerable<SelectListItem>> GetAllUserAccountsAsync(string userId)
