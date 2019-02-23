@@ -4,11 +4,11 @@
     using Interfaces;
     using Microsoft.Extensions.Options;
 
-    public class BankConfigurationService : IBankConfigurationService
+    public class BankConfigurationHelper : IBankConfigurationHelper
     {
         private readonly BankConfiguration bankConfiguration;
 
-        public BankConfigurationService(IOptions<BankConfiguration> bankConfigurationOptions)
+        public BankConfigurationHelper(IOptions<BankConfiguration> bankConfigurationOptions)
         {
             this.bankConfiguration = bankConfigurationOptions.Value;
         }

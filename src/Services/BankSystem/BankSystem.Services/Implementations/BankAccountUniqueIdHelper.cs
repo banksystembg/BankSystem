@@ -16,10 +16,10 @@ namespace BankSystem.Services.Implementations
          * 
          */
 
-        private readonly IBankConfigurationService bankConfiguration;
+        private readonly IBankConfigurationHelper bankConfiguration;
         private Random random;
 
-        public BankAccountUniqueIdHelper(IBankConfigurationService bankConfiguration)
+        public BankAccountUniqueIdHelper(IBankConfigurationHelper bankConfiguration)
         {
             this.bankConfiguration = bankConfiguration;
         }

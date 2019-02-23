@@ -1,6 +1,6 @@
 ﻿namespace BankSystem.Services.Interfaces
 {
-    public interface IBankConfigurationService
+    public interface IBankConfigurationHelper
     {
         string UniqueIdentifier { get; }
         string Key { get; }

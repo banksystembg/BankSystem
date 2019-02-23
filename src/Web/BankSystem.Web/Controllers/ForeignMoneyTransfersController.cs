@@ -21,7 +21,7 @@
     [Authorize]
     public class ForeignMoneyTransfersController : BaseController
     {
-        private readonly IBankConfigurationService bankConfigurationHelper;
+        private readonly IBankConfigurationHelper bankConfigurationHelper;
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
@@ -30,7 +30,7 @@
             IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
             IUserService userService,
-            IBankConfigurationService bankConfigurationHelper)
+            IBankConfigurationHelper bankConfigurationHelper)
         {
             this.moneyTransferService = moneyTransferService;
             this.bankAccountService = bankAccountService;
