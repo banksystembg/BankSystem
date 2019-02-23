@@ -6,7 +6,7 @@
     using Infrastructure.Filters;
     using Infrastructure.Handlers;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Options;
     using Models;
     using Services.Interfaces;
     using Services.Models.Banks;
@@ -16,38 +16,37 @@
     [EnsureRequestIsValid]
     public class ReceiveTransactionsController : ControllerBase
     {
-        private readonly IBanksService banksService;
-        private readonly IConfiguration configuration;
+        private const string BankRefusedTheRequestMessage = "{0} refused the transfer. If this error continues to occur please contact our support center";
+        private const string BankNotFound = "{0} was not found.";
 
-        public ReceiveTransactionsController(IBanksService banksService, IConfiguration configuration)
+        private readonly IBanksService banksService;
+        private readonly CentralApiConfiguration configuration;
+
+        public ReceiveTransactionsController(IBanksService banksService, IOptions<CentralApiConfiguration> configuration)
         {
             this.banksService = banksService;
-            this.configuration = configuration;
+            this.configuration = configuration.Value;
         }
 
         // POST api/values
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ReceiveTransactionModel model)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(model);
-            }
             var bank = await this.banksService.GetBankAsync<BankServiceModel>(model.DestinationBankName, model.DestinationBankSwiftCode,
                 model.DestinationBankCountry);
 
             if (bank == null)
             {
-                return this.NotFound($"{model.DestinationBankName} was not found.");
+                return this.NotFound(string.Format(BankNotFound, model.DestinationBankName));
             }
 
-            var customHandler = new CustomCentralApiDelegatingHandler(this.configuration.GetSection("CentralApiConfiguration:Key").Value, bank.ApiKey);
+            var customHandler = new CustomCentralApiDelegatingHandler(this.configuration.Key, bank.ApiKey);
             var client = HttpClientFactory.Create(customHandler);
             var sendModel = Mapper.Map<SendTransactionModel>(model);
             var response = await client.PostAsJsonAsync(bank.ApiAddress, sendModel);
             if (!response.IsSuccessStatusCode)
             {
-                return this.NotFound();
+                return this.BadRequest(string.Format(BankRefusedTheRequestMessage, model.DestinationBankName));
             }
 
             return this.Ok();
