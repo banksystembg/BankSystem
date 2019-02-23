@@ -62,10 +62,10 @@
         public async Task<IActionResult> Create(ForeignMoneyTransferCreateBindingModel model)
         {
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            model.SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId);
             if (!this.TryValidateModel(model))
             {
                 model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
-                model.SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId);
                 return this.View(model);
             }
 
@@ -75,10 +75,8 @@
             {
                 this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
                 model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
-                model.SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId);
                 return this.View(model);
             }
-
             // Contact central api
             var response = await this.ContactCentralApiAsync(model);
             if (!response.IsSuccessStatusCode)
