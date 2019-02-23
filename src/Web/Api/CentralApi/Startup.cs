@@ -1,7 +1,10 @@
 ﻿namespace CentralApi
 {
+    using System;
     using AutoMapper;
     using BankSystem.Common.AutoMapping.Profiles;
+    using BankSystem.Common.Configuration;
+    using BankSystem.Common.Utils;
     using Data;
     using Infrastructure;
     using Microsoft.AspNetCore.Builder;
@@ -29,6 +32,17 @@
                 options.UseSqlServer(
                     this.Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IBanksService, BankService>();
+
+            services.Configure<CentralApiConfiguration>(
+                this.Configuration.GetSection(nameof(CentralApiConfiguration)));
+
+            services.PostConfigure<BankConfiguration>(settings =>
+            {
+                if (!ValidationUtil.IsObjectValid(settings))
+                {
+                    throw new ApplicationException("CentralApiConfiguration is invalid");
+                }
+            });
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
