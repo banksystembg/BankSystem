@@ -14,7 +14,7 @@
                     <label asp-for="AccountId"></label>
                 </div>
                 <div class="col-sm-10">
-                    <select class="form-control" title="Select one account..." asp-for="AccountId" asp-items="Model.UserAccounts"></select>
+                    <select class="form-control custom-select" title="Select one account..." asp-for="AccountId" asp-items="Model.UserAccounts"></select>
                     <span asp-validation-for="AccountId" class="text-danger"></span>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                     <label asp-for="SenderName"></label>
                 </div>
                 <div class="col-sm-6">
-                    <input class="form-control" readonly asp-for="SenderName" value="@Model.SenderName"/>
+                    <input class="form-control" disabled asp-for="SenderName" value="@Model.SenderName"/>
                 </div>
             </div>
             <div class="form-group row">
@@ -66,7 +66,7 @@
                     <label asp-for="@Model.DestinationBank.Country"></label>
                 </div>
                 <div class="col-sm-8">
-                    <select asp-for="@Model.DestinationBank.Country" class="form-control">
+                    <select asp-for="@Model.DestinationBank.Country" class="form-control custom-select">
                         <option id='Afghanistan'> Afghanistan</option>
                         <option id='Aland Islands'>Aland Islands</option>
                         <option id='Albania'>Albania</option>
