@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\BankSystem.Common\BankSystem.Common.csproj" />
+    <ProjectReference Include="..\..\..\Data\CentralApi\CentralApi.Models\CentralApi.Models.csproj" />
+  </ItemGroup>
+
+</Project>

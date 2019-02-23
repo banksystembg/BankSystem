@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using BankAccount;
-    using MoneyTransfer;
+    using ForeignMoneyTransfers;
 
     public class HomeViewModel
     {
