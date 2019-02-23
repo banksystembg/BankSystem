@@ -1,4 +1,4 @@
-namespace BankSystem.Web.Controllers
+namespace BankSystem.Web.Controllers.MoneyTransfers
 {
     using System.Linq;
     using System.Threading.Tasks;
@@ -7,28 +7,28 @@ namespace BankSystem.Web.Controllers
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.InternalMoneyTransfers;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
 
     [Authorize]
-    public class InternalMoneyTransfersController : BaseController
+    public class InternalMoneyTransfersController : BaseMoneyTransferController
     {
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
 
-        public InternalMoneyTransfersController(IMoneyTransferService moneyTransferService,
+        public InternalMoneyTransfersController(
+            IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
             IUserService userService)
+            : base(bankAccountService)
         {
             this.moneyTransferService = moneyTransferService;
-            this.bankAccountService = bankAccountService;
             this.userService = userService;
+            this.bankAccountService = bankAccountService;
         }
-
 
         public async Task<IActionResult> Create()
         {
@@ -104,16 +104,6 @@ namespace BankSystem.Web.Controllers
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulMoneyTransfer);
             return this.RedirectToHome();
-        }
-
-        private async Task<SelectListItem[]> GetAllUserAccountsAsync(string userId)
-        {
-            var userAccounts = await this.bankAccountService
-                .GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId);
-
-            return userAccounts
-                .Select(a => new SelectListItem {Text = $"{a.Name} - ({a.Balance} EUR)", Value = a.Id})
-                .ToArray();
         }
     }
 }
