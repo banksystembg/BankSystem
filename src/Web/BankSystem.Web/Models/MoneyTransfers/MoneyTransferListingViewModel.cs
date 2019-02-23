@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Web.Models.ForeignMoneyTransfers
+﻿namespace BankSystem.Web.Models.MoneyTransfers
 {
     using System;
     using Common.AutoMapping.Interfaces;

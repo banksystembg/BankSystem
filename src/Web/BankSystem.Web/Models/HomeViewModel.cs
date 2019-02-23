@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using BankAccount;
     using ForeignMoneyTransfers;
+    using MoneyTransfers;
 
     public class HomeViewModel
     {

@@ -8,6 +8,7 @@
     using Models;
     using Models.BankAccount;
     using Models.ForeignMoneyTransfers;
+    using Models.MoneyTransfers;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
