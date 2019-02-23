@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Models.MoneyTransfer;
+    using Models.ForeignMoneyTransfer;
 
     public interface IMoneyTransferService
     {

@@ -7,10 +7,10 @@
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Models.BankAccount;
-    using Models.MoneyTransfer;
+    using Models.ForeignMoneyTransfers;
     using Services.Interfaces;
     using Services.Models.BankAccount;
-    using Services.Models.MoneyTransfer;
+    using Services.Models.ForeignMoneyTransfer;
 
     public class HomeController : BaseController
     {
@@ -38,7 +38,7 @@
                     .ToArray();
                 var moneyTransfers = (await this.moneyTransferService
                         .GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(userId))
-                    .Select(Mapper.Map<MoneyTransferListingViewModel>)
+                    .Select(Mapper.Map<ForeignMoneyTransferListingViewModel>)
                     .ToArray();
 
                 var viewModel = new HomeViewModel

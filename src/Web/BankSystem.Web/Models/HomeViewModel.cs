@@ -2,11 +2,11 @@
 {
     using System.Collections.Generic;
     using BankAccount;
-    using MoneyTransfer;
+    using ForeignMoneyTransfers;
 
     public class HomeViewModel
     {
         public IEnumerable<BankAccountIndexViewModel> UserBankAccounts { get; set; }
-        public IEnumerable<MoneyTransferListingViewModel> MoneyTransfers { get; set; }
+        public IEnumerable<ForeignMoneyTransferListingViewModel> MoneyTransfers { get; set; }
     }
 }

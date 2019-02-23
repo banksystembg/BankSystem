@@ -5,7 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Interfaces;
-    using Services.Models.MoneyTransfer;
+    using Services.Models.ForeignMoneyTransfer;
 
     [Route("api/[controller]")]
     [ApiController]

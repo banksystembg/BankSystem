@@ -1,10 +1,10 @@
-﻿namespace BankSystem.Web.Models.MoneyTransfer
+﻿namespace BankSystem.Web.Models.ForeignMoneyTransfers
 {
     using System;
     using Common.AutoMapping.Interfaces;
-    using Services.Models.MoneyTransfer;
+    using Services.Models.ForeignMoneyTransfer;
 
-    public class MoneyTransferListingViewModel : IMapWith<MoneyTransferListingServiceModel>
+    public class ForeignMoneyTransferListingViewModel : IMapWith<MoneyTransferListingServiceModel>
     {
         public string Description { get; set; }
 

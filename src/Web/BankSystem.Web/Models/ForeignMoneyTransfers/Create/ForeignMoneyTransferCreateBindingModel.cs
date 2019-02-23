@@ -1,15 +1,15 @@
-﻿namespace BankSystem.Web.Models.MoneyTransfer.Create
+﻿namespace BankSystem.Web.Models.ForeignMoneyTransfers.Create
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using Services.Models.MoneyTransfer;
+    using Services.Models.ForeignMoneyTransfer;
 
-    public class MoneyTransferCreateBindingModel : IMapWith<MoneyTransferCreateServiceModel>
+    public class ForeignMoneyTransferCreateBindingModel : IMapWith<MoneyTransferCreateServiceModel>
     {
         [Required]
-        public MoneyTransferCreateDestinationBankDto DestinationBank { get; set; }
+        public ForeignMoneyTransferCreateDestinationBankDto DestinationBank { get; set; }
 
         [MaxLength(150)]
         [Display(Name = "Details of Payment")]

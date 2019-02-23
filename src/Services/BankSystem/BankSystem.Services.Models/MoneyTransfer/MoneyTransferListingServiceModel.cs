@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Services.Models.MoneyTransfer
+﻿namespace BankSystem.Services.Models.ForeignMoneyTransfer
 {
     using System;
 
