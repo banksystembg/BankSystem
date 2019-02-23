@@ -19,8 +19,7 @@
         [Required]
         [MaxLength(34)]
         public string DestinationBankAccountUniqueId { get; set; }
-
-        [Required]
+        
         [MaxLength(150)]
         public string Description { get; set; }
 
