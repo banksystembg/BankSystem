@@ -85,6 +85,12 @@
                 using (var reader = new StreamReader(dataStream))
                 {
                     var strResponse = reader.ReadToEnd();
+
+                    if (strResponse.Length > 300)
+                    {
+                        strResponse = NotificationMessages.TryAgainLaterError;
+                    }
+                    
                     this.ShowErrorMessage(strResponse);
                     return this.RedirectToHome();
                 }
