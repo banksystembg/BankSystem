@@ -10,6 +10,7 @@
     [Route("api/[controller]")]
     [ApiController]
     [EnsureRequest]
+    [IgnoreAntiforgeryToken]
     public class ReceiveMoneyTransfersController : ControllerBase
     {
         private readonly IMoneyTransferService moneyTransferService;

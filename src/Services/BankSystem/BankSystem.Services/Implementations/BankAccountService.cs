@@ -67,7 +67,7 @@
         public async Task<string> GetAccountIdAsync(string uniqueId)
             => await this.Context
                 .Accounts
-                .Where(a => a.Id == uniqueId)
+                .Where(a => a.UniqueId == uniqueId)
                 .Select(a => a.Id)
                 .SingleOrDefaultAsync();
 

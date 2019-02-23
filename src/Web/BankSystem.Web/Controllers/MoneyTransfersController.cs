@@ -101,6 +101,7 @@
             if (!isSuccessful)
             {
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
+                return this.RedirectToHome();
             }
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulMoneyTransfer);
