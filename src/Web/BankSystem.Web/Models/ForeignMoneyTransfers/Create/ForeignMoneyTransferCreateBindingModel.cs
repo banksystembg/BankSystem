@@ -2,11 +2,10 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Common.AutoMapping.Interfaces;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using Services.Models.MoneyTransfer;
+    using MoneyTransfers;
 
-    public class ForeignMoneyTransferCreateBindingModel : IMapWith<MoneyTransferCreateServiceModel>
+    public class ForeignMoneyTransferCreateBindingModel : IMoneyTransferCreateBindingModel
     {
         [Required]
         public ForeignMoneyTransferCreateDestinationBankDto DestinationBank { get; set; }
