@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Services.Models.ForeignMoneyTransfer
+﻿namespace BankSystem.Services.Models.MoneyTransfer
 {
     using System;
     using System.ComponentModel.DataAnnotations;

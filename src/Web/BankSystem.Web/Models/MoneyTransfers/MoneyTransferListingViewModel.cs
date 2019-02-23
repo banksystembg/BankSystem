@@ -2,9 +2,9 @@
 {
     using System;
     using Common.AutoMapping.Interfaces;
-    using Services.Models.ForeignMoneyTransfer;
+    using Services.Models.MoneyTransfer;
 
-    public class ForeignMoneyTransferListingViewModel : IMapWith<MoneyTransferListingServiceModel>
+    public class MoneyTransferListingViewModel : IMapWith<MoneyTransferListingServiceModel>
     {
         public string Description { get; set; }
 

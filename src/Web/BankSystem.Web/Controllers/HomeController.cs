@@ -10,7 +10,7 @@
     using Models.ForeignMoneyTransfers;
     using Services.Interfaces;
     using Services.Models.BankAccount;
-    using Services.Models.ForeignMoneyTransfer;
+    using Services.Models.MoneyTransfer;
 
     public class HomeController : BaseController
     {
@@ -38,7 +38,7 @@
                     .ToArray();
                 var moneyTransfers = (await this.moneyTransferService
                         .GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(userId))
-                    .Select(Mapper.Map<ForeignMoneyTransferListingViewModel>)
+                    .Select(Mapper.Map<MoneyTransferListingViewModel>)
                     .ToArray();
 
                 var viewModel = new HomeViewModel

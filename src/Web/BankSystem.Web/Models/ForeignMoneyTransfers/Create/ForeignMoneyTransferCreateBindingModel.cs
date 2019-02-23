@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using Services.Models.ForeignMoneyTransfer;
+    using Services.Models.MoneyTransfer;
 
     public class ForeignMoneyTransferCreateBindingModel : IMapWith<MoneyTransferCreateServiceModel>
     {

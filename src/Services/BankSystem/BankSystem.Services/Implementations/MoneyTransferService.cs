@@ -9,7 +9,7 @@
     using Data;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
-    using Models.ForeignMoneyTransfer;
+    using Models.MoneyTransfer;
 
     public class MoneyTransferService : BaseService, IMoneyTransferService
     {

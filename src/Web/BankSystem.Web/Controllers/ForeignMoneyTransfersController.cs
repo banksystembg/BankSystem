@@ -16,7 +16,7 @@
     using Models.ForeignMoneyTransfers.Create;
     using Services.Interfaces;
     using Services.Models.BankAccount;
-    using Services.Models.ForeignMoneyTransfer;
+    using Services.Models.MoneyTransfer;
 
     [Authorize]
     public class ForeignMoneyTransfersController : BaseController
