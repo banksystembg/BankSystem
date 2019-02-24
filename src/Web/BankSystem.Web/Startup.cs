@@ -92,6 +92,7 @@
                 .AddResponseCompression(options => options.EnableForHttps = true);
 
             services.AddMvc(options => { options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>(); })
+                .AddRazorPagesOptions(options => { options.Conventions.AuthorizePage("/MoneyTransfers");})
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
