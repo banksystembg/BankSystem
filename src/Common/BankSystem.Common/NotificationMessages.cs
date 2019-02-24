@@ -24,5 +24,7 @@ namespace BankSystem.Common
         
         public const string TwoFactorAuthenticationCodeInvalid = "Invalid code";
         public const string TwoFactorAuthenticationEnabled = "Two-factor authentication enabled successfully";
+        public const string TwoFactorAuthenticationDisabled = "Two-factor authentication disabled successfully";
+        public const string TwoFactorAuthenticationDisableError = "An error occured while disabling two-factor authentication";
     }
 }
