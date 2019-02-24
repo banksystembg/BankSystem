@@ -72,6 +72,13 @@
                 await this.LoadSharedKeyAndQrCodeUriAsync(user);
                 return this.Page();
             }
+            
+            var isPasswordCorrect = await this.userManager.CheckPasswordAsync(user, this.Input.Password);
+            if (!isPasswordCorrect)
+            {
+                this.ShowErrorMessage(NotificationMessages.InvalidPassword);
+                return this.Page();
+            }
 
             string verificationCode = this.Input.Code.Replace(" ", string.Empty)
                 .Replace("-", string.Empty);
@@ -141,11 +148,15 @@
         public class InputModel
         {
             [Required]
-            [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+            [StringLength(7, ErrorMessage = "The {0} must be 6 digits long",
                 MinimumLength = 6)]
             [DataType(DataType.Text)]
             [Display(Name = "Verification Code")]
             public string Code { get; set; }
+            
+            [Required]
+            [DataType(DataType.Password)]
+            public string Password { get; set; }
         }
     }
 }
