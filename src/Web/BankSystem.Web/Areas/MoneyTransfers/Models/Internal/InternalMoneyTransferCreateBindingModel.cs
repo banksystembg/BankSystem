@@ -1,11 +1,10 @@
-namespace BankSystem.Web.Models.InternalMoneyTransfer
+namespace BankSystem.Web.Areas.MoneyTransfers.Models.Internal
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using BankAccount;
     using Microsoft.Extensions.DependencyInjection;
-    using MoneyTransfers;
     using Services.Interfaces;
+    using Web.Models.BankAccount;
 
     public class InternalMoneyTransferCreateBindingModel : IMoneyTransferCreateBindingModel, IValidatableObject
     {

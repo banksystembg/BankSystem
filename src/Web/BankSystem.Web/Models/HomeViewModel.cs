@@ -1,8 +1,8 @@
 ﻿namespace BankSystem.Web.Models
 {
     using System.Collections.Generic;
+    using Areas.MoneyTransfers.Models;
     using BankAccount;
-    using MoneyTransfers;
 
     public class HomeViewModel
     {

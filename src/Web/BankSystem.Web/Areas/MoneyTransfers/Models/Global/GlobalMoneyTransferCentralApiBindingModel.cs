@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Web.Models.GlobalMoneyTransfer
+﻿namespace BankSystem.Web.Areas.MoneyTransfers.Models.Global
 {
     using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
