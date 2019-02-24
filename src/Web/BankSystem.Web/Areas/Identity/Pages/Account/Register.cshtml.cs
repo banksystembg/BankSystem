@@ -6,11 +6,10 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
 
     [AllowAnonymous]
-    public class RegisterModel : PageModel
+    public class RegisterModel : BasePageModel
     {
         private readonly ILogger<RegisterModel> logger;
         private readonly SignInManager<BankUser> signInManager;
@@ -31,42 +30,56 @@
 
         public string ReturnUrl { get; set; }
 
-        public void OnGet(string returnUrl = null)
+        public IActionResult OnGet(string returnUrl = null)
         {
+            returnUrl = returnUrl ?? this.Url.Content("~/");
+
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.LocalRedirect(returnUrl);
+            }
+
             this.ReturnUrl = returnUrl;
+
+            return this.Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? this.Url.Content("~/");
-            if (this.ModelState.IsValid)
+
+            if (this.User.Identity.IsAuthenticated)
             {
-                var user = new BankUser
-                    {UserName = this.Input.Email, Email = this.Input.Email, FullName = this.Input.FullName};
-                var result = await this.userManager.CreateAsync(user, this.Input.Password);
-                if (result.Succeeded)
-                {
-                    this.logger.LogInformation("User created a new account with password.");
+                return this.LocalRedirect(returnUrl);
+            }
 
-                    string code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
-                    string callbackUrl = this.Url.Page(
-                        "/Account/ConfirmEmail",
-                        null,
-                        new {userId = user.Id, code},
-                        this.Request.Scheme);
+            if (!this.ModelState.IsValid)
+            {
+                return this.Page();
+            }
 
-                    await this.signInManager.SignInAsync(user, false);
-                    return this.LocalRedirect(returnUrl);
-                }
+            var user = new BankUser
+            {
+                UserName = this.Input.Email,
+                Email = this.Input.Email,
+                FullName = this.Input.FullName
+            };
 
+            var result = await this.userManager.CreateAsync(user, this.Input.Password);
+            if (!result.Succeeded)
+            {
                 foreach (var error in result.Errors)
                 {
                     this.ModelState.AddModelError(string.Empty, error.Description);
                 }
+
+                return this.Page();
             }
 
-            // If we got this far, something failed, redisplay form
-            return this.Page();
+            this.logger.LogInformation("User created a new account with password.");
+
+            await this.signInManager.SignInAsync(user, false);
+            return this.LocalRedirect(returnUrl);
         }
 
         public class InputModel
