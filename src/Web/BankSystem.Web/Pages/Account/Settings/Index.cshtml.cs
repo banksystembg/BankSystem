@@ -22,6 +22,8 @@
 
         public string FullName { get; set; }
 
+        public bool TwoFactorEnabled { get; set; }
+
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -32,6 +34,7 @@
 
             this.FullName = user.FullName;
             this.Email = user.Email;
+            this.TwoFactorEnabled = user.TwoFactorEnabled;
 
             return this.Page();
         }

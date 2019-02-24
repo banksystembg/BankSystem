@@ -10,10 +10,26 @@
         <i class="fas fa-user fa-3x mb-4 text-primary"></i>
         <h1>@Model.FullName</h1>
         <h4 class="text-muted">@Model.Email</h4>
-        <div class="mt-4 d-flex flex-column">
-            <a class="btn btn-outline-primary mx-auto" asp-page="./ChangePassword">
-                <i class="far fa-edit"></i> Change password
+        <a class="mt-4 btn btn-outline-primary mx-auto" asp-page="./ChangePassword">
+            <i class="far fa-edit"></i> Change password
+        </a>
+    </div>
+    <div class="card card-body py-4 mt-4 w-md-50 w-lg-25 mx-auto shadow">
+        <i class="fas fa-key fa-3x mb-3 text-secondary"></i>
+        <h3>Two-factor authentication</h3>
+        @if (Model.TwoFactorEnabled)
+        {
+            <h5 class="text-success">Enabled</h5>
+            <a class="mt-1 btn btn-outline-danger mx-auto" asp-page="./Disable2fa">
+                Disable
             </a>
-        </div>
+        }
+        else
+        {
+            <h5 class="text-danger">Disabled</h5>
+            <a class="mt-1 btn btn-primary mx-auto" asp-page="./EnableAuthenticator">
+                Enable
+            </a>
+        }
     </div>
 </div>
