@@ -12,15 +12,15 @@
     using Microsoft.Extensions.Logging;
 
     [Authorize]
-    public class EnableAuthenticatorModel : BasePageModel
+    public class Enable2faModel : BasePageModel
     {
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
-        private readonly ILogger<EnableAuthenticatorModel> logger;
+        private readonly ILogger<Enable2faModel> logger;
         private readonly UrlEncoder urlEncoder;
         private readonly UserManager<BankUser> userManager;
         private readonly SignInManager<BankUser> signInManager;
 
-        public EnableAuthenticatorModel(UserManager<BankUser> userManager, ILogger<EnableAuthenticatorModel> logger,
+        public Enable2faModel(UserManager<BankUser> userManager, ILogger<Enable2faModel> logger,
             UrlEncoder urlEncoder, SignInManager<BankUser> signInManager)
         {
             this.userManager = userManager;
