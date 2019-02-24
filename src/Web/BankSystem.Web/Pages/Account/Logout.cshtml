@@ -1,10 +1,15 @@
 ﻿@page
 @model LogoutModel
 @{
-    ViewData["Title"] = "Log out";
+    ViewData["Title"] = "Logout";
 }
 
-<header>
+<div class="text-center w-md-75 w-lg-50 mx-auto my-4">
     <h1>@ViewData["Title"]</h1>
-    <p>You have successfully logged out of the application.</p>
-</header>
+    <form method="post">
+        <p>Click this button to log out</p>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Logout</button>
+        </div>
+    </form>
+</div>

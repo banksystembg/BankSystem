@@ -2,14 +2,14 @@
 {
     using System.Threading.Tasks;
     using BankSystem.Models;
+    using Common;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
 
     [AllowAnonymous]
-    public class LogoutModel : PageModel
+    public class LogoutModel : BasePageModel
     {
         private readonly ILogger<LogoutModel> logger;
         private readonly SignInManager<BankUser> signInManager;
@@ -20,20 +20,28 @@
             this.logger = logger;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-        }
-
-        public async Task<IActionResult> OnPost(string returnUrl = null)
-        {
-            await this.signInManager.SignOutAsync();
-            this.logger.LogInformation("User logged out.");
-            if (returnUrl != null)
+            if (!this.User.Identity.IsAuthenticated)
             {
-                return this.LocalRedirect(returnUrl);
+                return this.RedirectToHome();
             }
 
             return this.Page();
+        }
+
+        public async Task<IActionResult> OnPost()
+        {
+            if (!this.User.Identity.IsAuthenticated)
+            {
+                return this.RedirectToHome();
+            }
+
+            await this.signInManager.SignOutAsync();
+            this.logger.LogInformation("User logged out.");
+
+            this.ShowSuccessMessage(NotificationMessages.LogoutSuccessful);
+            return this.RedirectToHome();
         }
     }
 }
