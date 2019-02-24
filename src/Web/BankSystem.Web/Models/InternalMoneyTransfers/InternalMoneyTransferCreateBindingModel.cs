@@ -2,7 +2,7 @@ namespace BankSystem.Web.Models.InternalMoneyTransfers
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Microsoft.AspNetCore.Mvc.Rendering;
+    using BankAccount;
     using Microsoft.Extensions.DependencyInjection;
     using MoneyTransfers;
     using Services.Interfaces;
@@ -29,7 +29,7 @@ namespace BankSystem.Web.Models.InternalMoneyTransfers
         [RegularExpression(@"^[A-Z]{4}\d{8}$", ErrorMessage = DestinationAccountIncorrectError)]
         public string DestinationBankAccountUniqueId { get; set; }
 
-        public IEnumerable<SelectListItem> UserAccounts { get; set; }
+        public IEnumerable<OwnBankAccountListingViewModel> OwnAccounts { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

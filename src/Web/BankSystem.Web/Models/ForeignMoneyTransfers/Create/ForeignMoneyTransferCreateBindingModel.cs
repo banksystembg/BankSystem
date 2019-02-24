@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Microsoft.AspNetCore.Mvc.Rendering;
+    using BankAccount;
     using MoneyTransfers;
 
     public class ForeignMoneyTransferCreateBindingModel : IMoneyTransferCreateBindingModel
@@ -25,6 +25,6 @@
         [Display(Name = "Name")]
         public string SenderName { get; set; }
 
-        public IEnumerable<SelectListItem> UserAccounts { get; set; }
+        public IEnumerable<OwnBankAccountListingViewModel> OwnAccounts { get; set; }
     }
 }
