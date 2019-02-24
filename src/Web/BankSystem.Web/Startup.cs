@@ -53,7 +53,6 @@
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
                 })
-                .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<BankSystemDbContext>()
                 .AddDefaultTokenProviders();
 
