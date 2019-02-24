@@ -1,6 +1,5 @@
-﻿namespace BankSystem.Web.Controllers
+﻿namespace BankSystem.Web.Controllers.MoneyTransfers
 {
-    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Net.Http;
@@ -11,7 +10,6 @@
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.ForeignMoneyTransfers;
     using Models.ForeignMoneyTransfers.Create;
     using Services.Interfaces;
@@ -19,9 +17,9 @@
     using Services.Models.MoneyTransfer;
 
     [Authorize]
-    public class ForeignMoneyTransfersController : BaseController
+    public class ForeignMoneyTransfersController : BaseMoneyTransferController
     {
-        private readonly IBankConfigurationService bankConfigurationHelper;
+        private readonly IBankConfigurationHelper bankConfigurationHelper;
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
@@ -30,7 +28,8 @@
             IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
             IUserService userService,
-            IBankConfigurationService bankConfigurationHelper)
+            IBankConfigurationHelper bankConfigurationHelper)
+            : base(bankAccountService)
         {
             this.moneyTransferService = moneyTransferService;
             this.bankAccountService = bankAccountService;
@@ -90,7 +89,7 @@
                     {
                         strResponse = NotificationMessages.TryAgainLaterError;
                     }
-                    
+
                     this.ShowErrorMessage(strResponse);
                     return this.RedirectToHome();
                 }
@@ -123,16 +122,6 @@
             var centralApiModel = Mapper.Map<ForeignMoneyTransferCentralApiBindingModel>(model);
             centralApiModel.SenderAccountUniqueId = senderAccountUniqueId;
             return await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveTransactions", centralApiModel);
-        }
-
-        private async Task<IEnumerable<SelectListItem>> GetAllUserAccountsAsync(string userId)
-        {
-            var userAccounts = await this.bankAccountService
-                .GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId);
-
-            return userAccounts
-                .Select(a => new SelectListItem { Text = $"{a.Name} - ({a.Balance} EUR)", Value = a.Id })
-                .ToArray();
         }
     }
 }

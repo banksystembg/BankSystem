@@ -14,5 +14,7 @@ namespace BankSystem.Common
             "Looks like you don't have any accounts. Please feel free to create one and then come back again to process your payment.";
 
         public const string SuccessfulMoneyTransfer = "Money transfer was successful";
+        
+        public const string DestinationBankAccountDoesNotExist = "Destination bank account does not exist";
     }
 }

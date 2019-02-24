@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.EntityFrameworkCore;
-    using Models.ForeignMoneyTransfers.Create;
+    using Models.MoneyTransfers;
 
     public class EnsureOwnership : ActionFilterAttribute
     {
@@ -20,7 +20,7 @@
             var database = httpContext.RequestServices.GetService(typeof(BankSystemDbContext)) as BankSystemDbContext;
             var userManager = httpContext.RequestServices.GetService(typeof(UserManager<BankUser>)) as UserManager<BankUser>;
             var userId = userManager?.GetUserId(context.HttpContext.User);
-            var model = context.ActionArguments[Id] as ForeignMoneyTransferCreateBindingModel;
+            var model = context.ActionArguments[Id] as IMoneyTransferCreateBindingModel;
 
             var dbAccount = database?.Accounts.AsNoTracking().FirstOrDefault(v => v.Id == model.AccountId);
             if (dbAccount == null || dbAccount.UserId != userId)
