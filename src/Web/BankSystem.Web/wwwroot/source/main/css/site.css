@@ -54,3 +54,22 @@ html {
 .background-green {
     background: greenyellow;
 }
+
+.fa-16x {
+    font-size: 16em;
+}
+
+.floating-card {
+    transition-duration: 300ms;
+}
+
+.floating-card:hover {
+    -webkit-box-shadow: -1px 9px 40px -12px rgba(0, 0, 0, 0.75) !important;
+    -moz-box-shadow: -1px 9px 40px -12px rgba(0, 0, 0, 0.75) !important;
+    box-shadow: -1px 9px 40px -12px rgba(0, 0, 0, 0.75) !important;
+    -moz-transform: translate(0, -5px);
+    -ms-transform: translate(0, -5px);
+    -o-transform: translate(0, -5px);
+    -webkit-transform: translate(0, -5px);
+    transform: translate(0, -5px);
+}
