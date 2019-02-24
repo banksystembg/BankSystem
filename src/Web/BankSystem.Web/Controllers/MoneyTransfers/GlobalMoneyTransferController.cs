@@ -1,5 +1,6 @@
 ﻿namespace BankSystem.Web.Controllers.MoneyTransfers
 {
+    using System;
     using System.IO;
     using System.Linq;
     using System.Net.Http;
@@ -68,8 +69,14 @@
                 return this.View(model);
             }
 
-            // Check whether user have sufficient balance to make the payment
             var account = await this.bankAccountService.GetBankAccountAsync<BankAccountIndexServiceModel>(model.AccountId);
+            if (string.Equals(account.UniqueId, model.DestinationBank.Account.UniqueId, StringComparison.InvariantCulture))
+            {
+                this.ShowErrorMessage(NotificationMessages.SameAccountsError);
+                model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+                return this.View(model);
+            }
+            // Check whether user have sufficient balance to make the payment
             if (account.Balance < model.Amount)
             {
                 this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
