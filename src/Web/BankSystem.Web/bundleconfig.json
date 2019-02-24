@@ -58,5 +58,14 @@
     "minify": {
       "enabled": true
     }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/qrcode.min.js",
+    "inputFiles": [
+      "wwwroot/source/qrcode/js/qrcode.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
   }
 ]
