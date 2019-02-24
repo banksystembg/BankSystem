@@ -6,14 +6,12 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
     using AutoMapper;
     using Common;
     using Infrastructure.Filters;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Models.Internal;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
 
-    [Authorize]
     public class InternalController : BaseMoneyTransferController
     {
         private readonly IMoneyTransferService moneyTransferService;

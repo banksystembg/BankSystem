@@ -9,7 +9,6 @@
     using Common;
     using Common.Utils.CustomHandlers;
     using Infrastructure.Filters;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Models.Global;
     using Models.Global.Create;
@@ -17,7 +16,6 @@
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
 
-    [Authorize]
     public class GlobalController : BaseMoneyTransferController
     {
         private readonly IBankConfigurationHelper bankConfigurationHelper;
