@@ -1,5 +1,6 @@
 ﻿namespace BankSystem.Web.Pages.Account.Settings
 {
+    using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using BankSystem.Models;
     using Common;
@@ -22,6 +23,9 @@
             this.logger = logger;
             this.signInManager = signInManager;
         }
+
+        [BindProperty]
+        public InputModel Input { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -52,6 +56,18 @@
                 return this.RedirectToPage("./Index");
             }
 
+            if (!this.ModelState.IsValid)
+            {
+                return this.Page();
+            }
+
+            var isPasswordCorrect = await this.userManager.CheckPasswordAsync(user, this.Input.Password);
+            if (!isPasswordCorrect)
+            {
+                this.ShowErrorMessage(NotificationMessages.InvalidPassword);
+                return this.Page();
+            }
+
             var disable2FaResult = await this.userManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2FaResult.Succeeded)
             {
@@ -67,6 +83,13 @@
 
             this.ShowSuccessMessage(NotificationMessages.TwoFactorAuthenticationDisabled);
             return this.RedirectToPage("./Index");
+        }
+
+        public class InputModel
+        {
+            [Required]
+            [DataType(DataType.Password)]
+            public string Password { get; set; }
         }
     }
 }

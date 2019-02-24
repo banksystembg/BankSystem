@@ -6,9 +6,18 @@
 
 <div class="text-center w-md-75 w-lg-50 mx-auto my-4">
     <h2>@ViewData["Title"]</h2>
-    <p>To disable two-factor authentication, please press this button</p>
+    <p>To disable two-factor authentication, please enter your password</p>
     <hr/>
     <form method="post" class="form-group">
+        <div class="form-group">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" class="form-control"/>
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+        <a class="btn btn-outline-primary" asp-page="./Index">
+            <i class="fas fa-chevron-left"></i>
+            Cancel
+        </a>
         <button class="btn btn-danger" type="submit">Disable 2FA</button>
     </form>
 </div>

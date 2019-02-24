@@ -22,6 +22,8 @@ namespace BankSystem.Common
         public const string LogoutSuccessful = "Logged out successfully";
         public const string PasswordChangeSuccessful = "Password changed successfully";
         
+        public const string InvalidPassword = "Invalid password";        
+        
         public const string TwoFactorAuthenticationCodeInvalid = "Invalid code";
         public const string TwoFactorAuthenticationEnabled = "Two-factor authentication enabled successfully";
         public const string TwoFactorAuthenticationDisabled = "Two-factor authentication disabled successfully";
