@@ -1,5 +1,6 @@
 namespace BankSystem.Web.Controllers.MoneyTransfers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
@@ -63,6 +64,12 @@ namespace BankSystem.Web.Controllers.MoneyTransfers
 
             var account =
                 await this.bankAccountService.GetBankAccountAsync<BankAccountIndexServiceModel>(model.AccountId);
+            if (string.Equals(account.UniqueId, model.DestinationBankAccountUniqueId, StringComparison.InvariantCulture))
+            {
+                this.ShowErrorMessage(NotificationMessages.SameAccountsError);
+                model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+                return this.View(model);
+            }
             if (account.Balance < model.Amount)
             {
                 this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
@@ -70,9 +77,7 @@ namespace BankSystem.Web.Controllers.MoneyTransfers
                 return this.View(model);
             }
 
-            var destinationAccountId =
-                await this.bankAccountService.GetAccountIdAsync(model.DestinationBankAccountUniqueId);
-
+            var destinationAccountId = await this.bankAccountService.GetAccountIdAsync(model.DestinationBankAccountUniqueId);
             if (destinationAccountId == null)
             {
                 this.ShowErrorMessage(NotificationMessages.DestinationBankAccountDoesNotExist);
