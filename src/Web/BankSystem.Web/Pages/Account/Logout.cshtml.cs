@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Web.Areas.Identity.Pages.Account
+﻿namespace BankSystem.Web.Pages.Account
 {
     using System.Threading.Tasks;
     using BankSystem.Models;

@@ -1,4 +1,4 @@
-namespace BankSystem.Web.Areas.Identity.Pages
+namespace BankSystem.Web.Pages
 {
     using Common;
     using Microsoft.AspNetCore.Mvc;

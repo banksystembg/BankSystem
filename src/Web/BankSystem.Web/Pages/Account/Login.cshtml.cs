@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Web.Areas.Identity.Pages.Account
+﻿namespace BankSystem.Web.Pages.Account
 {
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
