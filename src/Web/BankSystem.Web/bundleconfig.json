@@ -15,7 +15,7 @@
       "wwwroot/source/vendor/js/bootstrap.js",
       "wwwroot/source/vendor/js/moment.js",
       "wwwroot/source/vendor/js/jquery.validate.js",
-      "wwwroot/source/vendor/js/jquery.validate.unobtrusive.js.js"
+      "wwwroot/source/vendor/js/jquery.validate.unobtrusive.js"
     ],
     "minify": {
       "enabled": true
