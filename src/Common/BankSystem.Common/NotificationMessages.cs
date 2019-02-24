@@ -17,5 +17,7 @@ namespace BankSystem.Common
         public const string SameAccountsError = "The account from which you are sending money and the destination account must be different!";
         
         public const string DestinationBankAccountDoesNotExist = "Destination bank account does not exist";
+
+        public const string LoginInvalidPassword = "Invalid username or password";
     }
 }
