@@ -7,19 +7,19 @@ namespace BankSystem.Web.Controllers.MoneyTransfers
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Models.InternalMoneyTransfers;
+    using Models.InternalMoneyTransfer;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
 
     [Authorize]
-    public class InternalMoneyTransfersController : BaseMoneyTransferController
+    public class InternalMoneyTransferController : BaseMoneyTransferController
     {
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
 
-        public InternalMoneyTransfersController(
+        public InternalMoneyTransferController(
             IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
             IUserService userService)

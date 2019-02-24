@@ -1,4 +1,4 @@
-namespace BankSystem.Web.Models.InternalMoneyTransfers
+namespace BankSystem.Web.Models.InternalMoneyTransfer
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;

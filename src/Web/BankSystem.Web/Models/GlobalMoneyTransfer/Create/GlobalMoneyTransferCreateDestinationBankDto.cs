@@ -1,8 +1,8 @@
-﻿namespace BankSystem.Web.Models.ForeignMoneyTransfers.Create
+﻿namespace BankSystem.Web.Models.GlobalMoneyTransfer.Create
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class ForeignMoneyTransferCreateDestinationBankDto
+    public class GlobalMoneyTransferCreateDestinationBankDto
     {
         [Required]
         [MaxLength(11)]
@@ -18,6 +18,6 @@
         public string Country { get; set; }
 
         [Required]
-        public ForeignMoneyTransferCreateDestinationAccountDto Account { get; set; }
+        public GlobalMoneyTransferCreateDestinationAccountDto Account { get; set; }
     }
 }
