@@ -1,0 +1,64 @@
+﻿@page
+@model EnableAuthenticatorModel
+@{
+    ViewData["Title"] = "Configure authenticator app";
+}
+
+<h4>@ViewData["Title"]</h4>
+<div>
+    <p>To use an authenticator app go through the following steps:</p>
+    <ol>
+        <li>
+            <p>
+                Download a two-factor authenticator app like Google Authenticator for
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Android</a> and
+                <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605">iOS</a>.
+            </p>
+        </li>
+        <li>
+            <p>Scan the QR Code or enter this key 
+                <kbd id="keyContainer" data-key="@Model.SharedKey"><a href="#" onclick="showKey()" class="text-white font-italic">click to show key</a></kbd>
+                into your two factor authenticator app. Spaces and casing do not matter.</p>
+            <div>
+                <div class="d-inline-block background-grey rounded p-2" id="qrCode"></div>
+            </div>
+        </li>
+        <li>
+            <p>
+                Once you have scanned the QR code or input the key above, your two factor authentication app will provide you
+                with a unique code. Enter the code in the confirmation box below.
+            </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <form id="send-code" method="post">
+                        <div class="form-group">
+                            <label asp-for="Input.Code" class="control-label">Verification Code</label>
+                            <input asp-for="Input.Code" class="form-control" autocomplete="off"/>
+                            <span asp-validation-for="Input.Code" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Verify</button>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    </form>
+                </div>
+            </div>
+        </li>
+    </ol>
+</div>
+
+@section Scripts
+{
+    <script src="~/bundle/qrcode.min.js" asp-append-version="true"></script>
+    <script>
+        new QRCode(document.getElementById('qrCode'),
+            {
+                text: '@Html.Raw(Model.AuthenticatorUri)',
+                width: 150,
+                height: 150
+            });
+
+        function showKey() {
+            let keyContainer = $('#keyContainer');
+            keyContainer.html(keyContainer.data('key'));
+        }
+    </script>
+}
