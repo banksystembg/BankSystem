@@ -10,8 +10,13 @@
         <hr class="w-75" />
         <div class="form-group">
             <label asp-for="AccountId"></label>
-            <select class="form-control custom-select" title="Select source account..."
-                    asp-for="AccountId" asp-items="Model.UserAccounts"></select>
+            <select class="form-control custom-select" asp-for="AccountId">
+                <option selected disabled>Select source account...</option>
+                @foreach (var account in Model.OwnAccounts)
+                {
+                    <option value="@account.Id">@account.Name - €@account.Balance.ToString("F2")</option>
+                }
+            </select>
             <span asp-validation-for="AccountId" class="text-danger"></span>
         </div>
         <div class="form-group">

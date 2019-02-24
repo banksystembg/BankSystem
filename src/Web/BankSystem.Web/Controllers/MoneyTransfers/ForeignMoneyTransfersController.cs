@@ -40,7 +40,7 @@
         public async Task<IActionResult> Create()
         {
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
-            var userAccounts = await this.GetAllUserAccountsAsync(userId);
+            var userAccounts = await this.GetAllAccountsAsync(userId);
             if (!userAccounts.Any())
             {
                 this.ShowErrorMessage(NotificationMessages.NoAccountsError);
@@ -49,7 +49,7 @@
 
             var model = new ForeignMoneyTransferCreateBindingModel
             {
-                UserAccounts = userAccounts,
+                OwnAccounts = userAccounts,
                 SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId),
             };
 
@@ -64,7 +64,7 @@
             model.SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId);
             if (!this.TryValidateModel(model))
             {
-                model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
+                model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
 
@@ -73,7 +73,7 @@
             if (account.Balance < model.Amount)
             {
                 this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
-                model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
+                model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
             // Contact central api

@@ -33,7 +33,7 @@ namespace BankSystem.Web.Controllers.MoneyTransfers
         public async Task<IActionResult> Create()
         {
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
-            var userAccounts = await this.GetAllUserAccountsAsync(userId);
+            var userAccounts = await this.GetAllAccountsAsync(userId);
 
             if (!userAccounts.Any())
             {
@@ -43,7 +43,7 @@ namespace BankSystem.Web.Controllers.MoneyTransfers
 
             var model = new InternalMoneyTransferCreateBindingModel
             {
-                UserAccounts = userAccounts
+                OwnAccounts = userAccounts
             };
 
             return this.View(model);
@@ -57,7 +57,7 @@ namespace BankSystem.Web.Controllers.MoneyTransfers
 
             if (!this.ModelState.IsValid)
             {
-                model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
+                model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
 
@@ -66,7 +66,7 @@ namespace BankSystem.Web.Controllers.MoneyTransfers
             if (account.Balance < model.Amount)
             {
                 this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
-                model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
+                model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
 
@@ -76,7 +76,7 @@ namespace BankSystem.Web.Controllers.MoneyTransfers
             if (destinationAccountId == null)
             {
                 this.ShowErrorMessage(NotificationMessages.DestinationBankAccountDoesNotExist);
-                model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
+                model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
 
@@ -87,7 +87,7 @@ namespace BankSystem.Web.Controllers.MoneyTransfers
             if (!await this.moneyTransferService.CreateMoneyTransferAsync(sourceServiceModel))
             {
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
-                model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
+                model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
 
@@ -98,7 +98,7 @@ namespace BankSystem.Web.Controllers.MoneyTransfers
             if (!await this.moneyTransferService.CreateMoneyTransferAsync(destinationServiceModel))
             {
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
-                model.UserAccounts = await this.GetAllUserAccountsAsync(userId);
+                model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
 
