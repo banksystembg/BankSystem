@@ -1,10 +1,10 @@
-﻿namespace BankSystem.Web.Models.ForeignMoneyTransfers
+﻿namespace BankSystem.Web.Models.GlobalMoneyTransfer
 {
     using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
     using Create;
 
-    public class ForeignMoneyTransferCentralApiBindingModel : IMapWith<ForeignMoneyTransferCreateBindingModel>
+    public class GlobalMoneyTransferCentralApiBindingModel : IMapWith<GlobalMoneyTransferCreateBindingModel>
     {
         [Required]
         public string DestinationBankSwiftCode { get; set; }

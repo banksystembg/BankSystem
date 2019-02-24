@@ -10,21 +10,21 @@
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Models.ForeignMoneyTransfers;
-    using Models.ForeignMoneyTransfers.Create;
+    using Models.GlobalMoneyTransfer;
+    using Models.GlobalMoneyTransfer.Create;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
 
     [Authorize]
-    public class ForeignMoneyTransfersController : BaseMoneyTransferController
+    public class GlobalMoneyTransferController : BaseMoneyTransferController
     {
         private readonly IBankConfigurationHelper bankConfigurationHelper;
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
 
-        public ForeignMoneyTransfersController(
+        public GlobalMoneyTransferController(
             IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
             IUserService userService,
@@ -47,7 +47,7 @@
                 return this.RedirectToHome();
             }
 
-            var model = new ForeignMoneyTransferCreateBindingModel
+            var model = new GlobalMoneyTransferCreateBindingModel
             {
                 OwnAccounts = userAccounts,
                 SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId),
@@ -58,7 +58,7 @@
 
         [HttpPost]
         [EnsureOwnership]
-        public async Task<IActionResult> Create(ForeignMoneyTransferCreateBindingModel model)
+        public async Task<IActionResult> Create(GlobalMoneyTransferCreateBindingModel model)
         {
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
             model.SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId);
@@ -112,14 +112,14 @@
             return this.RedirectToHome();
         }
 
-        private async Task<HttpResponseMessage> ContactCentralApiAsync(ForeignMoneyTransferCreateBindingModel model)
+        private async Task<HttpResponseMessage> ContactCentralApiAsync(GlobalMoneyTransferCreateBindingModel model)
         {
             var customHandler = new CustomDelegatingHandler(this.bankConfigurationHelper.CentralApiPublicKey, this.bankConfigurationHelper.Key,
                 WebConstants.BankName, this.bankConfigurationHelper.UniqueIdentifier);
             var client = HttpClientFactory.Create(customHandler);
 
             var senderAccountUniqueId = await this.bankAccountService.GetUserAccountUniqueId(model.AccountId);
-            var centralApiModel = Mapper.Map<ForeignMoneyTransferCentralApiBindingModel>(model);
+            var centralApiModel = Mapper.Map<GlobalMoneyTransferCentralApiBindingModel>(model);
             centralApiModel.SenderAccountUniqueId = senderAccountUniqueId;
             return await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveTransactions", centralApiModel);
         }

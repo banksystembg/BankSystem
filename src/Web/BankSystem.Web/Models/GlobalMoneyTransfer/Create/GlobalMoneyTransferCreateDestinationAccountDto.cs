@@ -1,8 +1,8 @@
-﻿namespace BankSystem.Web.Models.ForeignMoneyTransfers.Create
+﻿namespace BankSystem.Web.Models.GlobalMoneyTransfer.Create
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class ForeignMoneyTransferCreateDestinationAccountDto
+    public class GlobalMoneyTransferCreateDestinationAccountDto
     {
         [Required]
         [MaxLength(34)]

@@ -1,14 +1,14 @@
-﻿namespace BankSystem.Web.Models.ForeignMoneyTransfers.Create
+﻿namespace BankSystem.Web.Models.GlobalMoneyTransfer.Create
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using BankAccount;
     using MoneyTransfers;
 
-    public class ForeignMoneyTransferCreateBindingModel : IMoneyTransferCreateBindingModel
+    public class GlobalMoneyTransferCreateBindingModel : IMoneyTransferCreateBindingModel
     {
         [Required]
-        public ForeignMoneyTransferCreateDestinationBankDto DestinationBank { get; set; }
+        public GlobalMoneyTransferCreateDestinationBankDto DestinationBank { get; set; }
 
         [MaxLength(150)]
         [Display(Name = "Details of Payment")]
@@ -21,7 +21,7 @@
         [Required]
         [Display(Name = "From Account")]
         public string AccountId { get; set; }
-        
+
         [Display(Name = "Name")]
         public string SenderName { get; set; }
 

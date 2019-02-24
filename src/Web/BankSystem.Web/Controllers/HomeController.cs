@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Models.BankAccount;
-    using Models.ForeignMoneyTransfers;
+    using Models.GlobalMoneyTransfer;
     using Models.MoneyTransfers;
     using Services.Interfaces;
     using Services.Models.BankAccount;

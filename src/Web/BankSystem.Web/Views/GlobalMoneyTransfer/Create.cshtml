@@ -1,4 +1,4 @@
-﻿@model ForeignMoneyTransferCreateBindingModel
+﻿@model GlobalMoneyTransferCreateBindingModel
 @{
     ViewData["Title"] = "Create foreign money transfer";
 }
@@ -15,7 +15,6 @@
                 </div>
                 <div class="col-sm-10">
                     <select class="form-control custom-select" asp-for="AccountId">
-                        <option selected disabled>Select source account...</option>
                         @foreach (var account in Model.OwnAccounts)
                         {
                             <option value="@account.Id">@account.Name - €@account.Balance.ToString("F2")</option>
