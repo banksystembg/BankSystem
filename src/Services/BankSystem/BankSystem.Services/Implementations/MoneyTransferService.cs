@@ -23,9 +23,10 @@
             => await this.Context
                 .Transfers
                 .Where(mt => mt.Account.UserId == userId)
-                .ProjectTo<T>()
+                .OrderByDescending(mt => mt.MadeOn)
                 .Take(10)
-                .ToListAsync();
+                .ProjectTo<T>()
+                .ToArrayAsync();
 
         public async Task<bool> CreateMoneyTransferAsync<T>(T model)
             where T : MoneyTransferBaseServiceModel
