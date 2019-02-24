@@ -21,8 +21,18 @@
         </div>
         <div class="form-group">
             <label asp-for="DestinationBankAccountUniqueId"></label>
-            <input class="form-control" asp-for="DestinationBankAccountUniqueId" />
+            <input class="form-control" asp-for="DestinationBankAccountUniqueId" id="destination"/>
             <span asp-validation-for="DestinationBankAccountUniqueId" class="text-danger"></span>
+            @if (Model.OwnAccounts.Count() > 1)
+            {
+                <select class="form-control custom-select mt-3 text-muted" id="ownAccountPicker">
+                    <option selected disabled>...or choose another one of your accounts</option>
+                    @foreach (var account in Model.OwnAccounts)
+                    {
+                        <option value="@account.UniqueId">@account.Name - €@account.Balance.ToString("F2")</option>
+                    }
+                </select>
+            }
         </div>
         <div class="form-group">
             <label asp-for="Amount"></label>
@@ -48,3 +58,19 @@
         </div>
     </form>
 </div>
+
+@section Scripts
+{
+    @if (Model.OwnAccounts.Count() > 1)
+    {
+        <script>
+            $('#ownAccountPicker').change(function() {
+                $('#destination').val(this.value);
+            });
+
+            $('#destination').change(function() {
+                $("#ownAccountPicker")[0].selectedIndex = 0;
+            });
+        </script>
+    }
+}
