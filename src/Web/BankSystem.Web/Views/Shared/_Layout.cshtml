@@ -132,6 +132,41 @@
             </div>
         }
 
+        @if (TempData[GlobalConstants.TempDataNoTwoFactorKey] as bool? == true)
+        {
+            <div class="modal fade" id="noTwoFactorModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered show" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Two-factor authentication is disabled</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Enabling two-factor authentication enhances the security of your account
+                            and protects it better from hackers, and is highly recommended.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link mr-auto text-muted" data-dismiss="modal"
+                                    onclick="noTwoFactorModalDoNotShow()">
+                                Do not show for 30 days
+                            </button>
+
+                            <button type="button" class="btn btn-outline-primary d-none d-md-inline-block"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+
+                            <a asp-page="/Account/Settings/Enable2fa" class="btn btn-primary">
+                                Enable now
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </header>
     <div class="container">
         <main role="main" class="py-4">
@@ -141,6 +176,17 @@
 
     <script src="~/bundle/vendor.min.js" asp-append-version="true"></script>
     <script src="~/bundle/main.min.js" asp-append-version="true"></script>
+
+    @if (TempData[GlobalConstants.TempDataNoTwoFactorKey] as bool? == true)
+    {
+        <script>
+            $('#noTwoFactorModal').modal('show');
+
+            function noTwoFactorModalDoNotShow() {
+                document.cookie = '@GlobalConstants.IgnoreTwoFactorWarningCookie=yes; Max-Age=2592000; Secure';
+            }
+        </script>
+    }
 
     @RenderSection("Scripts", required: false)
 </body>

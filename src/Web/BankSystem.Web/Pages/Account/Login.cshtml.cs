@@ -27,9 +27,6 @@
 
         public string ReturnUrl { get; set; }
 
-        [TempData]
-        public string ErrorMessage { get; set; }
-
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? this.Url.Content("~/");
@@ -37,11 +34,6 @@
             if (this.User.Identity.IsAuthenticated)
             {
                 return this.LocalRedirect(returnUrl);
-            }
-
-            if (!string.IsNullOrEmpty(this.ErrorMessage))
-            {
-                this.ModelState.AddModelError(string.Empty, this.ErrorMessage);
             }
 
             // Clear the existing external cookie to ensure a clean login process
@@ -79,6 +71,13 @@
                 this.ShowErrorMessage(NotificationMessages.LoginInvalidPassword);
 
                 return this.Page();
+            }
+
+            var user = await this.signInManager.UserManager.FindByNameAsync(this.Input.Email);
+
+            if (!user.TwoFactorEnabled && !this.Request.Cookies.ContainsKey(GlobalConstants.IgnoreTwoFactorWarningCookie))
+            {
+                this.TempData.Add(GlobalConstants.TempDataNoTwoFactorKey, true);
             }
 
             this.logger.LogInformation("User logged in.");
