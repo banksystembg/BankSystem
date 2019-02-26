@@ -6,7 +6,7 @@
 
 <div class="mx-auto my-4 text-center pb-3">
     <h2>@ViewData["Title"]</h2>
-    <div class="card card-body pt-4 pb-5 mt-4 mb-5 w-md-75 mx-auto shadow">
+    <div class="card card-body floating-card pt-4 pb-5 mt-4 mb-5 w-md-75 mx-auto shadow">
         <i class="fas fa-user fa-3x mb-4 text-primary"></i>
         <h1>@Model.FullName</h1>
         <h4 class="text-muted">@Model.Email</h4>
@@ -14,7 +14,7 @@
             <i class="far fa-edit"></i> Change password
         </a>
     </div>
-    <div class="card card-body py-4 mt-4 w-md-50 w-lg-25 mx-auto shadow">
+    <div class="card card-body floating-card py-4 mt-4 w-md-50 w-lg-25 mx-auto shadow">
         <i class="fas fa-key fa-3x mb-3 text-secondary"></i>
         <h3>Two-factor authentication</h3>
         @if (Model.TwoFactorEnabled)
