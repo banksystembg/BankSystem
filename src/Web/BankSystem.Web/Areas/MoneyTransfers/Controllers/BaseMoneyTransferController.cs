@@ -1,12 +1,15 @@
-namespace BankSystem.Web.Controllers.MoneyTransfers
+namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Models.BankAccount;
+    using Microsoft.AspNetCore.Mvc;
     using Services.Interfaces;
     using Services.Models.BankAccount;
+    using Web.Controllers;
+    using Web.Models.BankAccount;
 
+    [Area("MoneyTransfers")]
     public abstract class BaseMoneyTransferController : BaseController
     {
         private readonly IBankAccountService bankAccountService;

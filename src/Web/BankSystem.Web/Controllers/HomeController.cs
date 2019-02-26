@@ -3,16 +3,17 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
+    using Areas.MoneyTransfers.Models;
     using AutoMapper;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Models.BankAccount;
-    using Models.GlobalMoneyTransfer;
-    using Models.MoneyTransfers;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
 
+    [AllowAnonymous]
     public class HomeController : BaseController
     {
         private readonly IBankAccountService bankAccountService;

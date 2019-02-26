@@ -15,7 +15,7 @@
                     @* TODO: Add link when it's implemented *@
                 </div>
                 <div class="card-footer">
-                    <a asp-controller="InternalMoneyTransfer" asp-action="Create" class="btn btn-primary align-bottom stretched-link">Create new payment</a>
+                    <a asp-area="MoneyTransfers" asp-controller="Internal" asp-action="Create" class="btn btn-primary align-bottom stretched-link">Create new payment</a>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                     <p class="card-text">Payment transfer to a bank in the country or abroad.</p>
                 </div>
                 <div class="card-footer">
-                    <a asp-controller="GlobalMoneyTransfer" asp-action="Create" class="btn btn-primary align-bottom stretched-link">Create new payment</a>
+                    <a asp-area="MoneyTransfers" asp-controller="Global" asp-action="Create" class="btn btn-primary align-bottom stretched-link">Create new payment</a>
                 </div>
             </div>
         </div>

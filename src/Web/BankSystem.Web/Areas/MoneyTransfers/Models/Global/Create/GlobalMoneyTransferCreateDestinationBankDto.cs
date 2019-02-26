@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Web.Models.GlobalMoneyTransfer.Create
+﻿namespace BankSystem.Web.Areas.MoneyTransfers.Models.Global.Create
 {
     using System.ComponentModel.DataAnnotations;
 

@@ -1,13 +1,13 @@
 ﻿namespace BankSystem.Web.Infrastructure.Filters
 {
     using System.Linq;
+    using Areas.MoneyTransfers.Models;
     using BankSystem.Models;
     using Data;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.EntityFrameworkCore;
-    using Models.MoneyTransfers;
 
     public class EnsureOwnership : ActionFilterAttribute
     {

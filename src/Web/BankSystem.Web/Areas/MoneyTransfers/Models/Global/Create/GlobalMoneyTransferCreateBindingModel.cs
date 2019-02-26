@@ -1,9 +1,8 @@
-﻿namespace BankSystem.Web.Models.GlobalMoneyTransfer.Create
+﻿namespace BankSystem.Web.Areas.MoneyTransfers.Models.Global.Create
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using BankAccount;
-    using MoneyTransfers;
+    using Web.Models.BankAccount;
 
     public class GlobalMoneyTransferCreateBindingModel : IMoneyTransferCreateBindingModel
     {

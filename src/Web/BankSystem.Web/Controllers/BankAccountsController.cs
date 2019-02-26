@@ -3,13 +3,11 @@ namespace BankSystem.Web.Controllers
     using System.Threading.Tasks;
     using AutoMapper;
     using Common;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Models.BankAccount;
     using Services.Interfaces;
     using Services.Models.BankAccount;
 
-    [Authorize]
     public class BankAccountsController : BaseController
     {
         private readonly IBankAccountService bankAccountService;

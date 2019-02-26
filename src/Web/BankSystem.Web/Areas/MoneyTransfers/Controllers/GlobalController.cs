@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Web.Controllers.MoneyTransfers
+﻿namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
     using System;
     using System.IO;
@@ -9,23 +9,21 @@
     using Common;
     using Common.Utils.CustomHandlers;
     using Infrastructure.Filters;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Models.GlobalMoneyTransfer;
-    using Models.GlobalMoneyTransfer.Create;
+    using Models.Global;
+    using Models.Global.Create;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
 
-    [Authorize]
-    public class GlobalMoneyTransferController : BaseMoneyTransferController
+    public class GlobalController : BaseMoneyTransferController
     {
         private readonly IBankConfigurationHelper bankConfigurationHelper;
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
 
-        public GlobalMoneyTransferController(
+        public GlobalController(
             IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
             IUserService userService,
