@@ -53,7 +53,6 @@
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
                 })
-                .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<BankSystemDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -62,6 +61,8 @@
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 options.SlidingExpiration = true;
+                options.LoginPath = "/account/login";
+                options.LogoutPath = "/account/logout";
             });
 
             services

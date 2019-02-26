@@ -30,29 +30,30 @@
             this.moneyTransferService = moneyTransferService;
         }
 
+
         public async Task<IActionResult> Index()
         {
-            if (this.User.Identity.IsAuthenticated)
+            if (!this.User.Identity.IsAuthenticated)
             {
-                var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
-                var bankAccounts = (await this.bankAccountService.GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId))
-                    .Select(Mapper.Map<BankAccountIndexViewModel>)
-                    .ToArray();
-                var moneyTransfers = (await this.moneyTransferService
-                        .GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(userId))
-                    .Select(Mapper.Map<MoneyTransferListingViewModel>)
-                    .ToArray();
-
-                var viewModel = new HomeViewModel
-                {
-                    UserBankAccounts = bankAccounts,
-                    MoneyTransfers = moneyTransfers,
-                };
-                return this.View(viewModel);
+                return this.View("IndexGuest");
             }
 
-            return this.View("IndexGuest");
+            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            var bankAccounts =
+                (await this.bankAccountService.GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId))
+                .Select(Mapper.Map<BankAccountIndexViewModel>)
+                .ToArray();
+            var moneyTransfers = (await this.moneyTransferService
+                    .GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(userId))
+                .Select(Mapper.Map<MoneyTransferListingViewModel>)
+                .ToArray();
 
+            var viewModel = new HomeViewModel
+            {
+                UserBankAccounts = bankAccounts,
+                MoneyTransfers = moneyTransfers,
+            };
+            return this.View(viewModel);
         }
 
         public IActionResult Privacy()

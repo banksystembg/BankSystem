@@ -1,0 +1,77 @@
+﻿@page
+@model Enable2faModel
+@{
+    ViewData["Title"] = "Configure authenticator app";
+}
+
+<div class="w-md-75 w-lg-50 mx-auto my-4">
+    <h3 class="text-center">@ViewData["Title"]</h3>
+    <hr/>
+    <p>To use an authenticator app go through the following steps:</p>
+    <form id="send-code" method="post">
+        <ol>
+            <li>
+                <p>
+                    Download a two-factor authenticator app like Google Authenticator for
+                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Android</a> and
+                    <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605">iOS</a>.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Scan the QR Code or enter this key
+                    <kbd id="keyContainer" data-key="@Model.SharedKey"><a href="#" onclick="showKey()" class="text-white font-italic">click to show key</a></kbd>
+                    into your two factor authenticator app. Spaces and casing do not matter.
+                </p>
+                <div class="text-center">
+                    <div class="d-inline-block background-grey rounded p-2" id="qrCode"></div>
+                </div>
+            </li>
+            <li>
+                <p>
+                    Once you have scanned the QR code or input the key above, your two factor authentication app will provide you
+                    with a unique code. Enter the code in the confirmation box below.
+                </p>
+                <div class="form-group">
+                    <label asp-for="Input.Code" class="control-label">Verification Code</label>
+                    <input asp-for="Input.Code" class="form-control" autocomplete="off"/>
+                    <span asp-validation-for="Input.Code" class="text-danger"></span>
+                </div>
+            </li>
+            <li>
+                <p class="mt-5">To confirm your identity, please enter your password.</p>
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control"/>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="text-center">
+                    <a class="btn btn-outline-secondary" asp-page="./Index">
+                        <i class="fas fa-chevron-left"></i>
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">Enable 2FA</button>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                </div>
+            </li>
+        </ol>
+    </form>
+</div>
+
+@section Scripts
+{
+    <script src="~/bundle/qrcode.min.js" asp-append-version="true"></script>
+    <script>
+        new QRCode(document.getElementById('qrCode'),
+            {
+                text: '@Html.Raw(Model.AuthenticatorUri)',
+                width: 150,
+                height: 150
+            });
+
+        function showKey() {
+            let keyContainer = $('#keyContainer');
+            keyContainer.html(keyContainer.data('key'));
+        }
+    </script>
+}

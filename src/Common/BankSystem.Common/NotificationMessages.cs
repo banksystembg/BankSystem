@@ -17,5 +17,15 @@ namespace BankSystem.Common
         public const string SameAccountsError = "The account from which you are sending money and the destination account must be different!";
         
         public const string DestinationBankAccountDoesNotExist = "Destination bank account does not exist";
+
+        public const string LoginInvalidPassword = "Invalid username or password";
+        public const string PasswordChangeSuccessful = "Password changed successfully";
+        
+        public const string InvalidPassword = "Invalid password";        
+        
+        public const string TwoFactorAuthenticationCodeInvalid = "Invalid code";
+        public const string TwoFactorAuthenticationEnabled = "Two-factor authentication enabled successfully";
+        public const string TwoFactorAuthenticationDisabled = "Two-factor authentication disabled successfully";
+        public const string TwoFactorAuthenticationDisableError = "An error occured while disabling two-factor authentication";
     }
 }
