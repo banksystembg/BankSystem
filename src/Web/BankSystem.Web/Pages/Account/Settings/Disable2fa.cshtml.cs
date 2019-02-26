@@ -68,6 +68,18 @@
                 return this.Page();
             }
 
+            string verificationCode = this.Input.Code.Replace(" ", string.Empty)
+                .Replace("-", string.Empty);
+
+            bool isTokenValid = await this.userManager.VerifyTwoFactorTokenAsync(user,
+                this.userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+
+            if (!isTokenValid)
+            {
+                this.ShowErrorMessage(NotificationMessages.TwoFactorAuthenticationCodeInvalid);
+                return this.Page();
+            }
+
             var disable2FaResult = await this.userManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2FaResult.Succeeded)
             {
@@ -87,6 +99,13 @@
 
         public class InputModel
         {
+            [Required]
+            [StringLength(7, ErrorMessage = "The {0} must be 6 digits long",
+                MinimumLength = 6)]
+            [DataType(DataType.Text)]
+            [Display(Name = "Verification Code")]
+            public string Code { get; set; }
+
             [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
