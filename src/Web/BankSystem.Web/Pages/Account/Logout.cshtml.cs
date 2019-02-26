@@ -40,7 +40,6 @@
             await this.signInManager.SignOutAsync();
             this.logger.LogInformation("User logged out.");
 
-            this.ShowSuccessMessage(NotificationMessages.LogoutSuccessful);
             return this.RedirectToHome();
         }
     }

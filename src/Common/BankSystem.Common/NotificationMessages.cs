@@ -19,7 +19,6 @@ namespace BankSystem.Common
         public const string DestinationBankAccountDoesNotExist = "Destination bank account does not exist";
 
         public const string LoginInvalidPassword = "Invalid username or password";
-        public const string LogoutSuccessful = "Logged out successfully";
         public const string PasswordChangeSuccessful = "Password changed successfully";
         
         public const string InvalidPassword = "Invalid password";        
