@@ -89,7 +89,7 @@
             this.logger.LogInformation("User changed their password successfully.");
 
             this.ShowSuccessMessage(NotificationMessages.PasswordChangeSuccessful);
-            return this.RedirectToPage();
+            return this.RedirectToPage("./Index");
         }
     }
 }
