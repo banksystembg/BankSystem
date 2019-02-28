@@ -1,0 +1,49 @@
+﻿@model IEnumerable<MoneyTransferListingViewModel>
+@{
+    ViewData["Title"] = "All payments";
+}
+
+<div class="container">
+    @if (!Model.Any())
+    {
+        <h3>No money transfers have been made from this account</h3>
+    }
+    else
+    {
+        <h3>All payments from all accounts</h3>
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>Details</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var moneyTransfer in Model)
+                {
+                    <tr>
+                        <td>@moneyTransfer.Description</td>
+                        <td>
+                            <p>@moneyTransfer.AccountUserFullName</p>
+                            <p>@moneyTransfer.Source</p>
+                        </td>
+                        <td>@moneyTransfer.Destination</td>
+                        @if (moneyTransfer.Amount < 0)
+                        {
+                            <td class="text-red">@moneyTransfer.Amount EUR</td>
+                        }
+                        else
+                        {
+                            <td class="text-green">+@moneyTransfer.Amount EUR</td>
+                        }
+                        <td class="text-green">@moneyTransfer.Amount.ToString().TrimStart('-') EUR</td>
+                        <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

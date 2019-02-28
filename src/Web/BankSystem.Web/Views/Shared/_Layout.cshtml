@@ -28,19 +28,6 @@
                         <ul class="navbar-nav mx-auto text-uppercase">
                             <li class="nav-item dropdown auto-dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button">
-                                    Your Accounts
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item">
-                                        Account Balance
-                                    </a>
-                                    <a class="dropdown-item">
-                                        Account Statements in PDF
-                                    </a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown auto-dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button">
                                     Cards
                                 </a>
                                 <div class="dropdown-menu">
@@ -60,7 +47,7 @@
                                     <a asp-page="/MoneyTransfers" class="dropdown-item">
                                         New Payment
                                     </a>
-                                    <a class="dropdown-item">
+                                    <a asp-area="MoneyTransfers" asp-controller="Home" asp-action="All" class="dropdown-item">
                                         Archives
                                     </a>
                                 </div>
