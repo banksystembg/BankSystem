@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12 col-md-8">
-            <h3>All Transactions</h3>
+            <h3>Last 10 transactions</h3>
             <table class="table table-hover table-bordered">
                 <thead>
                     <tr>
@@ -44,8 +44,7 @@
                     @foreach (var account in Model.UserBankAccounts)
                     {
                         <div class="row">
-                            @* TODO: Redirect to my accounts details when we implement it *@
-                            <p class="col-6 card-text"><a href="">@account.Name</a></p>
+                            <p class="col-6 card-text"><a asp-controller="BankAccounts" asp-action="Details" asp-route-id="@account.Id">@account.Name</a></p>
                             <p class="col-6 card-text text-green text-right">€@account.Balance</p>
                         </div>
                     }
