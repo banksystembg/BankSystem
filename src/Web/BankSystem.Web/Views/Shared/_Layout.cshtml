@@ -183,7 +183,7 @@
             $('#noTwoFactorModal').modal('show');
 
             function noTwoFactorModalDoNotShow() {
-                document.cookie = '@GlobalConstants.IgnoreTwoFactorWarningCookie=yes; Max-Age=2592000; Secure';
+                document.cookie = `@GlobalConstants.IgnoreTwoFactorWarningCookie=yes; Max-Age=2592000;`;
             }
         </script>
     }
