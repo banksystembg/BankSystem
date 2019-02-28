@@ -6,6 +6,9 @@
 
     public interface IMoneyTransferService
     {
+        Task<IEnumerable<T>> GetAllMoneyTransfersForAccountAsync<T>(string accountId)
+            where T : MoneyTransferBaseServiceModel;
+
         Task<IEnumerable<T>> GetLast10MoneyTransfersForUserAsync<T>(string userId)
             where T : MoneyTransferBaseServiceModel;
 
