@@ -73,3 +73,17 @@ html {
     -webkit-transform: translate(0, -5px);
     transform: translate(0, -5px);
 }
+
+.error-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 80vh;
+}
+
+.error-box .error-heading{
+    color: dimgray;
+    font-size: 5em;
+}

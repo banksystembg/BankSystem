@@ -109,7 +109,7 @@
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/error/500");
                 app.UseHsts();
             }
 
@@ -130,6 +130,8 @@
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
 
             app.UseMvc(routes =>
             {
