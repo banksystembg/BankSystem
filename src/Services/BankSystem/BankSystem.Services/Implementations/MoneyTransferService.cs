@@ -18,6 +18,15 @@
         {
         }
 
+        public async Task<IEnumerable<T>> GetAllMoneyTransfersAsync<T>(string userId)
+            where T : MoneyTransferBaseServiceModel
+            => await this.Context
+                .Transfers
+                .Where(t => t.Account.UserId == userId)
+                .OrderByDescending(mt => mt.MadeOn)
+                .ProjectTo<T>()
+                .ToArrayAsync();
+
         public async Task<IEnumerable<T>> GetAllMoneyTransfersForAccountAsync<T>(string accountId)
             where T : MoneyTransferBaseServiceModel
             => await this.Context
