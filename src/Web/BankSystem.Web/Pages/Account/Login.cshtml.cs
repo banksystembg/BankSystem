@@ -59,13 +59,19 @@
             }
 
             var result = await this.signInManager.PasswordSignInAsync(this.Input.Email, this.Input.Password,
-                false, false);
+                false, true);
 
             if (!result.Succeeded)
             {
                 if (result.RequiresTwoFactor)
                 {
                     return this.RedirectToPage("./LoginWith2fa", new {ReturnUrl = returnUrl, RememberMe = false});
+                }
+
+                if (result.IsLockedOut)
+                {
+                    this.ShowErrorMessage(NotificationMessages.LoginLockedOut);
+                    return this.Page();
                 }
 
                 this.ShowErrorMessage(NotificationMessages.LoginInvalidPassword);

@@ -20,9 +20,11 @@ namespace BankSystem.Common
 
         public const string LoginInvalidPassword = "Invalid username or password";
         public const string PasswordChangeSuccessful = "Password changed successfully";
-        
-        public const string InvalidPassword = "Invalid password";        
-        
+
+        public const string InvalidPassword = "Invalid password";
+        public const string LoginLockedOut = 
+            "Your account is locked because of too many invalid login attempts. Please try again in a few minutes.";
+
         public const string TwoFactorAuthenticationCodeInvalid = "Invalid code";
         public const string TwoFactorAuthenticationEnabled = "Two-factor authentication enabled successfully";
         public const string TwoFactorAuthenticationDisabled = "Two-factor authentication disabled successfully";

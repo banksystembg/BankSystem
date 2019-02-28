@@ -69,6 +69,14 @@
 
             if (!result.Succeeded)
             {
+                if (result.IsLockedOut)
+                {
+                    await this.signInManager.SignOutAsync();
+
+                    this.ShowErrorMessage(NotificationMessages.LoginLockedOut);
+                    return this.RedirectToPage("./Login");
+                }
+
                 this.logger.LogWarning("Invalid authenticator code entered while logging in");
 
                 this.ShowErrorMessage(NotificationMessages.TwoFactorAuthenticationCodeInvalid);
