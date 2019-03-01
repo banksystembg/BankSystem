@@ -19,23 +19,24 @@
                 <tbody>
                     @foreach (var moneyTransfer in Model.MoneyTransfers)
                     {
-                    <tr>
-                        <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
-                        <td>@moneyTransfer.Description</td>
-                        <td>@moneyTransfer.Source</td>
-                        <td>@moneyTransfer.Destination</td>
-                        @if (moneyTransfer.Amount < 0)
-                        {
-                            <td class="text-red">@moneyTransfer.Amount EUR</td>
-                        }
-                        else
-                        {
-                            <td class="text-green">+@moneyTransfer.Amount EUR</td>
-                        }
-                    </tr>
+                        <tr>
+                            <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
+                            <td>@moneyTransfer.Description</td>
+                            <td>@moneyTransfer.Source</td>
+                            <td>@moneyTransfer.Destination</td>
+                            @if (moneyTransfer.Amount < 0)
+                            {
+                                <td class="text-red">@moneyTransfer.Amount EUR</td>
+                            }
+                            else
+                            {
+                                <td class="text-green">+@moneyTransfer.Amount EUR</td>
+                            }
+                        </tr>
                     }
                 </tbody>
             </table>
+            <a asp-area="MoneyTransfers" asp-controller="Home" asp-action="All" class="btn btn-outline-primary">View all transactions</a>
         </div>
         <div class="col-12 col-md-4">
             <div class="card mb-3">
@@ -48,7 +49,7 @@
                             <p class="col-6 card-text text-green text-right">€@account.Balance</p>
                         </div>
                     }
-                    
+
                     <a class="btn btn-primary float-right" asp-controller="BankAccounts" asp-action="Create">Create new account</a>
                 </div>
             </div>
