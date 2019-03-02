@@ -29,6 +29,12 @@
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
+            // Session has expired
+            if (returnUrl != null)
+            {
+                this.ShowErrorMessage(NotificationMessages.SessionExpired);
+            }
+
             returnUrl = returnUrl ?? this.Url.Content("~/");
 
             if (this.User.Identity.IsAuthenticated)
@@ -65,7 +71,7 @@
             {
                 if (result.RequiresTwoFactor)
                 {
-                    return this.RedirectToPage("./LoginWith2fa", new {ReturnUrl = returnUrl, RememberMe = false});
+                    return this.RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = false });
                 }
 
                 if (result.IsLockedOut)
