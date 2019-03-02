@@ -29,5 +29,7 @@ namespace BankSystem.Common
         public const string TwoFactorAuthenticationEnabled = "Two-factor authentication enabled successfully";
         public const string TwoFactorAuthenticationDisabled = "Two-factor authentication disabled successfully";
         public const string TwoFactorAuthenticationDisableError = "An error occured while disabling two-factor authentication";
+
+        public const string SessionExpired = "Session has expired. Please log in again.";
     }
 }
