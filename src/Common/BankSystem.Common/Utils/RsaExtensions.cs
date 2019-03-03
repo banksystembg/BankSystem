@@ -2,6 +2,7 @@
 {
     using System;
     using System.Security.Cryptography;
+    using System.Text;
     using System.Xml;
 
     public static class RsaExtensions
@@ -54,19 +55,27 @@
             rsa.ImportParameters(parameters);
         }
 
-        public static string ToXmlString(this RSA rsa)
+        public static string ToXmlString(this RSA rsa, bool includePrivateParameters)
         {
-            var parameters = rsa.ExportParameters(true);
+            var rsaParams = rsa.ExportParameters(includePrivateParameters);
+            var sb = new StringBuilder();
 
-            return string.Format("<RSAKeyValue><Modulus>{0}</Modulus><Exponent>{1}</Exponent><P>{2}</P><Q>{3}</Q><DP>{4}</DP><DQ>{5}</DQ><InverseQ>{6}</InverseQ><D>{7}</D></RSAKeyValue>",
-                Convert.ToBase64String(parameters.Modulus),
-                Convert.ToBase64String(parameters.Exponent),
-                Convert.ToBase64String(parameters.P),
-                Convert.ToBase64String(parameters.Q),
-                Convert.ToBase64String(parameters.DP),
-                Convert.ToBase64String(parameters.DQ),
-                Convert.ToBase64String(parameters.InverseQ),
-                Convert.ToBase64String(parameters.D));
+            sb.Append("<RSAKeyValue>");
+            sb.Append("<Modulus>" + Convert.ToBase64String(rsaParams.Modulus) + "</Modulus>");
+            sb.Append("<Exponent>" + Convert.ToBase64String(rsaParams.Exponent) + "</Exponent>");
+
+            if (includePrivateParameters)
+            {
+                sb.Append("<P>" + Convert.ToBase64String(rsaParams.P) + "</P>");
+                sb.Append("<Q>" + Convert.ToBase64String(rsaParams.Q) + "</Q>");
+                sb.Append("<DP>" + Convert.ToBase64String(rsaParams.DP) + "</DP>");
+                sb.Append("<DQ>" + Convert.ToBase64String(rsaParams.DQ) + "</DQ>");
+                sb.Append("<InverseQ>" + Convert.ToBase64String(rsaParams.InverseQ) + "</InverseQ>");
+                sb.Append("<D>" + Convert.ToBase64String(rsaParams.D) + "</D>");
+            }
+
+            sb.Append("</RSAKeyValue>");
+            return (sb.ToString());
         }
     }
 }
