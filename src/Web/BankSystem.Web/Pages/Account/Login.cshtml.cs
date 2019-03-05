@@ -80,7 +80,7 @@
                     return this.Page();
                 }
 
-                this.ShowErrorMessage(NotificationMessages.LoginInvalidPassword);
+                this.ShowErrorMessage(NotificationMessages.InvalidCredentials);
 
                 return this.Page();
             }
