@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using Models;
 
     [AllowAnonymous]
     public class RegisterModel : BasePageModel
@@ -27,6 +28,9 @@
 
         [BindProperty]
         public InputModel Input { get; set; }
+
+        [BindProperty]
+        public ReCaptchaModel Recaptcha { get; set; }
 
         public string ReturnUrl { get; set; }
 
@@ -104,6 +108,10 @@
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+        }
+
+        public class ReCaptchaModel : BaseReCaptchaModel
+        {
         }
     }
 }
