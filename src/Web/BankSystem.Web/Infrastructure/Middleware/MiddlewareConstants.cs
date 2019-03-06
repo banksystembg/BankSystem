@@ -28,11 +28,6 @@
             public const string AllowFromUri = "ALLOW-FROM {0}";
         }
 
-        public class Server
-        {
-            public const string Header = "Server";
-        }
-
         public class XssProtection
         {
             public const string Header = "X-XSS-Protection";
