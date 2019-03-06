@@ -8,6 +8,7 @@
     using Common.Utils;
     using Data;
     using Infrastructure;
+    using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;

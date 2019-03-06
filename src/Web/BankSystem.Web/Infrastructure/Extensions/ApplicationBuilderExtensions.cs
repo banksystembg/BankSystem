@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Web.Infrastructure
+﻿namespace BankSystem.Web.Infrastructure.Extensions
 {
     using Data;
     using Microsoft.AspNetCore.Builder;
