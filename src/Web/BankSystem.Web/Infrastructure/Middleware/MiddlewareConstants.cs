@@ -1,26 +1,26 @@
 ﻿namespace BankSystem.Web.Infrastructure.Middleware
 {
-    public class MiddlewareConstants
+    public static class MiddlewareConstants
     {
-        public class ContentTypeOptions
+        public static class ContentTypeOptions
         {
             public const string Header = "X-Content-Type-Options";
             public const string NoSniff = "nosniff";
         }
 
-        public class FeaturePolicy
+        public static class FeaturePolicy
         {
             public const string Header = "Feature-Policy";
             public const string Ignore = "microphone 'none'; geolocation 'none'; camera 'none'";
         }
 
-        public class ReferrerPolicy
+        public static class ReferrerPolicy
         {
             public const string Header = "Referrer-Policy";
             public const string NoReferrer = "no-referrer";
         }
 
-        public class FrameOptions
+        public static class FrameOptions
         {
             public const string Header = "X-Frame-Options";
             public const string Deny = "DENY";
@@ -28,7 +28,7 @@
             public const string AllowFromUri = "ALLOW-FROM {0}";
         }
 
-        public class XssProtection
+        public static class XssProtection
         {
             public const string Header = "X-XSS-Protection";
             public const string Enabled = "1";
