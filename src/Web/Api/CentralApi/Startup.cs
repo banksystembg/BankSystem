@@ -31,7 +31,7 @@
             services.AddDbContext<CentralApiDbContext>(options =>
                 options.UseSqlServer(
                     this.Configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IBanksService, BankService>();
+            services.AddScoped<IBanksService, BanksService>();
 
             services.Configure<CentralApiConfiguration>(
                 this.Configuration.GetSection(nameof(CentralApiConfiguration)));

@@ -10,9 +10,9 @@
     using Microsoft.EntityFrameworkCore;
     using Models.Banks;
 
-    public class BankService : BaseService, IBanksService
+    public class BanksService : BaseService, IBanksService
     {
-        public BankService(CentralApiDbContext context)
+        public BanksService(CentralApiDbContext context)
             : base(context)
         {
         }
