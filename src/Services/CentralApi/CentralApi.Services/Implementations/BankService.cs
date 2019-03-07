@@ -48,7 +48,7 @@
             where T : BankBaseServiceModel
         {
             return await this.Context.Banks
-                .Where(b => b.Id != id)
+                .Where(b => b.Id == id)
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
         }

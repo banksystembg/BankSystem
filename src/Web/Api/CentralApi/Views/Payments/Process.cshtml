@@ -1,0 +1,32 @@
+@model PaymentSelectBankViewModel
+
+@{
+    ViewData["Title"] = "Payment Gateway";
+}
+
+<div class="text-center mx-auto w-75 my-4">
+    <h3>@ViewData["Title"]</h3>
+    <hr/>
+
+    <h4>Amount: €@Model.Amount.ToString("f2")</h4>
+    <h4>Description: @Model.Description</h4>
+
+    <form method="post" class="card mt-4">
+        <div class="card-header">
+            <h5>To continue, please select your bank</h5>
+        </div>
+        <div class="list-group list-group-flush text-left">
+            @foreach (var bank in Model.Banks)
+            {
+                <button type="submit" class="list-group-item list-group-item-action"
+                        name="bankId" value="@bank.Id">
+                    <div class="d-flex w-100 justify-content-between">
+                        <p class="text-muted">@bank.Location</p>
+                        <small class="text-muted">@bank.SwiftCode</small>
+                    </div>
+                    <h5>@bank.Name</h5>
+                </button>
+            }
+        </div>
+    </form>
+</div>
