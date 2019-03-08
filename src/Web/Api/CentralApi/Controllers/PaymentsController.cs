@@ -1,13 +1,13 @@
 namespace CentralApi.Controllers
 {
     using System;
-    using System.Globalization;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
     using AutoMapper;
     using BankSystem.Common.Utils;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Models;
@@ -17,8 +17,8 @@ namespace CentralApi.Controllers
 
     public class PaymentsController : Controller
     {
-        private const int LinkValidityInMinutes = 5;
-        private const string DateFormat = "yyyyMMddHHmmss";
+        private const int CookieValidityInMinutes = 5;
+        private const string PaymentDataCookie = "PaymentData";
 
         private readonly IBanksService banksService;
         private readonly CentralApiConfiguration configuration;
@@ -29,29 +29,49 @@ namespace CentralApi.Controllers
             this.configuration = configuration.Value;
         }
 
+
         [HttpGet]
         [Route("/pay/{data}")]
-        public async Task<IActionResult> Process(string data, string expire)
+        public IActionResult SetCookie(string data)
         {
-            // Append expiration date to URL to prevent accidental duplicate payments
-            if (expire == null)
-            {
-                expire = DateTime.UtcNow.AddMinutes(LinkValidityInMinutes).ToString(DateFormat);
+            string decodedData;
 
-                return this.RedirectToAction("Process", new {data, expire});
+            try
+            {
+                decodedData = Base64UrlUtil.Decode(data);
+            }
+            catch
+            {
+                return this.BadRequest();
             }
 
-            bool dateParsed = DateTime.TryParseExact(expire, DateFormat, null, DateTimeStyles.None,
-                out var expirationDate);
+            // set payment data cookie
+            this.Response.Cookies.Append(PaymentDataCookie, decodedData,
+                new CookieOptions
+                {
+                    SameSite = SameSiteMode.Strict,
+                    HttpOnly = true,
+                    IsEssential = true,
+                    MaxAge = TimeSpan.FromMinutes(CookieValidityInMinutes)
+                });
 
-            if (!dateParsed || expirationDate < DateTime.UtcNow)
+            return this.RedirectToAction("Process");
+        }
+
+        [HttpGet]
+        [Route("/pay")]
+        public async Task<IActionResult> Process()
+        {
+            bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out string data);
+
+            if (!cookieExists)
             {
                 return this.BadRequest();
             }
 
             try
             {
-                dynamic deserializedJson = JsonConvert.DeserializeObject(Base64UrlUtil.Decode(data));
+                dynamic deserializedJson = JsonConvert.DeserializeObject(data);
 
                 string paymentInfoJson = deserializedJson.PaymentInfo;
 
@@ -82,26 +102,19 @@ namespace CentralApi.Controllers
         }
 
         [HttpPost]
-        [Route("/pay/{data}")]
-        public async Task<IActionResult> Process(string data, string expire, [FromForm] string bankId)
+        [Route("/pay")]
+        public async Task<IActionResult> Process([FromForm] string bankId)
         {
-            if (data == null || expire == null || bankId == null)
-            {
-                return this.BadRequest();
-            }
+            bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out string data);
 
-            // Verify that the link has not expired
-            bool dateParsed = DateTime.TryParseExact(expire, DateFormat, null, DateTimeStyles.None,
-                out var expirationDate);
-
-            if (!dateParsed || expirationDate < DateTime.UtcNow)
+            if (!cookieExists)
             {
                 return this.BadRequest();
             }
 
             try
             {
-                dynamic deserializedJson = JsonConvert.DeserializeObject(Base64UrlUtil.Decode(data));
+                dynamic deserializedJson = JsonConvert.DeserializeObject(data);
 
                 string paymentInfoJson = deserializedJson.PaymentInfo;
                 string websitePaymentInfoSignature = deserializedJson.PaymentInfoSignature;
