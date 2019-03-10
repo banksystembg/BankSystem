@@ -50,13 +50,6 @@
             return dbModel.Id;
         }
 
-        public async Task<decimal> GetUserAccountBalanceAsync(string accountId)
-            => await this.Context
-                .Accounts
-                .Where(b => b.Id == accountId)
-                .Select(b => b.Balance)
-                .SingleOrDefaultAsync();
-
         public async Task<string> GetUserAccountUniqueId(string accountId)
             => await this.Context
                 .Accounts

@@ -1,41 +1,41 @@
-﻿@model IEnumerable<MoneyTransferListingViewModel>
+﻿@model BankAccountDetailsViewModel
 @{
-    var account = Model.First().AccountName;
-    ViewData["Title"] = $"Money transfers for {account}";
+    var account = Model.BankAccountUniqueId;
+    ViewData["Title"] = $"Money transfers {account}";
 }
 
 <div class="container">
-    @if (!Model.Any())
+    <h3 class="text-center mb-4">All money transfers for @account bank account</h3>
+    @if (!Model.MoneyTransfers.Any())
     {
-        <h3>No money transfers have been made from this account</h3>
+        <h5 class="text-center text-muted">No money transfers have been made yet</h5>
     }
     else
     {
-        <h3>All money transfers for @account bank account</h3>
         <table class="table table-hover table-bordered">
             <thead>
-                <tr>
-                    <th>Details</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                </tr>
+            <tr>
+                <th>Details</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var moneyTransfer in Model)
-                {
-                    <tr>
-                        <td>@moneyTransfer.Description</td>
-                        <td>
-                            <p>@moneyTransfer.AccountUserFullName</p>
-                            <p>@moneyTransfer.Source</p>
-                        </td>
-                        <td>@moneyTransfer.Destination</td>
-                        <td class="text-green">@moneyTransfer.Amount.ToString().TrimStart('-') EUR</td>
-                        <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
-                    </tr>
-                }
+            @foreach (var moneyTransfer in Model.MoneyTransfers)
+            {
+                <tr>
+                    <td>@moneyTransfer.Description</td>
+                    <td>
+                        <p>@moneyTransfer.AccountUserFullName</p>
+                        <p>@moneyTransfer.Source</p>
+                    </td>
+                    <td>@moneyTransfer.Destination</td>
+                    <td class="text-green">@Math.Abs(moneyTransfer.Amount) EUR</td>
+                    <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
+                </tr>
+            }
             </tbody>
         </table>
     }

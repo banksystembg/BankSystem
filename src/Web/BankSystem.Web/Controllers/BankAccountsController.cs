@@ -58,11 +58,17 @@ namespace BankSystem.Web.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
-            var transfers = (await this.moneyTransferService
+            var serviceModelTransfers = (await this.moneyTransferService
                     .GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id))
                 .Select(Mapper.Map<MoneyTransferListingViewModel>)
                 .ToArray();
+            var accountUniqueId = await this.bankAccountService.GetUserAccountUniqueId(id);
 
+            var transfers = new BankAccountDetailsViewModel
+            {
+                BankAccountUniqueId = accountUniqueId,
+                MoneyTransfers = serviceModelTransfers,
+            };
             return this.View(transfers);
         }
     }
