@@ -28,20 +28,17 @@
                                 .Where(i => i.IsGenericType)
                                 .Select(i => i.GetGenericTypeDefinition())
                                 .Contains(typeof(IMapWith<>)))
-                .Select(t => new
-                {
-                    Type1 = t,
-                    Type2 = t.GetInterfaces()
-                        .Where(i => i.IsGenericType)
-                        .Select(i => new
+                .SelectMany(t =>
+                    t.GetInterfaces()
+                        .Where(i => i.IsGenericType &&
+                                    i.GetGenericTypeDefinition() == typeof(IMapWith<>))
+                        .SelectMany(i => i.GetGenericArguments())
+                        .Select(s => new
                         {
-                            Definition = i.GetGenericTypeDefinition(),
-                            Arguments = i.GetGenericArguments()
+                            Type1 = t,
+                            Type2 = s
                         })
-                        .Where(i => i.Definition == typeof(IMapWith<>))
-                        .SelectMany(i => i.Arguments)
-                        .First()
-                })
+                )
                 .ToArray();
 
             //Create bidirectional mapping for all types implementing the IMapWith<TModel> interface

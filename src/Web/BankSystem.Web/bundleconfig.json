@@ -67,5 +67,14 @@
     "minify": {
       "enabled": true
     }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/payments.min.js",
+    "inputFiles": [
+      "wwwroot/source/payments/js/payments.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
   }
 ]

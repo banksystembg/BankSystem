@@ -1,0 +1,57 @@
+@model PaymentConfirmBindingModel
+
+@{
+    ViewData["Title"] = "Confirm payment";
+}
+
+<div class="text-center w-md-75 w-lg-50 mx-auto my-4 p-5 shadow">
+    <h2>@ViewData["Title"]</h2>
+    <hr/>
+
+    <h4>Amount:</h4>
+    <h2 class="font-weight-bold mb-4">€@Model.Amount.ToString("f2")</h2>
+
+    <h5>Description:</h5>
+    <h4>@Model.Description</h4>
+    <hr/>
+
+    <p>Destination bank: @Model.DestinationBankName</p>
+    <p>Destination country: @Model.DestinationBankCountry</p>
+    <p>Destination bank account: @Model.DestinationBankAccountUniqueId</p>
+    <hr/>
+
+    <form id="paymentForm" method="post">
+        <input type="hidden" asp-for="DataHash"/>
+
+        <div class="form-group">
+            <label asp-for="AccountId"></label>
+            <select id="accountPicker" class="form-control custom-select" asp-for="AccountId">
+                @foreach (var account in Model.OwnAccounts)
+                {
+                    <option value="@account.Id">@account.Name - €@account.Balance.ToString("f2")</option>
+                }
+            </select>
+        </div>
+    </form>
+
+    <div class="form-group row flex-md-row-reverse">
+        <div class="col-12 col-md-6 px-3 py-2">
+            <button id="payBtn" class="btn btn-primary w-100" disabled="disabled">
+                <i class="fas fa-circle-notch fa-spin"></i>
+            </button>
+        </div>
+        <div class="col-12 col-md-6 px-3 py-2">
+            <a id="cancelBtn" class="btn btn-outline-secondary w-100" asp-controller="Home" asp-action="Index">Cancel</a>
+        </div>
+    </div>
+    <div id="errAlert" class="alert alert-danger" style="display: none;" role="alert"></div>
+</div>
+
+@section Scripts
+{
+    <script>
+        const payBtnText = 'Pay €@Model.Amount.ToString("f2")';
+    </script>
+
+    <script src="~/bundle/payments.min.js" asp-append-version="true"></script>
+}
