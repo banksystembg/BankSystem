@@ -7,11 +7,11 @@
     using Common.Configuration;
     using Common.Utils;
     using Data;
-    using Infrastructure;
+    using Infrastructure.Extensions;
+    using Infrastructure.Middleware;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;
     using Microsoft.EntityFrameworkCore;
@@ -84,7 +84,7 @@
 
             services.Configure<BankConfiguration>(
                 this.Configuration.GetSection(nameof(BankConfiguration)));
-            
+
             services.PostConfigure<BankConfiguration>(settings =>
             {
                 if (!ValidationUtil.IsObjectValid(settings))
@@ -97,7 +97,7 @@
                 .AddResponseCompression(options => options.EnableForHttps = true);
 
             services.AddMvc(options => { options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>(); })
-                .AddRazorPagesOptions(options => { options.Conventions.AuthorizePage("/MoneyTransfers");})
+                .AddRazorPagesOptions(options => { options.Conventions.AuthorizePage("/MoneyTransfers"); })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -116,6 +116,11 @@
                 app.UseExceptionHandler("/error/500");
                 app.UseHsts();
             }
+
+            // We can add all recommended headers or add custom ones or choose between different ones
+            app.AddDefaultSecurityHeaders(
+                new SecurityHeadersBuilder()
+                    .AddDefaultSecurePolicy());
 
             app.UseResponseCompression();
             app.UseStatusCodePages();

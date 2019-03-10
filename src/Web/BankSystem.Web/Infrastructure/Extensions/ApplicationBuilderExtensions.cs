@@ -1,9 +1,10 @@
-﻿namespace BankSystem.Web.Infrastructure
+﻿namespace BankSystem.Web.Infrastructure.Extensions
 {
     using Data;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
+    using Middleware;
 
     public static class ApplicationBuilderExtensions
     {
@@ -15,5 +16,8 @@
                 dbContext.Database.Migrate();
             }
         }
+
+        public static IApplicationBuilder AddDefaultSecurityHeaders(this IApplicationBuilder app, SecurityHeadersBuilder builder)
+            => app.UseMiddleware<SecurityHeadersMiddleware>(builder.Policy());
     }
 }

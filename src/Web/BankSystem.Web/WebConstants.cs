@@ -1,6 +1,6 @@
 ﻿namespace BankSystem.Web
 {
-    public class WebConstants
+    public static class WebConstants
     {
         public const string BankName = "Bank system";
     }
