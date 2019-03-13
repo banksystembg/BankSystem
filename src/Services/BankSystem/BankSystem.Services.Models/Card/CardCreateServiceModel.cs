@@ -1,21 +1,17 @@
-﻿namespace BankSystem.Models
+﻿namespace BankSystem.Services.Models.Card
 {
+    using BankSystem.Models;
     using System;
     using System.ComponentModel.DataAnnotations;
 
-    public class Card
+    public class CardCreateServiceModel : CardBaseServiceModel
     {
-        public string Id { get; set; }
+        public int Number { get; set; }
 
-        [Required]
-        public long Number { get; set; }
-
-        [Required]
         public string Name { get; set; }
 
         public DateTime ExpiryDate { get; set; } = DateTime.UtcNow.AddYears(4);
 
-        [Required]
         public int SecurityCode { get; set; }
 
         [Required]

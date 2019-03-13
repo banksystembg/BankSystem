@@ -1,4 +1,4 @@
-@model BankSystem.Web.Areas.Cards.Models.CardCreateViewModel
+@model CardCreateViewModel
 
 @{
     ViewData["Title"] = "Create card";
@@ -8,12 +8,11 @@
     <h2>@ViewData["Title"]</h2>
     <form method="post">
         <hr class="w-75" />
-        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="BankAccountId">
+            <label asp-for="AccountId">
             </label>
-            <select class="custom-select" asp-items="Model.BankAccounts"></select>
-            <span asp-validation-for="BankAccountId" class="text-danger"></span>
+            <select class="custom-select" asp-for="AccountId" asp-items="Model.BankAccounts"></select>
+            <span asp-validation-for="AccountId" class="text-danger"></span>
         </div>
         <div class="form-group">
             <a class="btn btn-outline-secondary" asp-controller="Cards" asp-action="Create">Cancel</a>
