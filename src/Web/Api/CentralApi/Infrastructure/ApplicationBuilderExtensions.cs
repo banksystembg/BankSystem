@@ -36,6 +36,7 @@
                         ApiAddress = "https://localhost:56013/api/ReceiveMoneyTransfers",
                         PaymentUrl = "https://localhost:56013/pay/{0}",
                         CardPaymentUrl = "https://localhost:56013/cardPayment/{0}",
+                        BankIdentificationCardNumbers = 101,
 
                     },
                     new Bank
