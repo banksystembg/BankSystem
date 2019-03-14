@@ -25,5 +25,7 @@
         public string ApiAddress { get; set; }
         
         public string PaymentUrl { get; set; }
+
+        public string CardPaymentUrl { get; set; }
     }
 }
