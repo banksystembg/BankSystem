@@ -16,5 +16,6 @@
         public string UniqueIdentifier => this.bankConfiguration.UniqueIdentifier;
         public string Key => this.bankConfiguration.Key;
         public string CentralApiPublicKey => this.bankConfiguration.CentralApiPublicKey;
+        public string First3CardDigits => this.bankConfiguration.First3CardDigits;
     }
 }

@@ -1,0 +1,119 @@
+@model CardListingViewModel
+
+@{
+    ViewData["Title"] = "All cards";
+    const int surroundingPagesCount = 3;
+}
+
+<div class="container">
+    <h3>All cards</h3>
+    <div class="row">
+        @foreach (var card in Model.Cards)
+        {
+            <div class="col-12 col-md-6 col-lg-4 p-1">
+                <div class="card shadow m-2 floating-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card number: @card.Number</h5>
+                        <p class="card-text">Card expiry date: @card.ExpiryDate.ToString("MM/yy")</p>
+                        <p class="card-text">Card is for account: @card.AccountName</p>
+                        <p class="card-text">CardHolder's name: @card.Name</p>
+                        <p class="card-text">Card security code: @card.SecurityCode</p>
+
+                        <button class="btn btn-outline-danger" data-toggle="modal"
+                                data-target="#deleteModal" data-id="@card.Id">
+                            <i class="fas fa-trash"></i> Delete Card
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div id="deleteModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you sure you want to delete ?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form asp-action="Delete" asp-controller="Cards" method="post">
+                    <input type="hidden" name="id">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    var prevDisabled = !Model.Cards.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Cards.HasNextPage ? "disabled" : "";
+    var firstDisabled = Model.Cards.PageIndex == 1 ? "disabled" : "";
+    var lastDisabled = Model.Cards.TotalPages <= Model.Cards.PageIndex ? "disabled" : "";
+
+    var firstShownPage = Math.Max(1, Model.Cards.PageIndex - surroundingPagesCount);
+    var lastShownPage = Math.Min(Model.Cards.TotalPages, Model.Cards.PageIndex + surroundingPagesCount);
+}
+
+@if (Model.Cards.Any())
+{
+    <ul class="pagination justify-content-center">
+        <li class="page-item @firstDisabled d-none d-md-inline-block">
+            <a class="page-link" asp-route-pageIndex="1">
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+        </li>
+        <li class="page-item @prevDisabled">
+            <a class="page-link" asp-route-pageIndex="@(Model.Cards.PageIndex - 1)">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+        </li>
+
+        @for (int i = firstShownPage; i < Model.Cards.PageIndex; i++)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-pageIndex="@i">@i</a>
+            </li>
+        }
+
+        <li class="page-item active">
+            <button class="page-link active">@Model.Cards.PageIndex</button>
+        </li>
+
+        @for (int i = Model.Cards.PageIndex + 1; i <= lastShownPage; i++)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-pageIndex="@i">@i</a>
+            </li>
+        }
+
+        <li class="page-item @nextDisabled">
+            <a class="page-link" asp-route-pageIndex="@(Model.Cards.PageIndex + 1)">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </li>
+        <li class="page-item @lastDisabled d-none d-md-inline-block">
+            <a class="page-link" asp-route-pageIndex="@(Model.Cards.TotalPages)">
+                <i class="fas fa-angle-double-right"></i>
+            </a>
+        </li>
+    </ul>
+}
+
+@section Scripts{
+    <script>
+        $('#deleteModal').on('show.bs.modal',
+            function (event) {
+                var button = $(event.relatedTarget);
+                var key = button.data('id');
+                var modal = $(this);
+                modal.find('.modal-footer input[name=id]').val(key);
+                console.log($("input[name=id]"));
+            })
+    </script>
+}

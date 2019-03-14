@@ -7,6 +7,9 @@ namespace BankSystem.Common
 
         public const string CardCreatedSuccessfully = "Card created successfully";
         public const string CardCreateError = "An error occured while creating card";
+        public const string CardDoesNotExist = "Such card does not exist";
+        public const string CardDeletedSuccessfully = "Card deleted successfully";
+        public const string CardDeleteError = "An error occured while deleting card";
 
         public const string TryAgainLaterError =
             "Oops! Something went wrong! Please try again later. If this error continues to occur, please contact our support center";

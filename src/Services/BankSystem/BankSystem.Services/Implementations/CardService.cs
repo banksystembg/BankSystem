@@ -29,7 +29,7 @@
                 return null;
             }
 
-            long generatedNumber;
+            string generatedNumber;
             int generated3DigitSecurityCode;
             do
             {
@@ -54,5 +54,28 @@
                 .Where(c => c.UserId == userId)
                 .ProjectTo<T>()
                 .ToArrayAsync();
+
+        public async Task<bool> DeleteAsync(string id)
+        {
+            if (id == null)
+            {
+                return false;
+            }
+
+            var card = await this.Context
+                .Cards
+                .Where(c => c.Id == id)
+                .SingleOrDefaultAsync();
+
+            if (card == null)
+            {
+                return false;
+            }
+
+            this.Context.Cards.Remove(card);
+            await this.Context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

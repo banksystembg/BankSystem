@@ -10,5 +10,7 @@
 
         Task<IEnumerable<T>> GetAllCardsAsync<T>(string userId)
             where T : CardBaseServiceModel;
+
+        Task<bool> DeleteAsync(string id);
     }
 }

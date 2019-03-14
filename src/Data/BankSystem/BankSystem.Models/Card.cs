@@ -8,7 +8,7 @@
         public string Id { get; set; }
 
         [Required]
-        public long Number { get; set; }
+        public string Number { get; set; }
 
         [Required]
         public string Name { get; set; }
