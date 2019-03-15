@@ -1,0 +1,56 @@
+﻿@model CreateDemoCardPaymentBindingModel
+
+<style>
+    div {
+        margin: 10px;
+    }
+</style>
+
+<h1>Demo Payment System</h1>
+<hr />
+<form asp-controller="DemoCardPayments" asp-action="CreatePaymentRequest" method="post" style="text-align: center;">
+    <h3>Create demo payment</h3>
+    <div>
+        <label asp-for="Amount"></label>
+        <input type="text" asp-for="Amount" />
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <input type="text" asp-for="Description" />
+    </div>
+    <div>
+        <label asp-for="Number"></label>
+        <input type="text" asp-for="Number" />
+    </div>
+    <div>
+        <label asp-for="Name"></label>
+        <input type="text" asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="ExpiryDate"></label>
+        <input type="text" asp-for="ExpiryDate" />
+    </div>
+    <div>
+        <label asp-for="SecurityCode"></label>
+        <input type="text" asp-for="SecurityCode" />
+    </div>
+    <div>
+        <label asp-for="DestinationBankName"></label>
+        <input type="text" asp-for="DestinationBankName" />
+    </div>
+    <div>
+        <label asp-for="DestinationBankCountry"></label>
+        <input type="text" asp-for="DestinationBankCountry" />
+    </div>
+    <div>
+        <label asp-for="DestinationBankSwiftCode"></label>
+        <input type="text" asp-for="DestinationBankSwiftCode" />
+    </div>
+    <div>
+        <label asp-for="DestinationBankAccountUniqueId"></label>
+        <input type="text" asp-for="DestinationBankAccountUniqueId" />
+    </div>
+    <input type="submit" value="Create" />
+</form>
+
+<hr />

@@ -28,6 +28,6 @@
 
         public string CardPaymentUrl { get; set; }
 
-        public int BankIdentificationCardNumbers { get; set; }
+        public string BankIdentificationCardNumbers { get; set; }
     }
 }

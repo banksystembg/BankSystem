@@ -27,7 +27,7 @@ namespace CentralApi.Data.Migrations
                     b.Property<string>("ApiKey")
                         .IsRequired();
 
-                    b.Property<int>("BankIdentificationCardNumbers");
+                    b.Property<string>("BankIdentificationCardNumbers");
 
                     b.Property<string>("CardPaymentUrl");
 

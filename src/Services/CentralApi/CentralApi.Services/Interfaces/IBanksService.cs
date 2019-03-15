@@ -1,8 +1,8 @@
 ﻿namespace CentralApi.Services.Interfaces
 {
+    using Models.Banks;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Models.Banks;
 
     public interface IBanksService
     {
@@ -13,6 +13,9 @@
             where T : BankBaseServiceModel;
 
         Task<T> GetBankByIdAsync<T>(string id)
+            where T : BankBaseServiceModel;
+
+        Task<T> GetBankByBankIdentificationCardNumbersAsync<T>(string identificationCardNumbers)
             where T : BankBaseServiceModel;
     }
 }
