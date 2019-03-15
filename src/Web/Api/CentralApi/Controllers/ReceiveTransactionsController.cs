@@ -1,7 +1,5 @@
 ﻿namespace CentralApi.Controllers
 {
-    using System.Net.Http;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Infrastructure.Filters;
     using Infrastructure.Handlers;
@@ -10,6 +8,9 @@
     using Models;
     using Services.Interfaces;
     using Services.Models.Banks;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -44,7 +45,7 @@
             var client = HttpClientFactory.Create(customHandler);
             var sendModel = Mapper.Map<SendTransactionModel>(model);
             var response = await client.PostAsJsonAsync(bank.ApiAddress, sendModel);
-            if (!response.IsSuccessStatusCode)
+            if (response.StatusCode != HttpStatusCode.OK)
             {
                 return this.BadRequest(string.Format(BankRefusedTheRequestMessage, model.DestinationBankName));
             }
