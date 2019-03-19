@@ -1,9 +1,12 @@
 namespace PaymentsDemo.Models
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     public class CreateDemoCardPaymentBindingModel
     {
+        public string PaymentId { get; set; } = Guid.NewGuid().ToString();
+
         [Required]
         public decimal Amount { get; set; }
 

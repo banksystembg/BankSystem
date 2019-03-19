@@ -1,8 +1,5 @@
 ﻿namespace BankSystem.Web.Infrastructure.Filters
 {
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
     using Api.Models;
     using Common.Utils;
     using Microsoft.AspNetCore.Http;
@@ -10,6 +7,9 @@
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
 
     public class EnsureRequest : ActionFilterAttribute
     {
@@ -53,7 +53,16 @@
             var actionArguments = context.ActionArguments;
             if (actionArguments.ContainsKey(Id))
             {
-                var model = actionArguments[Id] as ReceiveMoneyTransferModel;
+                object model = null;
+                switch (actionArguments[Id])
+                {
+                    case ReceiveMoneyTransferModel transferModel:
+                        model = transferModel;
+                        break;
+                    case PaymentInfoModel cardPaymentModel:
+                        model = cardPaymentModel;
+                        break;
+                }
 
                 var serializedModel = JsonConvert.SerializeObject(model);
                 var signature = Encoding.UTF8.GetBytes(serializedModel);
