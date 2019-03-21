@@ -31,6 +31,10 @@ html {
     }
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .text-green {
     color: green;
 }

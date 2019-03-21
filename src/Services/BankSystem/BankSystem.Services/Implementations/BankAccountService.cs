@@ -68,7 +68,7 @@
         public async Task<string> GetAccountIdAsync(string cardNumber, DateTime cardExpiryDate, int cardSecurityCode, string cardOwner)
             => await this.Context
                 .Accounts
-                .Where(a => a.Cards.Any(c=> c.Name == cardOwner && c.Number == cardNumber &&
+                .Where(a => a.Cards.Any(c => c.Name == cardOwner && c.Number == cardNumber &&
                                             c.SecurityCode == cardSecurityCode && c.ExpiryDate <= cardExpiryDate))
                 .Select(a => a.Id)
                 .SingleOrDefaultAsync();
@@ -80,6 +80,23 @@
                 .Where(a => a.Id == id)
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
+
+        public async Task<bool> ChangeAccountNameAsync(string accountId, string newName)
+        {
+            var account = await this.Context
+                .Accounts
+                .FindAsync(accountId);
+            if (account == null)
+            {
+                return false;
+            }
+
+            account.Name = newName;
+            this.Context.Update(account);
+            await this.Context.SaveChangesAsync();
+
+            return true;
+        }
 
         public async Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId)
             where T : BankAccountBaseServiceModel

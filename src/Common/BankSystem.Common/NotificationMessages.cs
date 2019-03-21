@@ -11,6 +11,9 @@ namespace BankSystem.Common
         public const string CardDeletedSuccessfully = "Card deleted successfully";
         public const string CardDeleteError = "An error occured while deleting card";
 
+        public const string AccountEditedSuccessfully = "Account name edited successfully";
+        public const string AccountEditError = "An error occured while editing acount";
+
         public const string TryAgainLaterError =
             "Oops! Something went wrong! Please try again later. If this error continues to occur, please contact our support center";
 
