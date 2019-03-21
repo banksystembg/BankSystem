@@ -65,7 +65,7 @@ namespace BankSystem.Services.Implementations
             // remove money from source account
             var serviceModel = new MoneyTransferCreateServiceModel
             {
-                Amount = model.Amount,
+                Amount = -model.Amount,
                 Source = account.UniqueId,
                 Description = model.Description,
                 AccountId = account.Id,
