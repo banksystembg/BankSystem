@@ -1,8 +1,5 @@
 ﻿namespace BankSystem.Services.Implementations
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
@@ -10,6 +7,10 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.BankAccount;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class BankAccountService : BaseService, IBankAccountService
     {
@@ -61,6 +62,14 @@
             => await this.Context
                 .Accounts
                 .Where(a => a.UniqueId == uniqueId)
+                .Select(a => a.Id)
+                .SingleOrDefaultAsync();
+
+        public async Task<string> GetAccountIdAsync(string cardNumber, DateTime cardExpiryDate, int cardSecurityCode, string cardOwner)
+            => await this.Context
+                .Accounts
+                .Where(a => a.Cards.Any(c=> c.Name == cardOwner && c.Number == cardNumber &&
+                                            c.SecurityCode == cardSecurityCode && c.ExpiryDate <= cardExpiryDate))
                 .Select(a => a.Id)
                 .SingleOrDefaultAsync();
 

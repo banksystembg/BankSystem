@@ -4,5 +4,7 @@ namespace CentralApi.Services.Models.Banks
     {
         public string ApiKey { get; set; }
         public string PaymentUrl { get; set; }
+
+        public string CardPaymentUrl { get; set; }
     }
 }

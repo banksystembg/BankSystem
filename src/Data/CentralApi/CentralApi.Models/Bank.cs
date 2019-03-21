@@ -23,7 +23,11 @@
 
         [Required]
         public string ApiAddress { get; set; }
-        
+
         public string PaymentUrl { get; set; }
+
+        public string CardPaymentUrl { get; set; }
+
+        public string BankIdentificationCardNumbers { get; set; }
     }
 }

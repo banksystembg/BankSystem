@@ -31,8 +31,11 @@
                                     Cards
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item">
+                                    <a class="dropdown-item" asp-area="Cards" asp-controller="Cards" asp-action="Index">
                                         Bank Cards
+                                    </a>
+                                    <a class="dropdown-item" asp-area="Cards" asp-action="Create" asp-controller="Cards">
+                                        Create new card
                                     </a>
                                     <a class="dropdown-item">
                                         Card transactions

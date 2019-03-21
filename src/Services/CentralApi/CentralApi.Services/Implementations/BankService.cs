@@ -1,14 +1,14 @@
 ﻿namespace CentralApi.Services.Implementations
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper.QueryableExtensions;
     using Data;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Banks;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class BanksService : BaseService, IBanksService
     {
@@ -52,5 +52,13 @@
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
         }
+
+        public async Task<T> GetBankByBankIdentificationCardNumbersAsync<T>(string identificationCardNumbers)
+            where T : BankBaseServiceModel
+            => await this.Context
+                .Banks
+                .Where(b => b.BankIdentificationCardNumbers == identificationCardNumbers)
+                .ProjectTo<T>()
+                .SingleOrDefaultAsync();
     }
 }

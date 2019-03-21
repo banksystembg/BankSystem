@@ -5,5 +5,6 @@
         string UniqueIdentifier { get; }
         string Key { get; }
         string CentralApiPublicKey { get; }
+        string First3CardDigits { get; }
     }
 }

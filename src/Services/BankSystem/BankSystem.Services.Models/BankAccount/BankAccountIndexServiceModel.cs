@@ -9,5 +9,7 @@
         public decimal Balance { get; set; }
 
         public string UniqueId { get; set; }
+
+        public string UserFullName { get; set; }
     }
 }

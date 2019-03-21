@@ -13,5 +13,9 @@ namespace BankSystem.Common.Configuration
 
         [Required]
         public string CentralApiPublicKey { get; set; }
+
+        [Required]
+        [RegularExpression(@"^[0-9]{3}$")]
+        public string First3CardDigits { get; set; }
     }
 }

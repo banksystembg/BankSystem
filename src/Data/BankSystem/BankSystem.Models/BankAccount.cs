@@ -25,6 +25,8 @@
 
         public BankUser User { get; set; }
 
+        public ICollection<Card> Cards { get; set; }
+
         public ICollection<MoneyTransfer> Transfers { get; set; }
     }
 }

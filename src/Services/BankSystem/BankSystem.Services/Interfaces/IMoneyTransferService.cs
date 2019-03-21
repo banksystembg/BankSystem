@@ -1,8 +1,8 @@
 ﻿namespace BankSystem.Services.Interfaces
 {
+    using Models.MoneyTransfer;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Models.MoneyTransfer;
 
     public interface IMoneyTransferService
     {
