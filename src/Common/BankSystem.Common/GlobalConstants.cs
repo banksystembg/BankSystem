@@ -7,7 +7,5 @@ namespace BankSystem.Common
         
         public const string TempDataNoTwoFactorKey = "2FANotEnabled";
         public const string IgnoreTwoFactorWarningCookie = "IgnoreTwoFactorWarning";
-
-        public const string CentralApiBaseAddress = "https://localhost:5001/";
     }
 }

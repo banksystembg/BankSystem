@@ -17,5 +17,7 @@
         public string Key => this.bankConfiguration.Key;
         public string CentralApiPublicKey => this.bankConfiguration.CentralApiPublicKey;
         public string First3CardDigits => this.bankConfiguration.First3CardDigits;
+        public string BankName => this.bankConfiguration.BankName;
+        public string CentralApiAddress => this.bankConfiguration.CentralApiAddress;
     }
 }

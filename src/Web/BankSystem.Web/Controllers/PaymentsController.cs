@@ -2,15 +2,12 @@ namespace BankSystem.Web.Controllers
 {
     using System;
     using System.Linq;
-    using System.Net.Http;
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
-    using Areas.MoneyTransfers.Models.Global;
     using AutoMapper;
     using Common;
     using Common.Utils;
-    using Common.Utils.CustomHandlers;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
@@ -20,7 +17,7 @@ namespace BankSystem.Web.Controllers
     using Newtonsoft.Json;
     using Services.Interfaces;
     using Services.Models.BankAccount;
-    using Services.Models.MoneyTransfer;
+    using Services.Models.GlobalTransfer;
 
     [Authorize]
     public class PaymentsController : BaseController
@@ -31,17 +28,16 @@ namespace BankSystem.Web.Controllers
         private readonly IBankConfigurationHelper bankConfigurationHelper;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
-        private readonly IMoneyTransferService moneyTransferService;
+        private readonly IGlobalTransferHelper globalTransferHelper;
 
         public PaymentsController(IBankConfigurationHelper bankConfigurationHelper,
             IBankAccountService bankAccountService,
-            IUserService userService,
-            IMoneyTransferService moneyTransferService)
+            IUserService userService, IGlobalTransferHelper globalTransferHelper)
         {
             this.bankConfigurationHelper = bankConfigurationHelper;
             this.bankAccountService = bankAccountService;
             this.userService = userService;
-            this.moneyTransferService = moneyTransferService;
+            this.globalTransferHelper = globalTransferHelper;
         }
 
         [HttpGet]
@@ -158,13 +154,28 @@ namespace BankSystem.Web.Controllers
                     return this.PaymentFailed(NotificationMessages.PaymentStateInvalid);
                 }
 
-
                 // transfer money to destination account
-                var error = await this.ExecuteTransfer(paymentInfo, model.AccountId);
-
-                if (error != null)
+                var serviceModel = new GlobalTransferServiceModel
                 {
-                    return error;
+                    Amount = paymentInfo.Amount,
+                    Description = paymentInfo.Description,
+                    DestinationBankName = paymentInfo.DestinationBankName,
+                    DestinationBankCountry = paymentInfo.DestinationBankCountry,
+                    DestinationBankSwiftCode = paymentInfo.DestinationBankSwiftCode,
+                    DestinationBankAccountUniqueId = paymentInfo.DestinationBankAccountUniqueId,
+                    SourceAccountId = model.AccountId
+                };
+
+                var result = await this.globalTransferHelper.TransferMoneyAsync(serviceModel);
+
+                if (result != GlobalTransferResult.Succeeded)
+                {
+                    if (result == GlobalTransferResult.InsufficientFunds)
+                    {
+                        return this.PaymentFailed(NotificationMessages.InsufficientFunds);
+                    }
+
+                    return this.PaymentFailed(NotificationMessages.TryAgainLaterError);
                 }
 
                 // delete cookie to prevent accidental duplicate payments
@@ -224,54 +235,6 @@ namespace BankSystem.Web.Controllers
             return responseJson;
         }
 
-        private async Task<IActionResult> ExecuteTransfer(dynamic paymentInfo, string sourceAccountId)
-        {
-            string userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
-            string senderName = await this.userService.GetAccountOwnerFullnameAsync(userId);
-
-            var account = await this.bankAccountService
-                .GetBankAccountAsync<BankAccountIndexServiceModel>(sourceAccountId);
-
-            var transferModel = new GlobalMoneyTransferCentralApiBindingModel
-            {
-                Amount = paymentInfo.Amount,
-                Description = paymentInfo.Description,
-                DestinationBankName = paymentInfo.DestinationBankName,
-                DestinationBankCountry = paymentInfo.DestinationBankCountry,
-                DestinationBankSwiftCode = paymentInfo.DestinationBankSwiftCode,
-                DestinationBankAccountUniqueId = paymentInfo.DestinationBankAccountUniqueId,
-                SenderName = senderName,
-                SenderAccountUniqueId = account.UniqueId
-            };
-
-            // verify there is enough money in the account
-            if (account.Balance < transferModel.Amount)
-            {
-                return this.PaymentFailed(NotificationMessages.InsufficientFunds);
-            }
-
-            // contact central api
-            var response = await this.ContactCentralApiAsync(transferModel);
-            if (!response.IsSuccessStatusCode)
-            {
-                return this.PaymentFailed(NotificationMessages.PaymentFailed);
-            }
-
-            // remove money from source account
-            var serviceModel = Mapper.Map<MoneyTransferCreateServiceModel>(transferModel);
-            serviceModel.Source = account.UniqueId;
-            serviceModel.AccountId = sourceAccountId;
-            serviceModel.Amount = serviceModel.Amount * -1;
-
-            bool success = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);
-            if (!success)
-            {
-                return this.PaymentFailed(NotificationMessages.PaymentFailed);
-            }
-
-            return null;
-        }
-
         private IActionResult PaymentFailed(string message)
         {
             return this.Ok(new
@@ -329,17 +292,6 @@ namespace BankSystem.Web.Controllers
 
                 return builder.ToString();
             }
-        }
-
-        private async Task<HttpResponseMessage> ContactCentralApiAsync(GlobalMoneyTransferCentralApiBindingModel model)
-        {
-            var customHandler = new CustomDelegatingHandler(this.bankConfigurationHelper.CentralApiPublicKey,
-                this.bankConfigurationHelper.Key,
-                WebConstants.BankName, this.bankConfigurationHelper.UniqueIdentifier);
-            var client = HttpClientFactory.Create(customHandler);
-
-            return await client.PostAsJsonAsync($"{GlobalConstants.CentralApiBaseAddress}api/ReceiveTransactions",
-                model);
         }
     }
 }
