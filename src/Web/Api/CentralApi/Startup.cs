@@ -1,9 +1,7 @@
 ﻿namespace CentralApi
 {
-    using System;
     using AutoMapper;
     using BankSystem.Common.AutoMapping.Profiles;
-    using BankSystem.Common.Configuration;
     using BankSystem.Common.Utils;
     using Data;
     using Infrastructure;
@@ -15,6 +13,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Services.Implementations;
     using Services.Interfaces;
+    using System;
 
     public class Startup
     {
@@ -36,7 +35,7 @@
             services.Configure<CentralApiConfiguration>(
                 this.Configuration.GetSection(nameof(CentralApiConfiguration)));
 
-            services.PostConfigure<BankConfiguration>(settings =>
+            services.PostConfigure<CentralApiConfiguration>(settings =>
             {
                 if (!ValidationUtil.IsObjectValid(settings))
                 {
