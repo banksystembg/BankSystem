@@ -39,7 +39,7 @@
         {
             if (model.Amount <= 0)
             {
-                return this.PaymentFailed(NotificationMessages.PaymentStateInvalid);
+                return this.BadRequest();
             }
 
             var accountId = await this.bankAccountService.GetAccountIdAsync(model.Number, model.ParsedExpiryDate, model.SecurityCode,
@@ -70,14 +70,14 @@
             // verify there is enough money in the account
             if (account.Balance < transferModel.Amount)
             {
-                return this.PaymentFailed(NotificationMessages.InsufficientFunds);
+                return this.BadRequest();
             }
 
             // contact central api
             var response = await this.ContactCentralApiAsync(transferModel);
             if (!response.IsSuccessStatusCode)
             {
-                return this.PaymentFailed(NotificationMessages.PaymentFailed);
+                return this.BadRequest();
             }
 
             // remove money from source account
@@ -87,12 +87,7 @@
             serviceModel.Amount *= -1;
 
             var success = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);
-            return !success ? this.PaymentFailed(NotificationMessages.PaymentFailed) : null;
-        }
-
-        private IActionResult PaymentFailed(string message)
-        {
-            return this.BadRequest(message);
+            return !success ? this.BadRequest() : null;
         }
 
         private async Task<HttpResponseMessage> ContactCentralApiAsync(GlobalMoneyTransferCentralApiBindingModel model)

@@ -39,11 +39,10 @@
                 var customHandler = new CustomCentralApiDelegatingHandler(this.configuration.Key, bank.ApiKey);
                 var client = HttpClientFactory.Create(customHandler);
                 var request = await client.PostAsJsonAsync(bank.CardPaymentUrl, model);
-                var responseContent = request.Content.ReadAsStringAsync();
 
                 if (request.StatusCode != HttpStatusCode.OK)
                 {
-                    return this.BadRequest(responseContent);
+                    return this.BadRequest();
                 }
 
                 return this.Ok();
