@@ -15,11 +15,14 @@
 
     public class CardsController : BaseCardsController
     {
+        private const int CardsCountPerPage = 10;
+
         private readonly IUserService userService;
         private readonly IBankAccountService bankAccountService;
         private readonly ICardService cardService;
 
-        public CardsController(IUserService userService, IBankAccountService bankAccountService, ICardService cardService)
+        public CardsController(IUserService userService, IBankAccountService bankAccountService,
+            ICardService cardService)
         {
             this.userService = userService;
             this.bankAccountService = bankAccountService;
@@ -32,7 +35,7 @@
             var allCards = (await this.cardService
                     .GetAllCardsAsync<CardListingServiceModel>(userId))
                 .Select(Mapper.Map<CardListingDto>)
-                .ToPaginatedList(page, WebConstants.CardsCountPerPage);
+                .ToPaginatedList(page, CardsCountPerPage);
 
             var cards = new CardListingViewModel
             {
@@ -103,8 +106,7 @@
         private async Task<IEnumerable<SelectListItem>> GetAllAccountsAsync(string userId)
             => (await this.bankAccountService
                     .GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId))
-                .Select(a => new SelectListItem { Text = a.Name, Value = a.Id })
+                .Select(a => new SelectListItem {Text = a.Name, Value = a.Id})
                 .ToArray();
-
     }
 }

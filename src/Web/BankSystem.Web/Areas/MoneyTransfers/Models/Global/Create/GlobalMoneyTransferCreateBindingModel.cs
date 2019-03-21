@@ -2,9 +2,12 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Common.AutoMapping.Interfaces;
+    using Services.Models.GlobalTransfer;
     using Web.Models.BankAccount;
 
-    public class GlobalMoneyTransferCreateBindingModel : IMoneyTransferCreateBindingModel
+    public class GlobalMoneyTransferCreateBindingModel : IMoneyTransferCreateBindingModel,
+        IMapWith<GlobalTransferServiceModel>
     {
         [Required]
         public GlobalMoneyTransferCreateDestinationBankDto DestinationBank { get; set; }
