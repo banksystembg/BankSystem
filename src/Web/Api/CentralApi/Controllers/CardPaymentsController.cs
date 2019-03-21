@@ -23,7 +23,7 @@
             this.configuration = configuration.Value;
         }
 
-        [HttpPost("{data}", Name = "Post")]
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] CardPaymentDto model)
         {
             try

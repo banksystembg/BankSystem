@@ -34,7 +34,7 @@
         }
 
         // POST: api/CardPayments
-        [HttpPost("{data}", Name = "Post")]
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] PaymentInfoModel model)
         {
             if (model.Amount <= 0)

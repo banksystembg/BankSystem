@@ -8,7 +8,7 @@
 
     public class DemoCardPaymentsController : Controller
     {
-        private const string CentralApiUrl = "https://localhost:5001/api/cardPayments/{0}";
+        private const string CentralApiUrl = "https://localhost:5001/api/cardPayments";
 
         [HttpPost]
         public async Task<IActionResult> CreatePaymentRequest(CreateDemoCardPaymentBindingModel model)
