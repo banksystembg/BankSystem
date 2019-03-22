@@ -19,6 +19,9 @@ namespace PaymentsDemo.Models
         public string Name { get; set; }
 
         [Required]
+        public string RecipientName { get; set; }
+
+        [Required]
         public string ExpiryDate { get; set; }
 
         [Required]
