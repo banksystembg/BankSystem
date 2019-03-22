@@ -3,6 +3,7 @@ namespace BankSystem.Web.Controllers
     using Areas.MoneyTransfers.Models;
     using AutoMapper;
     using Common;
+    using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Mvc;
     using Models.BankAccount;
     using Services.Interfaces;
@@ -13,6 +14,8 @@ namespace BankSystem.Web.Controllers
 
     public class BankAccountsController : BaseController
     {
+        private const int ItemsPerPage = 10;
+
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
         private readonly IMoneyTransferService moneyTransferService;
@@ -51,19 +54,17 @@ namespace BankSystem.Web.Controllers
             }
 
             this.ShowSuccessMessage(NotificationMessages.BankAccountCreated);
-
-            // TODO Redirect to account details page
             return this.RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string id, int pageIndex = 1)
         {
             var serviceModelTransfers = (await this.moneyTransferService
                     .GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id))
                 .Select(Mapper.Map<MoneyTransferListingDto>)
-                .ToArray();
+                .ToPaginatedList(pageIndex, ItemsPerPage);
+                
             var account = await this.bankAccountService.GetBankAccountAsync<BankAccountConciseServiceModel>(id);
-
             var transfers = new BankAccountDetailsViewModel
             {
                 BankAccountUniqueId = account.UniqueId,
