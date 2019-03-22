@@ -17,5 +17,8 @@
 
         Task<T> GetBankAccountAsync<T>(string id)
             where T : BankAccountBaseServiceModel;
+
+        Task<bool> ChangeAccountNameAsync(string accountId, string newName);
+        Task<BankAccountDetailsServiceModel> GetByAccountIdAsync(string id);
     }
 }

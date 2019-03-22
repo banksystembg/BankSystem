@@ -72,6 +72,23 @@
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
 
+        public async Task<bool> ChangeAccountNameAsync(string accountId, string newName)
+        {
+            var account = await this.Context
+                .Accounts
+                .FindAsync(accountId);
+            if (account == null)
+            {
+                return false;
+            }
+
+            account.Name = newName;
+            this.Context.Update(account);
+            await this.Context.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId)
             where T : BankAccountBaseServiceModel
             => await this.Context
@@ -79,5 +96,15 @@
                 .Where(a => a.UserId == userId)
                 .ProjectTo<T>()
                 .ToArrayAsync();
+
+        public async Task<BankAccountDetailsServiceModel> GetByAccountIdAsync(string id)
+        {
+            var account = await this.Context
+                .Accounts
+                .ProjectTo<BankAccountDetailsServiceModel>()
+                .SingleOrDefaultAsync(a => a.Id == id);
+
+            return account;
+        }
     }
 }

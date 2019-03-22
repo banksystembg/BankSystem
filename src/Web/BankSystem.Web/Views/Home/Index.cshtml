@@ -44,9 +44,13 @@
                     <h5 class="card-title">Your Accounts</h5>
                     @foreach (var account in Model.UserBankAccounts)
                     {
-                        <div class="row">
-                            <p class="col-6 card-text"><a asp-controller="BankAccounts" asp-action="Details" asp-route-id="@account.Id">@account.Name</a></p>
-                            <p class="col-6 card-text text-green text-right">€@account.Balance</p>
+                        <div class="d-flex flex-row justify-content-between hover-parent">
+                            <p class="card-text">
+                                <a asp-controller="BankAccounts" asp-action="Details" asp-route-id="@account.Id">@account.Name</a>
+                                <i class="fas fa-pen ml-1 cursor-pointer hover-visible text-muted text-primary-hover" 
+                                   data-toggle="modal" data-target="#editModal" data-id="@account.Id"></i>
+                            </p>
+                            <p class="card-text text-green text-right ml-3">€@account.Balance</p>
                         </div>
                     }
 
@@ -55,4 +59,74 @@
             </div>
         </div>
     </div>
+
+    <div id="editModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit account display name</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <input type="hidden" name="accountId">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input required class="form-control" type="text" name="name">
+                        </div>
+                        <div class="text-center d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">OK</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        $('#editModal').on('show.bs.modal',
+            function(event) {
+                let button = $(event.relatedTarget);
+                let id = button.data('id');
+                let modal = $(this);
+                modal.find('.modal-body input[name=accountId]').val(id);
+
+                let name = button.parent().find('a').text();
+
+                modal.find('.modal-body input[name=name]').val(name);
+            });
+
+        $('#editModal').on('shown.bs.modal',
+            function() {
+                $(this).find('.modal-body input[name=name]').trigger('focus');
+            });
+
+        $('#editModal form').submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '@Url.Action("ChangeAccountNameAsync", "BankAccounts")',
+                type: 'post',
+                data: $(event.target).serialize()
+
+            }).always(function() {
+                $('#editModal').modal('hide');
+            }).done(function(response) {
+                if (!response.success) {
+                    return;
+                }
+
+                let accountId = $('#editModal input[name=accountId]').val();
+                let newName = $('#editModal input[name=name]').val();
+
+                $(`i[data-id=${accountId}]`).parent().find('a').text(newName);
+            });
+        });
+    </script>
+}

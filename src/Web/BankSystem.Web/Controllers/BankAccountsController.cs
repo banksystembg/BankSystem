@@ -1,7 +1,5 @@
 namespace BankSystem.Web.Controllers
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using Areas.MoneyTransfers.Models;
     using AutoMapper;
     using Common;
@@ -10,6 +8,8 @@ namespace BankSystem.Web.Controllers
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class BankAccountsController : BaseController
     {
@@ -70,6 +70,36 @@ namespace BankSystem.Web.Controllers
                 MoneyTransfers = serviceModelTransfers,
             };
             return this.View(transfers);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeAccountNameAsync(string accountId, string name)
+        {
+            if (name == null)
+            {
+                return this.Ok(new
+                {
+                    success = false
+                });
+            }
+
+            var account = await this.bankAccountService.GetByAccountIdAsync(accountId);
+
+            if (account == null ||
+                account.UserUserName != this.User.Identity.Name)
+            {
+                return this.Ok(new
+                {
+                    success = false
+                });
+            }
+
+            bool isSuccessful = await this.bankAccountService.ChangeAccountNameAsync(accountId, name);
+
+            return this.Ok(new
+            {
+                success = isSuccessful
+            });
         }
     }
 }

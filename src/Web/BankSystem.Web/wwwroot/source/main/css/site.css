@@ -31,6 +31,10 @@ html {
     }
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 .text-green {
     color: green;
 }
@@ -83,7 +87,20 @@ html {
     height: 80vh;
 }
 
-.error-box .error-heading{
+.error-box .error-heading {
     color: dimgray;
     font-size: 5em;
+}
+
+.hover-visible {
+    opacity: 0;
+    transition: all 150ms;
+}
+
+.hover-parent:hover .hover-visible {
+    opacity: 1;
+}
+
+.text-primary-hover:hover {
+    color: #0069d9 !important;
 }
