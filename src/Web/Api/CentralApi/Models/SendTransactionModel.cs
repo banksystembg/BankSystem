@@ -1,7 +1,7 @@
 ﻿namespace CentralApi.Models
 {
-    using System.ComponentModel.DataAnnotations;
     using BankSystem.Common.AutoMapping.Interfaces;
+    using System.ComponentModel.DataAnnotations;
 
     public class SendTransactionModel : IMapWith<ReceiveTransactionModel>
     {
@@ -16,6 +16,9 @@
 
         [Required]
         public string SenderName { get; set; }
+
+        [Required]
+        public string RecipientName { get; set; }
 
         [Required]
         public string SenderAccountUniqueId { get; set; }

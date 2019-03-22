@@ -1,11 +1,11 @@
 ﻿namespace BankSystem.Web.Api
 {
-    using System.Threading.Tasks;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Interfaces;
     using Services.Models.MoneyTransfer;
+    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -44,6 +44,8 @@
                 Description = model.Description,
                 DestinationBankAccountUniqueId = model.DestinationBankAccountUniqueId,
                 Source = model.SenderAccountUniqueId,
+                SenderName = model.SenderName,
+                RecipientName = model.RecipientName,
             };
 
             var isSuccessful = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);

@@ -81,6 +81,13 @@
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
 
+        public async Task<string> GetBankAccountUserFullNameAsync(string id)
+            => await this.Context
+                .Accounts
+                .Where(a => a.Id == id)
+                .Select(a=> a.User.FullName)
+                .SingleOrDefaultAsync();
+
         public async Task<bool> ChangeAccountNameAsync(string accountId, string newName)
         {
             var account = await this.Context

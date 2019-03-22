@@ -1,7 +1,5 @@
 namespace BankSystem.Services.Implementations
 {
-    using System.Net.Http;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Common.AutoMapping.Interfaces;
     using Common.Utils;
@@ -10,6 +8,8 @@ namespace BankSystem.Services.Implementations
     using Models.BankAccount;
     using Models.GlobalTransfer;
     using Models.MoneyTransfer;
+    using System.Net.Http;
+    using System.Threading.Tasks;
 
     public class GlobalTransferHelper : IGlobalTransferHelper
     {
@@ -51,7 +51,6 @@ namespace BankSystem.Services.Implementations
 
             // contact the CentralApi to execute the transfer
             var submitDto = Mapper.Map<CentralApiSubmitTransferDto>(model);
-
             submitDto.SenderName = account.UserFullName;
             submitDto.SenderAccountUniqueId = account.UniqueId;
 
@@ -69,7 +68,9 @@ namespace BankSystem.Services.Implementations
                 Source = account.UniqueId,
                 Description = model.Description,
                 AccountId = account.Id,
-                DestinationBankAccountUniqueId = model.DestinationBankAccountUniqueId
+                DestinationBankAccountUniqueId = model.DestinationBankAccountUniqueId,
+                SenderName = account.UserFullName,
+                RecipientName = model.RecipientName,
             };
 
             bool success = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);
@@ -105,6 +106,8 @@ namespace BankSystem.Services.Implementations
             public decimal Amount { get; set; }
 
             public string SenderName { get; set; }
+
+            public string RecipientName { get; set; }
 
             public string SenderAccountUniqueId { get; set; }
 

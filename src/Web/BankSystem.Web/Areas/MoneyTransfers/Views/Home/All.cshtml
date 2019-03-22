@@ -27,10 +27,13 @@
                     <tr>
                         <td>@moneyTransfer.Description</td>
                         <td>
-                            <p>@moneyTransfer.AccountUserFullName</p>
+                            <p>@moneyTransfer.SenderName</p>
                             <p>@moneyTransfer.Source</p>
                         </td>
-                        <td>@moneyTransfer.Destination</td>
+                        <td>
+                            <p>@moneyTransfer.RecipientName</p>
+                            <p>@moneyTransfer.Destination</p>
+                        </td>
                         @if (moneyTransfer.Amount < 0)
                         {
                             <td class="text-red">@moneyTransfer.Amount EUR</td>
