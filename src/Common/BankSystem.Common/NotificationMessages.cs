@@ -51,5 +51,11 @@ namespace BankSystem.Common
             "Payment details are invalid or have expired. Please try again later.";
 
         public const string PaymentFailed = "Payment failed. Please try again later.";
+
+        public const string EmailReceiveMoneySubject = "You've received money";
+        public const string EmailReceiveMoneyMessage = "{0}€ have been transferred to your account. Please log in your account for additional information.";
+        public const string EmailSendMoneySubject = "You've sent money";
+        public const string EmailSendMoneyMessage =
+            "{0}€ have been transferred from your account. If it were not you, please contact our support center as fast as possible!";
     }
 }

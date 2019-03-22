@@ -5,6 +5,6 @@
     public class SendGridConfiguration
     {
         [Required]
-        public string SendGridApiKey { get; set; }
+        public string ApiKey { get; set; }
     }
 }
