@@ -76,7 +76,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             }
 
             var destinationAccount =
-                await this.bankAccountService.GetBankAccountAsyncByUniqueId<BankAccountConciseServiceModel>(
+                await this.bankAccountService.GetByUniqueIdAsync<BankAccountConciseServiceModel>(
                     model.DestinationBankAccountUniqueId);
             if (destinationAccount == null || !string.Equals(
                     destinationAccount.UserFullName, account.UserFullName, StringComparison.InvariantCulture))

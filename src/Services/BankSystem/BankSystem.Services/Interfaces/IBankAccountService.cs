@@ -11,7 +11,7 @@
 
         Task<string> CreateAsync(BankAccountCreateServiceModel model);
 
-        Task<T> GetBankAccountAsyncByUniqueId<T>(string uniqueId)
+        Task<T> GetByUniqueIdAsync<T>(string uniqueId)
             where T : BankAccountBaseServiceModel;
 
         Task<T> GetBankAccountAsync<T>(string id)

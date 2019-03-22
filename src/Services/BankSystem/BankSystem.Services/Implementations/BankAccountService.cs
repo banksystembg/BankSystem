@@ -50,7 +50,7 @@
             return dbModel.Id;
         }
 
-        public async Task<T> GetBankAccountAsyncByUniqueId<T>(string uniqueId)
+        public async Task<T> GetByUniqueIdAsync<T>(string uniqueId)
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
