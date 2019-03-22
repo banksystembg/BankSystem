@@ -44,13 +44,13 @@
                     <h5 class="card-title">Your Accounts</h5>
                     @foreach (var account in Model.UserBankAccounts)
                     {
-                        <div class="row">
-                            <p class="col-6 card-text">
+                        <div class="d-flex flex-row justify-content-between hover-parent">
+                            <p class="card-text">
                                 <a asp-controller="BankAccounts" asp-action="Details" asp-route-id="@account.Id">@account.Name</a>
-                                <i class="far fa-edit clickable floating-card" data-toggle="modal"
-                                   data-target="#editModal" data-id="@account.Id"></i>
+                                <i class="fas fa-pen ml-1 cursor-pointer hover-visible text-muted text-primary-hover" 
+                                   data-toggle="modal" data-target="#editModal" data-id="@account.Id"></i>
                             </p>
-                            <p class="col-6 card-text text-green text-right">€@account.Balance</p>
+                            <p class="card-text text-green text-right ml-3">€@account.Balance</p>
                         </div>
                     }
 
