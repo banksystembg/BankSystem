@@ -68,8 +68,11 @@
         public async Task<string> GetAccountIdAsync(string cardNumber, DateTime cardExpiryDate, int cardSecurityCode, string cardOwner)
             => await this.Context
                 .Accounts
-                .Where(a => a.Cards.Any(c=> c.Name == cardOwner && c.Number == cardNumber &&
-                                            c.SecurityCode == cardSecurityCode && c.ExpiryDate <= cardExpiryDate))
+                .Where(a => a.Cards.Any(c =>
+                    c.Name == cardOwner &&
+                    c.Number == cardNumber &&
+                    c.SecurityCode == cardSecurityCode &&
+                    c.ExpiryDate == cardExpiryDate))
                 .Select(a => a.Id)
                 .SingleOrDefaultAsync();
 
