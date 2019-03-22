@@ -73,6 +73,7 @@
             services
                 .AddDomainServices()
                 .AddApplicationServices()
+                .AddCommonProjectServices()
                 .AddAuthentication();
 
             services.Configure<SecurityStampValidatorOptions>(options =>
