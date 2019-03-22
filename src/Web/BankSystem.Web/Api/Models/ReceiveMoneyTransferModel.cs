@@ -16,6 +16,9 @@
         public string SenderName { get; set; }
 
         [Required]
+        public string RecipientName { get; set; }
+
+        [Required]
         public string SenderAccountUniqueId { get; set; }
     }
 }

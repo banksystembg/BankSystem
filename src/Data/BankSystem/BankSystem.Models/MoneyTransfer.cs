@@ -6,7 +6,7 @@
     public class MoneyTransfer
     {
         public string Id { get; set; }
-        
+
         public string Description { get; set; }
 
         [Required]
@@ -22,6 +22,12 @@
 
         [Required]
         public string Source { get; set; }
+
+        [Required]
+        public string SenderName { get; set; }
+
+        [Required]
+        public string RecipientName { get; set; }
 
         [Required]
         public string Destination { get; set; }

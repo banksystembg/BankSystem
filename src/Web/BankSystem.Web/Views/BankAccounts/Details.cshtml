@@ -28,10 +28,13 @@
                 <tr>
                     <td>@moneyTransfer.Description</td>
                     <td>
-                        <p>@moneyTransfer.AccountUserFullName</p>
+                        <p>@moneyTransfer.SenderName</p>
                         <p>@moneyTransfer.Source</p>
                     </td>
-                    <td>@moneyTransfer.Destination</td>
+                    <td>
+                        <p>@moneyTransfer.Destination</p>
+                        <p>@moneyTransfer.RecipientName</p>
+                    </td>
                     <td class="text-green">@Math.Abs(moneyTransfer.Amount) EUR</td>
                     <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
                 </tr>
