@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class CardListingServiceModel : CardBaseServiceModel
+    public class CardDetailsServiceModel : CardBaseServiceModel
     {
         public string Id { get; set; }
 
@@ -13,6 +13,8 @@
         public DateTime ExpiryDate { get; set; }
 
         public int SecurityCode { get; set; }
+
+        public string AccountId { get; set; }
 
         public string AccountName { get; set; }
     }

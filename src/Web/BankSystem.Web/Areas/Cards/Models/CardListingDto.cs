@@ -4,7 +4,7 @@
     using Services.Models.Card;
     using System;
 
-    public class CardListingDto : IMapWith<CardListingServiceModel>
+    public class CardListingDto : IMapWith<CardDetailsServiceModel>
     {
         public string Id { get; set; }
 
