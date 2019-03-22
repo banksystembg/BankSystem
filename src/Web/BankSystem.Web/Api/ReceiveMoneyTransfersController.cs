@@ -4,7 +4,9 @@
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Interfaces;
+    using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
+    using System;
     using System.Threading.Tasks;
 
     [Route("api/[controller]")]
@@ -31,15 +33,17 @@
                 return this.NoContent();
             }
 
-            var accountId = await this.bankAccountService.GetAccountIdAsync(model.DestinationBankAccountUniqueId);
-            if (accountId == null)
+            var account = 
+                await this.bankAccountService.GetBankAccountAsyncByUniqueId<BankAccountConciseServiceModel>(
+                    model.DestinationBankAccountUniqueId);
+            if (account == null || !string.Equals(account.UserFullName, model.RecipientName, StringComparison.InvariantCulture))
             {
                 return this.NoContent();
             }
 
             var serviceModel = new MoneyTransferCreateServiceModel
             {
-                AccountId = accountId,
+                AccountId = account.Id,
                 Amount = model.Amount,
                 Description = model.Description,
                 DestinationBankAccountUniqueId = model.DestinationBankAccountUniqueId,

@@ -8,6 +8,7 @@ namespace BankSystem.Services.Implementations
     using Models.BankAccount;
     using Models.GlobalTransfer;
     using Models.MoneyTransfer;
+    using System;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -37,8 +38,8 @@ namespace BankSystem.Services.Implementations
             var account = await this.bankAccountService
                 .GetBankAccountAsync<BankAccountIndexServiceModel>(model.SourceAccountId);
 
-            // check if the account exists
-            if (account == null)
+            // check if account exists and recipient name is accurate
+            if (account == null || !string.Equals(model.RecipientName, account.UserFullName, StringComparison.InvariantCulture))
             {
                 return GlobalTransferResult.GeneralFailure;
             }

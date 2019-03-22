@@ -13,7 +13,8 @@
 
         Task<string> GetUserAccountUniqueId(string accountId);
 
-        Task<string> GetAccountIdAsync(string uniqueId);
+        Task<T> GetBankAccountAsyncByUniqueId<T>(string uniqueId)
+            where T : BankAccountBaseServiceModel;
 
         Task<string> GetBankAccountUserFullNameAsync(string id);
 

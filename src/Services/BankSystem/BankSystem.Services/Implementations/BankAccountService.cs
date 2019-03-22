@@ -57,11 +57,12 @@
                 .Select(a => a.UniqueId)
                 .SingleOrDefaultAsync();
 
-        public async Task<string> GetAccountIdAsync(string uniqueId)
+        public async Task<T> GetBankAccountAsyncByUniqueId<T>(string uniqueId)
+            where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
                 .Where(a => a.UniqueId == uniqueId)
-                .Select(a => a.Id)
+                .ProjectTo<T>()
                 .SingleOrDefaultAsync();
 
         public async Task<T> GetBankAccountAsync<T>(string id)
