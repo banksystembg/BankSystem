@@ -12,5 +12,12 @@
             where T : CardBaseServiceModel;
 
         Task<bool> DeleteAsync(string id);
+
+        Task<T> GetAsync<T>(
+            string cardNumber,
+            string cardExpiryDate,
+            int cardSecurityCode,
+            string cardOwner)
+            where T : CardBaseServiceModel;
     }
 }

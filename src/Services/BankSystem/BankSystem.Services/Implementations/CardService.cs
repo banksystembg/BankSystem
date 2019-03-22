@@ -47,6 +47,22 @@
             return dbModel.Id;
         }
 
+        public async Task<T> GetAsync<T>(
+            string cardNumber,
+            string cardExpiryDate,
+            int cardSecurityCode,
+            string cardOwner)
+            where T : CardBaseServiceModel
+            => await this.Context
+                .Cards
+                .Where(c =>
+                    c.Name == cardOwner &&
+                    c.Number == cardNumber &&
+                    c.SecurityCode == cardSecurityCode &&
+                    c.ExpiryDate == cardExpiryDate)
+                .ProjectTo<T>()
+                .SingleOrDefaultAsync();
+
         public async Task<IEnumerable<T>> GetAllCardsAsync<T>(string userId)
             where T : CardBaseServiceModel
             => await this.Context

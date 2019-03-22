@@ -1,5 +1,6 @@
 ﻿namespace BankSystem.Web.Areas.Cards.Controllers
 {
+    using System;
     using AutoMapper;
     using Common;
     using Infrastructure.Extensions;
@@ -33,7 +34,7 @@
         {
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
             var allCards = (await this.cardService
-                    .GetAllCardsAsync<CardListingServiceModel>(userId))
+                    .GetAllCardsAsync<CardDetailsServiceModel>(userId))
                 .Select(Mapper.Map<CardListingDto>)
                 .ToPaginatedList(pageIndex, CardsCountPerPage);
 
@@ -71,6 +72,8 @@
             var serviceModel = Mapper.Map<CardCreateServiceModel>(model);
             serviceModel.UserId = userId;
             serviceModel.Name = await this.userService.GetAccountOwnerFullnameAsync(userId);
+            serviceModel.ExpiryDate = DateTime.UtcNow.AddYears(GlobalConstants.CardValidityInYears)
+                .ToString(GlobalConstants.CardExpirationDateFormat);
 
             var id = await this.cardService.CreateAsync(serviceModel);
             if (id == null)

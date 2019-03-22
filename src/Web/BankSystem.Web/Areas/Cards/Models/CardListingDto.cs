@@ -2,9 +2,8 @@
 {
     using Common.AutoMapping.Interfaces;
     using Services.Models.Card;
-    using System;
 
-    public class CardListingDto : IMapWith<CardListingServiceModel>
+    public class CardListingDto : IMapWith<CardDetailsServiceModel>
     {
         public string Id { get; set; }
 
@@ -12,7 +11,7 @@
 
         public string Name { get; set; }
 
-        public DateTime ExpiryDate { get; set; }
+        public string ExpiryDate { get; set; }
 
         public int SecurityCode { get; set; }
 
