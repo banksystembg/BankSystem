@@ -64,7 +64,7 @@ namespace BankSystem.Web.Controllers
                 .Select(Mapper.Map<MoneyTransferListingDto>)
                 .ToPaginatedList(pageIndex, ItemsPerPage);
                 
-            var account = await this.bankAccountService.GetBankAccountAsync<BankAccountConciseServiceModel>(id);
+            var account = await this.bankAccountService.GetByIdAsync<BankAccountConciseServiceModel>(id);
             var transfers = new BankAccountDetailsViewModel
             {
                 BankAccountUniqueId = account.UniqueId,
@@ -84,7 +84,7 @@ namespace BankSystem.Web.Controllers
                 });
             }
 
-            var account = await this.bankAccountService.GetBankAccountAsync<BankAccountDetailsServiceModel>(accountId);
+            var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(accountId);
             if (account == null ||
                 account.UserUserName != this.User.Identity.Name)
             {

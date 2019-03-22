@@ -61,7 +61,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             }
 
             var account =
-                await this.bankAccountService.GetBankAccountAsync<BankAccountIndexServiceModel>(model.AccountId);
+                await this.bankAccountService.GetByIdAsync<BankAccountIndexServiceModel>(model.AccountId);
             if (string.Equals(account.UniqueId, model.DestinationBankAccountUniqueId, StringComparison.InvariantCulture))
             {
                 this.ShowErrorMessage(NotificationMessages.SameAccountsError);

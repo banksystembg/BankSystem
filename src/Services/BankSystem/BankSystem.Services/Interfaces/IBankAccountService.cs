@@ -14,7 +14,7 @@
         Task<T> GetByUniqueIdAsync<T>(string uniqueId)
             where T : BankAccountBaseServiceModel;
 
-        Task<T> GetBankAccountAsync<T>(string id)
+        Task<T> GetByIdAsync<T>(string id)
             where T : BankAccountBaseServiceModel;
 
         Task<bool> ChangeAccountNameAsync(string accountId, string newName);

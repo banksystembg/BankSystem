@@ -58,7 +58,7 @@
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
 
-        public async Task<T> GetBankAccountAsync<T>(string id)
+        public async Task<T> GetByIdAsync<T>(string id)
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
