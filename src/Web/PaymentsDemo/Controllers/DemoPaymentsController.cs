@@ -32,6 +32,7 @@ namespace PaymentsDemo.Controllers
                 model.DestinationBankCountry,
                 model.DestinationBankSwiftCode,
                 model.DestinationBankAccountUniqueId,
+                model.RecipientName,
 
                 // ! PaymentInfo can also contain custom properties
                 // ! that will be returned on payment completion

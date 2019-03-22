@@ -13,5 +13,7 @@ namespace PaymentsDemo.Models
         public string DestinationBankCountry { get; set; }
 
         public string DestinationBankAccountUniqueId { get; set; }
+
+        public string RecipientName { get; set; }
     }
 }
