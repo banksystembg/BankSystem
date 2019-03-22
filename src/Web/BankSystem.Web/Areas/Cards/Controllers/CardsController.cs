@@ -29,13 +29,13 @@
             this.cardService = cardService;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int pageIndex = 1)
         {
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
             var allCards = (await this.cardService
                     .GetAllCardsAsync<CardListingServiceModel>(userId))
                 .Select(Mapper.Map<CardListingDto>)
-                .ToPaginatedList(page, CardsCountPerPage);
+                .ToPaginatedList(pageIndex, CardsCountPerPage);
 
             var cards = new CardListingViewModel
             {
