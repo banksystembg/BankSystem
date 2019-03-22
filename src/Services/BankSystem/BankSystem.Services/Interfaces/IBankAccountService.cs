@@ -6,7 +6,7 @@
 
     public interface IBankAccountService
     {
-        Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId)
+        Task<IEnumerable<T>> GetAllAccountsByUserIdAsync<T>(string userId)
             where T : BankAccountBaseServiceModel;
 
         Task<string> CreateAsync(BankAccountCreateServiceModel model);

@@ -22,7 +22,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
         protected async Task<OwnBankAccountListingViewModel[]> GetAllAccountsAsync(string userId)
         {
             return (await this.bankAccountService
-                    .GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId))
+                    .GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(userId))
                 .Select(Mapper.Map<OwnBankAccountListingViewModel>)
                 .ToArray();
         }

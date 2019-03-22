@@ -83,7 +83,7 @@
             return true;
         }
 
-        public async Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId)
+        public async Task<IEnumerable<T>> GetAllAccountsByUserIdAsync<T>(string userId)
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
