@@ -105,5 +105,15 @@
                 .Where(a => a.UserId == userId)
                 .ProjectTo<T>()
                 .ToArrayAsync();
+
+        public async Task<BankAccountDetailsServiceModel> GetByAccountIdAsync(string id)
+        {
+            var account = await this.Context
+                .Accounts
+                .ProjectTo<BankAccountDetailsServiceModel>()
+                .SingleOrDefaultAsync(a => a.Id == id);
+
+            return account;
+        }
     }
 }
