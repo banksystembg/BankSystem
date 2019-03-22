@@ -97,12 +97,14 @@
                 let modal = $(this);
                 modal.find('.modal-body input[name=accountId]').val(id);
 
-                let nameHolder = button.parent().find('a');
-                let name = nameHolder.text();
+                let name = button.parent().find('a').text();
 
-                let inputField = modal.find('.modal-body input[name=name]');
-                inputField.val(name);
-                inputField.focus();
+                modal.find('.modal-body input[name=name]').val(name);
+            });
+
+        $('#editModal').on('shown.bs.modal',
+            function() {
+                $(this).find('.modal-body input[name=name]').trigger('focus');
             });
 
         $('#editModal form').submit(function(event) {
