@@ -6,21 +6,17 @@
 
     public interface IBankAccountService
     {
-        Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId)
+        Task<IEnumerable<T>> GetAllAccountsByUserIdAsync<T>(string userId)
             where T : BankAccountBaseServiceModel;
 
         Task<string> CreateAsync(BankAccountCreateServiceModel model);
 
-        Task<string> GetUserAccountUniqueId(string accountId);
+        Task<T> GetByUniqueIdAsync<T>(string uniqueId)
+            where T : BankAccountBaseServiceModel;
 
-        Task<string> GetAccountIdAsync(string uniqueId);
-
-        Task<string> GetBankAccountUserFullNameAsync(string id);
-
-        Task<T> GetBankAccountAsync<T>(string id)
+        Task<T> GetByIdAsync<T>(string id)
             where T : BankAccountBaseServiceModel;
 
         Task<bool> ChangeAccountNameAsync(string accountId, string newName);
-        Task<BankAccountDetailsServiceModel> GetByAccountIdAsync(string id);
     }
 }

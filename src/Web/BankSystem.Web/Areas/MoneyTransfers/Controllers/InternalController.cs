@@ -61,7 +61,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             }
 
             var account =
-                await this.bankAccountService.GetBankAccountAsync<BankAccountIndexServiceModel>(model.AccountId);
+                await this.bankAccountService.GetByIdAsync<BankAccountIndexServiceModel>(model.AccountId);
             if (string.Equals(account.UniqueId, model.DestinationBankAccountUniqueId, StringComparison.InvariantCulture))
             {
                 this.ShowErrorMessage(NotificationMessages.SameAccountsError);
@@ -75,8 +75,11 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
                 return this.View(model);
             }
 
-            var destinationAccountId = await this.bankAccountService.GetAccountIdAsync(model.DestinationBankAccountUniqueId);
-            if (destinationAccountId == null)
+            var destinationAccount =
+                await this.bankAccountService.GetByUniqueIdAsync<BankAccountConciseServiceModel>(
+                    model.DestinationBankAccountUniqueId);
+            if (destinationAccount == null || !string.Equals(
+                    destinationAccount.UserFullName, account.UserFullName, StringComparison.InvariantCulture))
             {
                 this.ShowErrorMessage(NotificationMessages.DestinationBankAccountDoesNotExist);
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
@@ -96,13 +99,11 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
                 return this.View(model);
             }
 
-            var destinationBankAccountUserFullName =
-                await this.bankAccountService.GetBankAccountUserFullNameAsync(destinationAccountId);
             var destinationServiceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
             destinationServiceModel.Source = account.UniqueId;
-            destinationServiceModel.AccountId = destinationAccountId;
+            destinationServiceModel.AccountId = destinationAccount.Id;
             destinationServiceModel.SenderName = account.UserFullName;
-            destinationServiceModel.RecipientName = destinationBankAccountUserFullName;
+            destinationServiceModel.RecipientName = destinationAccount.UserFullName;
 
             if (!await this.moneyTransferService.CreateMoneyTransferAsync(destinationServiceModel))
             {

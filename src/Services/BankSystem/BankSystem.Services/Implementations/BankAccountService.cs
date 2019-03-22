@@ -50,33 +50,20 @@
             return dbModel.Id;
         }
 
-        public async Task<string> GetUserAccountUniqueId(string accountId)
-            => await this.Context
-                .Accounts
-                .Where(a => a.Id == accountId)
-                .Select(a => a.UniqueId)
-                .SingleOrDefaultAsync();
-
-        public async Task<string> GetAccountIdAsync(string uniqueId)
+        public async Task<T> GetByUniqueIdAsync<T>(string uniqueId)
+            where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
                 .Where(a => a.UniqueId == uniqueId)
-                .Select(a => a.Id)
+                .ProjectTo<T>()
                 .SingleOrDefaultAsync();
 
-        public async Task<T> GetBankAccountAsync<T>(string id)
+        public async Task<T> GetByIdAsync<T>(string id)
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
                 .Where(a => a.Id == id)
                 .ProjectTo<T>()
-                .SingleOrDefaultAsync();
-
-        public async Task<string> GetBankAccountUserFullNameAsync(string id)
-            => await this.Context
-                .Accounts
-                .Where(a => a.Id == id)
-                .Select(a=> a.User.FullName)
                 .SingleOrDefaultAsync();
 
         public async Task<bool> ChangeAccountNameAsync(string accountId, string newName)
@@ -96,22 +83,12 @@
             return true;
         }
 
-        public async Task<IEnumerable<T>> GetAllUserAccountsAsync<T>(string userId)
+        public async Task<IEnumerable<T>> GetAllAccountsByUserIdAsync<T>(string userId)
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
                 .Where(a => a.UserId == userId)
                 .ProjectTo<T>()
                 .ToArrayAsync();
-
-        public async Task<BankAccountDetailsServiceModel> GetByAccountIdAsync(string id)
-        {
-            var account = await this.Context
-                .Accounts
-                .ProjectTo<BankAccountDetailsServiceModel>()
-                .SingleOrDefaultAsync(a => a.Id == id);
-
-            return account;
-        }
     }
 }

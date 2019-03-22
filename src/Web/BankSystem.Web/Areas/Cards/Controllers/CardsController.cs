@@ -108,7 +108,7 @@
 
         private async Task<IEnumerable<SelectListItem>> GetAllAccountsAsync(string userId)
             => (await this.bankAccountService
-                    .GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId))
+                    .GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(userId))
                 .Select(a => new SelectListItem {Text = a.Name, Value = a.Id})
                 .ToArray();
     }

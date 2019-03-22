@@ -40,7 +40,7 @@
 
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
             var bankAccounts =
-                (await this.bankAccountService.GetAllUserAccountsAsync<BankAccountIndexServiceModel>(userId))
+                (await this.bankAccountService.GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(userId))
                 .Select(Mapper.Map<BankAccountIndexViewModel>)
                 .ToArray();
             var moneyTransfers = (await this.moneyTransferService

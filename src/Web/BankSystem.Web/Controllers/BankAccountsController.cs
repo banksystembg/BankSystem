@@ -54,8 +54,6 @@ namespace BankSystem.Web.Controllers
             }
 
             this.ShowSuccessMessage(NotificationMessages.BankAccountCreated);
-
-            // TODO Redirect to account details page
             return this.RedirectToAction("Index", "Home");
         }
 
@@ -65,11 +63,11 @@ namespace BankSystem.Web.Controllers
                     .GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id))
                 .Select(Mapper.Map<MoneyTransferListingDto>)
                 .ToPaginatedList(pageIndex, ItemsPerPage);
-            var accountUniqueId = await this.bankAccountService.GetUserAccountUniqueId(id);
-
+                
+            var account = await this.bankAccountService.GetByIdAsync<BankAccountConciseServiceModel>(id);
             var transfers = new BankAccountDetailsViewModel
             {
-                BankAccountUniqueId = accountUniqueId,
+                BankAccountUniqueId = account.UniqueId,
                 MoneyTransfers = serviceModelTransfers,
             };
             return this.View(transfers);
@@ -86,8 +84,7 @@ namespace BankSystem.Web.Controllers
                 });
             }
 
-            var account = await this.bankAccountService.GetByAccountIdAsync(accountId);
-
+            var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(accountId);
             if (account == null ||
                 account.UserUserName != this.User.Identity.Name)
             {
