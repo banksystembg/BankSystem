@@ -1,5 +1,7 @@
 ﻿namespace BankSystem.Web.Api
 {
+    using Common;
+    using Common.EmailSender.Interface;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models;
@@ -17,11 +19,16 @@
     {
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
+        private readonly IEmailSender emailSender;
 
-        public ReceiveMoneyTransfersController(IMoneyTransferService moneyTransferService, IBankAccountService bankAccountService)
+        public ReceiveMoneyTransfersController(
+            IMoneyTransferService moneyTransferService,
+            IBankAccountService bankAccountService,
+            IEmailSender emailSender)
         {
             this.moneyTransferService = moneyTransferService;
             this.bankAccountService = bankAccountService;
+            this.emailSender = emailSender;
         }
 
         // POST api/values
@@ -33,7 +40,7 @@
                 return this.NoContent();
             }
 
-            var account = 
+            var account =
                 await this.bankAccountService.GetByUniqueIdAsync<BankAccountConciseServiceModel>(
                     model.DestinationBankAccountUniqueId);
             if (account == null || !string.Equals(account.UserFullName, model.RecipientName, StringComparison.InvariantCulture))
@@ -57,6 +64,9 @@
             {
                 return this.NoContent();
             }
+
+            await this.emailSender.SendEmailAsync(account.UserEmail, NotificationMessages.EmailReceiveMoneySubject,
+                string.Format(NotificationMessages.EmailReceiveMoneyMessage, serviceModel.Amount));
 
             return this.Ok();
         }

@@ -2,6 +2,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
     using AutoMapper;
     using Common;
+    using Common.EmailSender.Interface;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Internal;
@@ -17,15 +18,18 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
+        private readonly IEmailSender emailSender;
 
         public InternalController(
             IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
-            IUserService userService)
+            IUserService userService, 
+            IEmailSender emailSender)
             : base(bankAccountService)
         {
             this.moneyTransferService = moneyTransferService;
             this.userService = userService;
+            this.emailSender = emailSender;
             this.bankAccountService = bankAccountService;
         }
 
@@ -88,7 +92,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 
             var sourceServiceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
             sourceServiceModel.Source = account.UniqueId;
-            sourceServiceModel.Amount = -sourceServiceModel.Amount;
+            sourceServiceModel.Amount *= -1;
             sourceServiceModel.SenderName = account.UserFullName;
             sourceServiceModel.RecipientName = account.UserFullName;
 
@@ -98,6 +102,9 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
+
+            await this.emailSender.SendEmailAsync(account.UserEmail, NotificationMessages.EmailSendMoneySubject,
+                string.Format(NotificationMessages.EmailSendMoneyMessage, sourceServiceModel.Amount));
 
             var destinationServiceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
             destinationServiceModel.Source = account.UniqueId;
@@ -111,6 +118,9 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
+
+            await this.emailSender.SendEmailAsync(destinationAccount.UserEmail, NotificationMessages.EmailReceiveMoneySubject,
+                string.Format(NotificationMessages.EmailReceiveMoneyMessage, destinationServiceModel.Amount));
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulMoneyTransfer);
             return this.RedirectToHome();
