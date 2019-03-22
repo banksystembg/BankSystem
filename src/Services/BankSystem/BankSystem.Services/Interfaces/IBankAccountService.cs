@@ -22,6 +22,5 @@
             where T : BankAccountBaseServiceModel;
 
         Task<bool> ChangeAccountNameAsync(string accountId, string newName);
-        Task<BankAccountDetailsServiceModel> GetByAccountIdAsync(string id);
     }
 }

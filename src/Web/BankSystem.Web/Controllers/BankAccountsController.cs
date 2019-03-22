@@ -83,8 +83,7 @@ namespace BankSystem.Web.Controllers
                 });
             }
 
-            var account = await this.bankAccountService.GetByAccountIdAsync(accountId);
-
+            var account = await this.bankAccountService.GetBankAccountAsync<BankAccountDetailsServiceModel>(accountId);
             if (account == null ||
                 account.UserUserName != this.User.Identity.Name)
             {
