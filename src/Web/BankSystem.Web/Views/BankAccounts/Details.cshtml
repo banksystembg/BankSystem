@@ -2,101 +2,60 @@
 @{
     var account = Model.BankAccountUniqueId;
     ViewData["Title"] = $"Money transfers {account}";
-    const int surroundingPagesCount = 3;
+
+    // Pass ViewData with the surroundingPagesCount constant
+    // and the desired number to the partial view if you want to have custom number of surrounding pages
+    // or if you want to use the default one don't pass anything. The default number of surrounding pages is 3.
+
+    // Example
+    //ViewData[WebConstants.SurroundingPagesCountKey] = 10;
+    // Also don't forget to pass it to the partial helper
+    // Example
+    // <partial name="_Pagination" model="@Model.MoneyTransfers" view-data="@ViewData" />
+    // P.S Keep in mind the partial helper should be down below after the whole html code or wherever you want to display the pagination
 }
 
 <div class="container">
     <h3 class="text-center mb-4">All money transfers for @account bank account</h3>
     @if (!Model.MoneyTransfers.Any())
     {
-    <h5 class="text-center text-muted">No money transfers have been made yet</h5>
+        <h5 class="text-center text-muted">No money transfers have been made yet</h5>
     }
     else
     {
-    <table class="table table-hover table-bordered">
-        <thead>
-            <tr>
-                <th>Details</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Amount</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var moneyTransfer in Model.MoneyTransfers)
-            {
-            <tr>
-                <td>@moneyTransfer.Description</td>
-                <td>
-                    <p>@moneyTransfer.SenderName</p>
-                    <p>@moneyTransfer.Source</p>
-                </td>
-                <td>
-                    <p>@moneyTransfer.RecipientName</p>
-                    <p>@moneyTransfer.Destination</p>
-                </td>
-                <td class="text-green">@Math.Abs(moneyTransfer.Amount) EUR</td>
-                <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
-            </tr>
-            }
-        </tbody>
-    </table>
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>Details</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var moneyTransfer in Model.MoneyTransfers)
+                {
+                    <tr>
+                        <td>@moneyTransfer.Description</td>
+                        <td>
+                            <p>@moneyTransfer.SenderName</p>
+                            <p>@moneyTransfer.Source</p>
+                        </td>
+                        <td>
+                            <p>@moneyTransfer.RecipientName</p>
+                            <p>@moneyTransfer.Destination</p>
+                        </td>
+                        <td class="text-green">@Math.Abs(moneyTransfer.Amount) EUR</td>
+                        <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 </div>
 
-
-@{
-    var prevDisabled = !Model.MoneyTransfers.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.MoneyTransfers.HasNextPage ? "disabled" : "";
-    var firstDisabled = Model.MoneyTransfers.PageIndex == 1 ? "disabled" : "";
-    var lastDisabled = Model.MoneyTransfers.TotalPages <= Model.MoneyTransfers.PageIndex ? "disabled" : "";
-
-    var firstShownPage = Math.Max(1, Model.MoneyTransfers.PageIndex - surroundingPagesCount);
-    var lastShownPage = Math.Min(Model.MoneyTransfers.TotalPages, Model.MoneyTransfers.PageIndex + surroundingPagesCount);
-}
-
 @if (Model.MoneyTransfers.Any())
 {
-<ul class="pagination justify-content-center">
-    <li class="page-item @firstDisabled d-none d-md-inline-block">
-        <a class="page-link" asp-route-pageIndex="1">
-            <i class="fas fa-angle-double-left"></i>
-        </a>
-    </li>
-    <li class="page-item @prevDisabled">
-        <a class="page-link" asp-route-pageIndex="@(Model.MoneyTransfers.PageIndex - 1)">
-            <i class="fas fa-chevron-left"></i>
-        </a>
-    </li>
-
-    @for (int i = firstShownPage; i < Model.MoneyTransfers.PageIndex; i++)
-        {
-    <li class="page-item">
-        <a class="page-link" asp-route-pageIndex="@i">@i</a>
-    </li>
-        }
-
-    <li class="page-item active">
-        <button class="page-link active">@Model.MoneyTransfers.PageIndex</button>
-    </li>
-
-    @for (int i = Model.MoneyTransfers.PageIndex + 1; i <= lastShownPage; i++)
-        {
-    <li class="page-item">
-        <a class="page-link" asp-route-pageIndex="@i">@i</a>
-    </li>
-        }
-
-    <li class="page-item @nextDisabled">
-        <a class="page-link" asp-route-pageIndex="@(Model.MoneyTransfers.PageIndex + 1)">
-            <i class="fas fa-chevron-right"></i>
-        </a>
-    </li>
-    <li class="page-item @lastDisabled d-none d-md-inline-block">
-        <a class="page-link" asp-route-pageIndex="@(Model.MoneyTransfers.TotalPages)">
-            <i class="fas fa-angle-double-right"></i>
-        </a>
-    </li>
-</ul>
+    <partial name="_Pagination" model="@Model.MoneyTransfers" />
 }

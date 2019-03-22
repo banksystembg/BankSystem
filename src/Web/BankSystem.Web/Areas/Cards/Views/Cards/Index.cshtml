@@ -2,7 +2,17 @@
 
 @{
     ViewData["Title"] = "All cards";
-    const int surroundingPagesCount = 3;
+
+    // Pass ViewData with the surroundingPagesCount constant
+    // and the desired number to the partial view if you want to have custom number of surrounding pages
+    // or if you want to use the default one don't pass anything. The default number of surrounding pages is 3.
+
+    // Example
+    //ViewData[WebConstants.SurroundingPagesCountKey] = 10;
+    // Also don't forget to pass it to the partial helper
+    // Example
+    // <partial name="_Pagination" model="@Model.MoneyTransfers" view-data="@ViewData" />
+    // P.S Keep in mind the partial helper should be down below after the whole html code or wherever you want to display the pagination
 }
 
 <div class="container">
@@ -10,22 +20,22 @@
     <div class="row">
         @foreach (var card in Model.Cards)
         {
-            <div class="col-12 col-md-6 col-lg-4 p-1">
-                <div class="card shadow m-2 floating-card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card number: @card.Number</h5>
-                        <p class="card-text">Expiration: @card.ExpiryDate</p>
-                        <p class="card-text">Account: @card.AccountName</p>
-                        <p class="card-text">Cardholder name: @card.Name</p>
-                        <p class="card-text">Security code: @card.SecurityCode</p>
+        <div class="col-12 col-md-6 col-lg-4 p-1">
+            <div class="card shadow m-2 floating-card">
+                <div class="card-body">
+                    <h5 class="card-title">Card number: @card.Number</h5>
+                    <p class="card-text">Expiration: @card.ExpiryDate</p>
+                    <p class="card-text">Account: @card.AccountName</p>
+                    <p class="card-text">Cardholder name: @card.Name</p>
+                    <p class="card-text">Security code: @card.SecurityCode</p>
 
-                        <button class="btn btn-outline-danger" data-toggle="modal"
-                                data-target="#deleteModal" data-id="@card.Id">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
+                    <button class="btn btn-outline-danger" data-toggle="modal"
+                            data-target="#deleteModal" data-id="@card.Id">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
                 </div>
             </div>
+        </div>
         }
     </div>
 </div>
@@ -50,59 +60,9 @@
     </div>
 </div>
 
-@{
-    var prevDisabled = !Model.Cards.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.Cards.HasNextPage ? "disabled" : "";
-    var firstDisabled = Model.Cards.PageIndex == 1 ? "disabled" : "";
-    var lastDisabled = Model.Cards.TotalPages <= Model.Cards.PageIndex ? "disabled" : "";
-
-    var firstShownPage = Math.Max(1, Model.Cards.PageIndex - surroundingPagesCount);
-    var lastShownPage = Math.Min(Model.Cards.TotalPages, Model.Cards.PageIndex + surroundingPagesCount);
-}
-
 @if (Model.Cards.Any())
 {
-    <ul class="pagination justify-content-center">
-        <li class="page-item @firstDisabled d-none d-md-inline-block">
-            <a class="page-link" asp-route-pageIndex="1">
-                <i class="fas fa-angle-double-left"></i>
-            </a>
-        </li>
-        <li class="page-item @prevDisabled">
-            <a class="page-link" asp-route-pageIndex="@(Model.Cards.PageIndex - 1)">
-                <i class="fas fa-chevron-left"></i>
-            </a>
-        </li>
-
-        @for (int i = firstShownPage; i < Model.Cards.PageIndex; i++)
-        {
-            <li class="page-item">
-                <a class="page-link" asp-route-pageIndex="@i">@i</a>
-            </li>
-        }
-
-        <li class="page-item active">
-            <button class="page-link active">@Model.Cards.PageIndex</button>
-        </li>
-
-        @for (int i = Model.Cards.PageIndex + 1; i <= lastShownPage; i++)
-        {
-            <li class="page-item">
-                <a class="page-link" asp-route-pageIndex="@i">@i</a>
-            </li>
-        }
-
-        <li class="page-item @nextDisabled">
-            <a class="page-link" asp-route-pageIndex="@(Model.Cards.PageIndex + 1)">
-                <i class="fas fa-chevron-right"></i>
-            </a>
-        </li>
-        <li class="page-item @lastDisabled d-none d-md-inline-block">
-            <a class="page-link" asp-route-pageIndex="@(Model.Cards.TotalPages)">
-                <i class="fas fa-angle-double-right"></i>
-            </a>
-        </li>
-    </ul>
+    <partial name="_Pagination" model="@Model.Cards" />
 }
 
 @section Scripts{
