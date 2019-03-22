@@ -1,14 +1,15 @@
 namespace BankSystem.Services.Implementations
 {
     using AutoMapper;
+    using Common;
     using Common.AutoMapping.Interfaces;
+    using Common.EmailSender.Interface;
     using Common.Utils;
     using Common.Utils.CustomHandlers;
     using Interfaces;
     using Models.BankAccount;
     using Models.GlobalTransfer;
     using Models.MoneyTransfer;
-    using System;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -19,13 +20,18 @@ namespace BankSystem.Services.Implementations
         private readonly IBankAccountService bankAccountService;
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankConfigurationHelper bankConfigurationHelper;
+        private readonly IEmailSender emailSender;
 
-        public GlobalTransferHelper(IBankAccountService bankAccountService, IMoneyTransferService moneyTransferService,
-            IBankConfigurationHelper bankConfigurationHelper)
+        public GlobalTransferHelper(
+            IBankAccountService bankAccountService, 
+            IMoneyTransferService moneyTransferService,
+            IBankConfigurationHelper bankConfigurationHelper, 
+            IEmailSender emailSender)
         {
             this.bankAccountService = bankAccountService;
             this.moneyTransferService = moneyTransferService;
             this.bankConfigurationHelper = bankConfigurationHelper;
+            this.emailSender = emailSender;
         }
 
         public async Task<GlobalTransferResult> TransferMoneyAsync(GlobalTransferServiceModel model)
@@ -39,7 +45,7 @@ namespace BankSystem.Services.Implementations
                 .GetByIdAsync<BankAccountIndexServiceModel>(model.SourceAccountId);
 
             // check if account exists and recipient name is accurate
-            if (account == null || !string.Equals(model.RecipientName, account.UserFullName, StringComparison.InvariantCulture))
+            if (account == null)
             {
                 return GlobalTransferResult.GeneralFailure;
             }
@@ -79,6 +85,9 @@ namespace BankSystem.Services.Implementations
             {
                 return GlobalTransferResult.GeneralFailure;
             }
+
+            await this.emailSender.SendEmailAsync(account.UserEmail, NotificationMessages.EmailSendMoneySubject,
+                string.Format(NotificationMessages.EmailSendMoneyMessage, serviceModel.Amount));
 
             return GlobalTransferResult.Succeeded;
         }
