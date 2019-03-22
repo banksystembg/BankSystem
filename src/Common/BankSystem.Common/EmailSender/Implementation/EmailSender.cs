@@ -9,9 +9,9 @@
 
     public class EmailSender : IEmailSender
     {
-        private readonly SendGridOptions options;
+        private readonly SendGridConfiguration options;
 
-        public EmailSender(IOptions<SendGridOptions> options)
+        public EmailSender(IOptions<SendGridConfiguration> options)
         {
             this.options = options.Value;
         }

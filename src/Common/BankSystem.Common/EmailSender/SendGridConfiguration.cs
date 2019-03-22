@@ -1,7 +1,10 @@
 ﻿namespace BankSystem.Common.EmailSender
 {
-    public class SendGridOptions
+    using System.ComponentModel.DataAnnotations;
+
+    public class SendGridConfiguration
     {
+        [Required]
         public string SendGridApiKey { get; set; }
     }
 }
