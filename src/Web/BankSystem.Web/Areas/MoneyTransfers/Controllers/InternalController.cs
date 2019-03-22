@@ -1,8 +1,5 @@
 namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Infrastructure.Filters;
@@ -11,6 +8,9 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class InternalController : BaseMoneyTransferController
     {
@@ -86,6 +86,8 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             var sourceServiceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
             sourceServiceModel.Source = account.UniqueId;
             sourceServiceModel.Amount = -sourceServiceModel.Amount;
+            sourceServiceModel.SenderName = account.UserFullName;
+            sourceServiceModel.RecipientName = account.UserFullName;
 
             if (!await this.moneyTransferService.CreateMoneyTransferAsync(sourceServiceModel))
             {
@@ -94,9 +96,13 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
                 return this.View(model);
             }
 
+            var destinationBankAccountUserFullName =
+                await this.bankAccountService.GetBankAccountUserFullNameAsync(destinationAccountId);
             var destinationServiceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
             destinationServiceModel.Source = account.UniqueId;
             destinationServiceModel.AccountId = destinationAccountId;
+            destinationServiceModel.SenderName = account.UserFullName;
+            destinationServiceModel.RecipientName = destinationBankAccountUserFullName;
 
             if (!await this.moneyTransferService.CreateMoneyTransferAsync(destinationServiceModel))
             {

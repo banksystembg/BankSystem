@@ -5,8 +5,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Interfaces;
-    using System.Threading.Tasks;
     using Services.Models.GlobalTransfer;
+    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [IgnoreAntiforgeryToken]
@@ -39,9 +39,11 @@
                 model.ParsedExpiryDate,
                 model.SecurityCode,
                 model.Name);
+            var accountUserFullName = await this.bankAccountService.GetBankAccountUserFullNameAsync(accountId);
 
             var serviceModel = Mapper.Map<GlobalTransferServiceModel>(model);
             serviceModel.SourceAccountId = accountId;
+            serviceModel.RecipientName = accountUserFullName;
 
             var result = await this.globalTransferHelper.TransferMoneyAsync(serviceModel);
 

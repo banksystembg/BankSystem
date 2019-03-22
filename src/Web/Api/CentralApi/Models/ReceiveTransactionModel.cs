@@ -15,6 +15,9 @@
         public string SenderName { get; set; }
 
         [Required]
+        public string RecipientName { get; set; }
+
+        [Required]
         [MaxLength(34)]
         public string SenderAccountUniqueId { get; set; }
 
