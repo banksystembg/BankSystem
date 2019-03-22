@@ -15,6 +15,8 @@
 
         Task<string> GetAccountIdAsync(string uniqueId);
 
+        Task<string> GetBankAccountUserFullNameAsync(string id);
+
         Task<T> GetBankAccountAsync<T>(string id)
             where T : BankAccountBaseServiceModel;
 

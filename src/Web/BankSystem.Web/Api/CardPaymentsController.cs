@@ -46,7 +46,7 @@
             {
                 return this.BadRequest();
             }
-            
+
             bool expirationDateValid = DateTime.TryParseExact(
                 card.ExpiryDate,
                 GlobalConstants.CardExpirationDateFormat,
@@ -61,6 +61,7 @@
 
             var serviceModel = Mapper.Map<GlobalTransferServiceModel>(model);
             serviceModel.SourceAccountId = card.AccountId;
+            serviceModel.RecipientName = card.Name;
 
             var result = await this.globalTransferHelper.TransferMoneyAsync(serviceModel);
 

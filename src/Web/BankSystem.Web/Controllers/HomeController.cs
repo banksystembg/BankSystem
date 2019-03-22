@@ -1,8 +1,5 @@
 ﻿namespace BankSystem.Web.Controllers
 {
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Areas.MoneyTransfers.Models;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
@@ -12,6 +9,9 @@
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     [AllowAnonymous]
     public class HomeController : BaseController
@@ -45,7 +45,7 @@
                 .ToArray();
             var moneyTransfers = (await this.moneyTransferService
                     .GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(userId))
-                .Select(Mapper.Map<MoneyTransferListingViewModel>)
+                .Select(Mapper.Map<MoneyTransferListingDto>)
                 .ToArray();
 
             var viewModel = new HomeViewModel

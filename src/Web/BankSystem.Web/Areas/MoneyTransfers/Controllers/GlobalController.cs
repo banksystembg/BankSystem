@@ -1,9 +1,5 @@
 ﻿namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Infrastructure.Filters;
@@ -12,7 +8,9 @@
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.GlobalTransfer;
-    using Services.Models.MoneyTransfer;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class GlobalController : BaseMoneyTransferController
     {
@@ -73,6 +71,7 @@
 
             var serviceModel = Mapper.Map<GlobalTransferServiceModel>(model);
             serviceModel.SourceAccountId = model.AccountId;
+            serviceModel.RecipientName = model.DestinationBank.Account.UserFullName;
 
             var result = await this.globalTransferHelper.TransferMoneyAsync(serviceModel);
 
