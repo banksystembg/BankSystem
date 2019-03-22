@@ -73,23 +73,33 @@ namespace BankSystem.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(string id, string name)
+        public async Task<IActionResult> ChangeAccountNameAsync(string accountId, string name)
         {
             if (name == null)
             {
-                this.ShowErrorMessage(NotificationMessages.AccountEditError);
-                return this.RedirectToHome();
+                return this.Ok(new
+                {
+                    success = false
+                });
             }
 
-            var isSuccessful = await this.bankAccountService.ChangeAccountNameAsync(id, name);
-            if (!isSuccessful)
+            var account = await this.bankAccountService.GetByAccountIdAsync(accountId);
+
+            if (account == null ||
+                account.UserUserName != this.User.Identity.Name)
             {
-                this.ShowErrorMessage(NotificationMessages.AccountEditError);
-                return this.RedirectToHome();
+                return this.Ok(new
+                {
+                    success = false
+                });
             }
 
-            this.ShowSuccessMessage(NotificationMessages.AccountEditedSuccessfully);
-            return this.RedirectToHome();
+            bool isSuccessful = await this.bankAccountService.ChangeAccountNameAsync(accountId, name);
+
+            return this.Ok(new
+            {
+                success = isSuccessful
+            });
         }
     }
 }
