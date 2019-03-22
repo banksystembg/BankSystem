@@ -60,7 +60,7 @@ namespace BankSystem.Web.Controllers
         {
             var serviceModelTransfers = (await this.moneyTransferService
                     .GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id))
-                .Select(Mapper.Map<MoneyTransferListingViewModel>)
+                .Select(Mapper.Map<MoneyTransferListingDto>)
                 .ToArray();
             var accountUniqueId = await this.bankAccountService.GetUserAccountUniqueId(id);
 
