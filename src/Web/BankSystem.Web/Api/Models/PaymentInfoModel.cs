@@ -1,8 +1,8 @@
 ﻿namespace BankSystem.Web.Api.Models
 {
-    using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
     using Services.Models.GlobalTransfer;
+    using System.ComponentModel.DataAnnotations;
 
     public class PaymentInfoModel : IMapWith<GlobalTransferServiceModel>
     {
@@ -16,6 +16,9 @@
 
         [Required]
         public string Name { get; set; }
+
+        [Required]
+        public string RecipientName { get; set; }
 
         [Required]
         public string ExpiryDate { get; set; }

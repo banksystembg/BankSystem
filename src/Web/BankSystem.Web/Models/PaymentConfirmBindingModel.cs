@@ -17,6 +17,8 @@ namespace BankSystem.Web.Models
 
         public string DestinationBankAccountUniqueId { get; set; }
 
+        public string RecipientName { get; set; }
+
         public IEnumerable<OwnBankAccountListingViewModel> OwnAccounts { get; set; }
 
         [Required]

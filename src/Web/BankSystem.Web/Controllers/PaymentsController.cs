@@ -107,6 +107,7 @@ namespace BankSystem.Web.Controllers
                     DestinationBankName = paymentInfo.DestinationBankName,
                     DestinationBankCountry = paymentInfo.DestinationBankCountry,
                     DestinationBankAccountUniqueId = paymentInfo.DestinationBankAccountUniqueId,
+                    RecipientName = paymentInfo.RecipientName,
                     OwnAccounts = await this.GetAllAccountsAsync(userId),
                     DataHash = Sha256Hash(data)
                 };
@@ -163,6 +164,7 @@ namespace BankSystem.Web.Controllers
                     DestinationBankCountry = paymentInfo.DestinationBankCountry,
                     DestinationBankSwiftCode = paymentInfo.DestinationBankSwiftCode,
                     DestinationBankAccountUniqueId = paymentInfo.DestinationBankAccountUniqueId,
+                    RecipientName = paymentInfo.RecipientName,
                     SourceAccountId = model.AccountId
                 };
 
