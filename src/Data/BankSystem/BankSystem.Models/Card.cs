@@ -1,6 +1,5 @@
 ﻿namespace BankSystem.Models
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
 
     public class Card
@@ -13,7 +12,9 @@
         [Required]
         public string Name { get; set; }
 
-        public DateTime ExpiryDate { get; set; } = DateTime.UtcNow.AddYears(4);
+        [Required]
+        [StringLength(5, MinimumLength = 5)]
+        public string ExpiryDate { get; set; }
 
         [Required]
         public int SecurityCode { get; set; }

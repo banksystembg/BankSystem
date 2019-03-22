@@ -1,6 +1,5 @@
 ﻿namespace BankSystem.Services.Implementations
 {
-    using System;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
@@ -50,7 +49,7 @@
 
         public async Task<T> GetAsync<T>(
             string cardNumber,
-            DateTime cardExpiryDate,
+            string cardExpiryDate,
             int cardSecurityCode,
             string cardOwner)
             where T : CardBaseServiceModel

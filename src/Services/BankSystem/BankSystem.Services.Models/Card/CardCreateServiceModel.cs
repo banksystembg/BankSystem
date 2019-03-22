@@ -1,7 +1,6 @@
 ﻿namespace BankSystem.Services.Models.Card
 {
     using BankSystem.Models;
-    using System;
     using System.ComponentModel.DataAnnotations;
 
     public class CardCreateServiceModel : CardBaseServiceModel
@@ -10,7 +9,7 @@
 
         public string Name { get; set; }
 
-        public DateTime ExpiryDate { get; set; } = DateTime.UtcNow.AddYears(4);
+        public string ExpiryDate { get; set; }
 
         public int SecurityCode { get; set; }
 

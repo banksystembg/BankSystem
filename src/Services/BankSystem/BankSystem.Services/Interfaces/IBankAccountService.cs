@@ -1,7 +1,6 @@
 ﻿namespace BankSystem.Services.Interfaces
 {
     using Models.BankAccount;
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 

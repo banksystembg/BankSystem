@@ -1,6 +1,5 @@
 ﻿namespace BankSystem.Web.Api.Models
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
     using Services.Models.GlobalTransfer;
@@ -20,9 +19,6 @@
 
         [Required]
         public string ExpiryDate { get; set; }
-
-        public DateTime ParsedExpiryDate =>
-            DateTime.Parse($"{DateTime.DaysInMonth(int.Parse(this.ExpiryDate.Split('/')[1]), int.Parse(this.ExpiryDate.Split('/')[0]))}/{this.ExpiryDate}");
 
         [Required]
         public int SecurityCode { get; set; }

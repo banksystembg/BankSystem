@@ -1,6 +1,5 @@
 ﻿namespace BankSystem.Services.Interfaces
 {
-    using System;
     using Models.Card;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -16,7 +15,7 @@
 
         Task<T> GetAsync<T>(
             string cardNumber,
-            DateTime cardExpiryDate,
+            string cardExpiryDate,
             int cardSecurityCode,
             string cardOwner)
             where T : CardBaseServiceModel;

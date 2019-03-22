@@ -1,5 +1,6 @@
 ﻿namespace BankSystem.Web.Areas.Cards.Controllers
 {
+    using System;
     using AutoMapper;
     using Common;
     using Infrastructure.Extensions;
@@ -71,6 +72,8 @@
             var serviceModel = Mapper.Map<CardCreateServiceModel>(model);
             serviceModel.UserId = userId;
             serviceModel.Name = await this.userService.GetAccountOwnerFullnameAsync(userId);
+            serviceModel.ExpiryDate = DateTime.UtcNow.AddYears(GlobalConstants.CardValidityInYears)
+                .ToString(GlobalConstants.CardExpirationDateFormat);
 
             var id = await this.cardService.CreateAsync(serviceModel);
             if (id == null)
