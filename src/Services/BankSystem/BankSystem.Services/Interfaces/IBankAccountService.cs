@@ -16,8 +16,6 @@
 
         Task<string> GetAccountIdAsync(string uniqueId);
 
-        Task<string> GetAccountIdAsync(string cardNumber, DateTime cardExpiryDate, int cardSecurityCode, string cardOwner);
-
         Task<T> GetBankAccountAsync<T>(string id)
             where T : BankAccountBaseServiceModel;
     }

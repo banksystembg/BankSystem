@@ -1,5 +1,6 @@
 ﻿namespace BankSystem.Services.Implementations
 {
+    using System;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
@@ -46,6 +47,22 @@
 
             return dbModel.Id;
         }
+
+        public async Task<T> GetAsync<T>(
+            string cardNumber,
+            DateTime cardExpiryDate,
+            int cardSecurityCode,
+            string cardOwner)
+            where T : CardBaseServiceModel
+            => await this.Context
+                .Cards
+                .Where(c =>
+                    c.Name == cardOwner &&
+                    c.Number == cardNumber &&
+                    c.SecurityCode == cardSecurityCode &&
+                    c.ExpiryDate == cardExpiryDate)
+                .ProjectTo<T>()
+                .SingleOrDefaultAsync();
 
         public async Task<IEnumerable<T>> GetAllCardsAsync<T>(string userId)
             where T : CardBaseServiceModel
