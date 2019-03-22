@@ -62,11 +62,11 @@ namespace BankSystem.Web.Controllers
                     .GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id))
                 .Select(Mapper.Map<MoneyTransferListingDto>)
                 .ToArray();
-            var accountUniqueId = await this.bankAccountService.GetUserAccountUniqueId(id);
+            var account = await this.bankAccountService.GetBankAccountAsync<BankAccountConciseServiceModel>(id);
 
             var transfers = new BankAccountDetailsViewModel
             {
-                BankAccountUniqueId = accountUniqueId,
+                BankAccountUniqueId = account.UniqueId,
                 MoneyTransfers = serviceModelTransfers,
             };
             return this.View(transfers);
