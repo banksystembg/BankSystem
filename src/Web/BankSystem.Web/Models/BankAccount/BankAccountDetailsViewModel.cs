@@ -1,12 +1,12 @@
 ﻿namespace BankSystem.Web.Models.BankAccount
 {
     using Areas.MoneyTransfers.Models;
-    using System.Collections.Generic;
+    using Infrastructure.Collections;
 
     public class BankAccountDetailsViewModel
     {
         public string BankAccountUniqueId { get; set; }
 
-        public IEnumerable<MoneyTransferListingDto> MoneyTransfers { get; set; }
+        public PaginatedList<MoneyTransferListingDto> MoneyTransfers { get; set; }
     }
 }
