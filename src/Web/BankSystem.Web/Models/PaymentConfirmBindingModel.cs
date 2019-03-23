@@ -8,26 +8,16 @@ namespace BankSystem.Web.Models
 
     public class PaymentConfirmBindingModel : IMoneyTransferCreateBindingModel
     {
-        [Required]
         public decimal Amount { get; set; }
 
-        [MaxLength(ModelConstants.MoneyTransfer.DescriptionMaxLength)]
         public string Description { get; set; }
 
-        [Required]
-        [MaxLength(ModelConstants.BankAccount.NameMaxLength)]
         public string DestinationBankName { get; set; }
 
-        [Required]
-        [MaxLength(ModelConstants.BankAccount.CountryMaxLength)]
         public string DestinationBankCountry { get; set; }
 
-        [Required]
-        [MaxLength(ModelConstants.BankAccount.UniqueIdMaxLength)]
         public string DestinationBankAccountUniqueId { get; set; }
 
-        [Required]
-        [MaxLength(ModelConstants.User.FullNameMaxLength)]
         public string RecipientName { get; set; }
 
         public IEnumerable<OwnBankAccountListingViewModel> OwnAccounts { get; set; }

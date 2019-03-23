@@ -81,6 +81,7 @@
             if (id == null)
             {
                 this.ShowErrorMessage(NotificationMessages.CardCreateError);
+                return this.RedirectToHome();
             }
 
             this.ShowSuccessMessage(NotificationMessages.CardCreatedSuccessfully);

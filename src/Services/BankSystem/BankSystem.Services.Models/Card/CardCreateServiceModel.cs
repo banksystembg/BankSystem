@@ -6,7 +6,6 @@
 
     public class CardCreateServiceModel : CardBaseServiceModel
     {
-        [Required]
         public string Number { get; set; }
 
         [Required]
@@ -17,8 +16,6 @@
         [StringLength(ModelConstants.Card.ExpiryDateMaxLength, MinimumLength = ModelConstants.Card.ExpiryDateMaxLength)]
         public string ExpiryDate { get; set; }
 
-        [Required]
-        [StringLength(ModelConstants.Card.SecurityCodeMaxLength, MinimumLength = ModelConstants.Card.SecurityCodeMaxLength)]
         public string SecurityCode { get; set; }
 
         [Required]
