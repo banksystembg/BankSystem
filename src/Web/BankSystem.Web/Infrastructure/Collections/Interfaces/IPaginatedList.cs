@@ -9,5 +9,7 @@
         bool HasPreviousPage { get; }
 
         bool HasNextPage { get; }
+        
+        int SurroundingPagesCount { get; }
     }
 }

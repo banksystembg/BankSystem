@@ -7,19 +7,27 @@
 
     public static class PaginatedListExtensions
     {
-        public static PaginatedList<T> ToPaginatedList<T>(this IEnumerable<T> items, int pageIndex, int itemsCountPerPage)
+        private const int DefaultSurroundingPageCount = 3;
+
+        public static PaginatedList<T> ToPaginatedList<T>(
+            this IEnumerable<T> items,
+            int pageIndex,
+            int itemsCountPerPage,
+            int surroundingPagesCount = DefaultSurroundingPageCount)
         {
             pageIndex = Math.Max(1, pageIndex);
 
-            var totalPages = (int)Math.Ceiling(items.Count() / (double)itemsCountPerPage);
+            var itemsArray = items as T[] ?? items.ToArray();
+
+            var totalPages = (int) Math.Ceiling(itemsArray.Length / (double) itemsCountPerPage);
             pageIndex = Math.Min(pageIndex, totalPages);
 
-            var itemsToShow = items
+            var itemsToShow = itemsArray
                 .Skip((pageIndex - 1) * itemsCountPerPage)
                 .Take(itemsCountPerPage)
                 .ToList();
 
-            return new PaginatedList<T>(itemsToShow, pageIndex, totalPages);
+            return new PaginatedList<T>(itemsToShow, pageIndex, totalPages, surroundingPagesCount);
         }
     }
 }

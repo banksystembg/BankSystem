@@ -1,0 +1,52 @@
+﻿@model IPaginatedList
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var firstDisabled = Model.PageIndex == 1 ? "disabled" : "";
+    var lastDisabled = Model.TotalPages <= Model.PageIndex ? "disabled" : "";
+
+    var firstShownPage = Math.Max(1, Model.PageIndex - Model.SurroundingPagesCount);
+    var lastShownPage = Math.Min(Model.TotalPages, Model.PageIndex + Model.SurroundingPagesCount);
+}
+
+<ul class="pagination justify-content-center">
+    <li class="page-item @firstDisabled d-none d-md-inline-block">
+        <a class="page-link" asp-route-pageIndex="1">
+            <i class="fas fa-angle-double-left"></i>
+        </a>
+    </li>
+    <li class="page-item @prevDisabled">
+        <a class="page-link" asp-route-pageIndex="@(Model.PageIndex - 1)">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+    </li>
+
+    @for (int i = firstShownPage; i < Model.PageIndex; i++)
+    {
+        <li class="page-item">
+            <a class="page-link" asp-route-pageIndex="@i">@i</a>
+        </li>
+    }
+
+    <li class="page-item active">
+        <button class="page-link active">@Model.PageIndex</button>
+    </li>
+
+    @for (int i = Model.PageIndex + 1; i <= lastShownPage; i++)
+    {
+        <li class="page-item">
+            <a class="page-link" asp-route-pageIndex="@i">@i</a>
+        </li>
+    }
+
+    <li class="page-item @nextDisabled">
+        <a class="page-link" asp-route-pageIndex="@(Model.PageIndex + 1)">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </li>
+    <li class="page-item @lastDisabled d-none d-md-inline-block">
+        <a class="page-link" asp-route-pageIndex="@(Model.TotalPages)">
+            <i class="fas fa-angle-double-right"></i>
+        </a>
+    </li>
+</ul>
