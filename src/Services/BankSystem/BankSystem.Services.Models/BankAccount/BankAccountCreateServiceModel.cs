@@ -2,10 +2,11 @@ namespace BankSystem.Services.Models.BankAccount
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Common;
 
     public class BankAccountCreateServiceModel : BankAccountBaseServiceModel
     {
-        [MaxLength(50)]
+        [MaxLength(ModelConstants.BankAccount.NameMaxLength)]
         public string Name { get; set; }
 
         [Required]
