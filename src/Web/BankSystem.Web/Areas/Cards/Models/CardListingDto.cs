@@ -13,7 +13,7 @@
 
         public string ExpiryDate { get; set; }
 
-        public int SecurityCode { get; set; }
+        public string SecurityCode { get; set; }
 
         public string AccountName { get; set; }
     }

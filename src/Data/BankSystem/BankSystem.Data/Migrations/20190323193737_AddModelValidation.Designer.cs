@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Data.Migrations
 {
     [DbContext(typeof(BankSystemDbContext))]
-    [Migration("20190323152453_AddValidationAttributes")]
-    partial class AddValidationAttributes
+    [Migration("20190323193737_AddModelValidation")]
+    partial class AddModelValidation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -122,7 +122,8 @@ namespace BankSystem.Data.Migrations
                     b.Property<string>("Number")
                         .IsRequired();
 
-                    b.Property<int>("SecurityCode")
+                    b.Property<string>("SecurityCode")
+                        .IsRequired()
                         .HasMaxLength(3);
 
                     b.Property<string>("UserId")

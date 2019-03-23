@@ -28,7 +28,7 @@
 
         [Required]
         [StringLength(ModelConstants.Card.SecurityCodeMaxLength, MinimumLength = ModelConstants.Card.SecurityCodeMaxLength)]
-        public int SecurityCode { get; set; }
+        public string SecurityCode { get; set; }
 
         [Required]
         [MaxLength(ModelConstants.BankAccount.NameMaxLength)]

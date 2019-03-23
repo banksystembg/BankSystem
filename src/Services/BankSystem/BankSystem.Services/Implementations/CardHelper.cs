@@ -57,7 +57,7 @@
             return !this.CheckLuhn(sb.ToString()) ? null : sb.ToString();
         }
 
-        public int Generate3DigitSecurityCode()
+        public string Generate3DigitSecurityCode()
         {
             var stringBuilder = new StringBuilder();
             while (stringBuilder.Length < 3)
@@ -65,7 +65,7 @@
                 stringBuilder.Append(this.random.Next(10).ToString());
             }
 
-            return int.Parse(stringBuilder.ToString());
+            return stringBuilder.ToString();
         }
 
         private string CreateCheckDigit(string number)

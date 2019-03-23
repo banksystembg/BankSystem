@@ -30,7 +30,7 @@
             }
 
             string generatedNumber;
-            int generated3DigitSecurityCode;
+            string generated3DigitSecurityCode;
             do
             {
                 generatedNumber = this.cardHelper.Generate16DigitNumber();
@@ -50,7 +50,7 @@
         public async Task<T> GetAsync<T>(
             string cardNumber,
             string cardExpiryDate,
-            int cardSecurityCode,
+            string cardSecurityCode,
             string cardOwner)
             where T : CardBaseServiceModel
             => await this.Context

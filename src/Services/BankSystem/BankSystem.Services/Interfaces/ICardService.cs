@@ -16,7 +16,7 @@
         Task<T> GetAsync<T>(
             string cardNumber,
             string cardExpiryDate,
-            int cardSecurityCode,
+            string cardSecurityCode,
             string cardOwner)
             where T : CardBaseServiceModel;
     }
