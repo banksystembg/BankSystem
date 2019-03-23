@@ -1,6 +1,5 @@
 ﻿namespace BankSystem.Web.Api
 {
-    using Common;
     using Common.EmailSender.Interface;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
@@ -64,9 +63,6 @@
             {
                 return this.NoContent();
             }
-
-            await this.emailSender.SendEmailAsync(account.UserEmail, NotificationMessages.EmailReceiveMoneySubject,
-                string.Format(NotificationMessages.EmailReceiveMoneyMessage, serviceModel.Amount));
 
             return this.Ok();
         }

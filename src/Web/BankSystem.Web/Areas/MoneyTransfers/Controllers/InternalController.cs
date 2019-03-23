@@ -103,9 +103,6 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
                 return this.View(model);
             }
 
-            await this.emailSender.SendEmailAsync(account.UserEmail, NotificationMessages.EmailSendMoneySubject,
-                string.Format(NotificationMessages.EmailSendMoneyMessage, sourceServiceModel.Amount));
-
             var destinationServiceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
             destinationServiceModel.Source = account.UniqueId;
             destinationServiceModel.AccountId = destinationAccount.Id;
@@ -118,9 +115,6 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
-
-            await this.emailSender.SendEmailAsync(destinationAccount.UserEmail, NotificationMessages.EmailReceiveMoneySubject,
-                string.Format(NotificationMessages.EmailReceiveMoneyMessage, destinationServiceModel.Amount));
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulMoneyTransfer);
             return this.RedirectToHome();

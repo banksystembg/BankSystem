@@ -1,7 +1,6 @@
 namespace BankSystem.Services.Implementations
 {
     using AutoMapper;
-    using Common;
     using Common.AutoMapping.Interfaces;
     using Common.EmailSender.Interface;
     using Common.Utils;
@@ -85,9 +84,6 @@ namespace BankSystem.Services.Implementations
             {
                 return GlobalTransferResult.GeneralFailure;
             }
-
-            await this.emailSender.SendEmailAsync(account.UserEmail, NotificationMessages.EmailSendMoneySubject,
-                string.Format(NotificationMessages.EmailSendMoneyMessage, serviceModel.Amount));
 
             return GlobalTransferResult.Succeeded;
         }
