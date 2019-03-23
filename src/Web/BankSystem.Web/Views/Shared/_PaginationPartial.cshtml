@@ -1,12 +1,12 @@
-﻿@model BankSystem.Web.Infrastructure.Collections.Interfaces.IPaginatedList
+﻿@model IPaginatedList
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
     var firstDisabled = Model.PageIndex == 1 ? "disabled" : "";
     var lastDisabled = Model.TotalPages <= Model.PageIndex ? "disabled" : "";
 
-    var firstShownPage = Math.Max(1, Model.PageIndex - Model.SurroundingPageCount);
-    var lastShownPage = Math.Min(Model.TotalPages, Model.PageIndex + Model.SurroundingPageCount);
+    var firstShownPage = Math.Max(1, Model.PageIndex - Model.SurroundingPagesCount);
+    var lastShownPage = Math.Min(Model.TotalPages, Model.PageIndex + Model.SurroundingPagesCount);
 }
 
 <ul class="pagination justify-content-center">

@@ -1,8 +1,8 @@
 ﻿namespace BankSystem.Web.Infrastructure.Collections
 {
+    using Interfaces;
     using System.Collections;
     using System.Collections.Generic;
-    using Interfaces;
 
     public class PaginatedList<T> : IPaginatedList, IEnumerable<T>
     {
@@ -14,7 +14,7 @@
 
             this.PageIndex = pageIndex;
             this.TotalPages = totalPages;
-            this.SurroundingPageCount = surroundingPageCount;
+            this.SurroundingPagesCount = surroundingPageCount;
         }
 
         public IEnumerator<T> GetEnumerator() => this.data.GetEnumerator();
@@ -29,6 +29,6 @@
 
         public bool HasNextPage => this.PageIndex < this.TotalPages;
 
-        public int SurroundingPageCount { get; }
+        public int SurroundingPagesCount { get; }
     }
 }

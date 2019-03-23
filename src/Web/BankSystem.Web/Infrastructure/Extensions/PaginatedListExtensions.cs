@@ -13,7 +13,7 @@
             this IEnumerable<T> items,
             int pageIndex,
             int itemsCountPerPage,
-            int surroundingPageCount = DefaultSurroundingPageCount)
+            int surroundingPagesCount = DefaultSurroundingPageCount)
         {
             pageIndex = Math.Max(1, pageIndex);
 
@@ -27,7 +27,7 @@
                 .Take(itemsCountPerPage)
                 .ToList();
 
-            return new PaginatedList<T>(itemsToShow, pageIndex, totalPages, surroundingPageCount);
+            return new PaginatedList<T>(itemsToShow, pageIndex, totalPages, surroundingPagesCount);
         }
     }
 }

@@ -10,6 +10,6 @@
 
         bool HasNextPage { get; }
         
-        int SurroundingPageCount { get; }
+        int SurroundingPagesCount { get; }
     }
 }
