@@ -11,7 +11,7 @@
     //ViewData[WebConstants.SurroundingPagesCountKey] = 10;
     // Also don't forget to pass it to the partial helper
     // Example
-    // <partial name="_Pagination" model="@Model.MoneyTransfers" view-data="@ViewData" />
+    // <partial name="_PaginationPartial" model="@Model.MoneyTransfers" view-data="@ViewData" />
     // P.S Keep in mind the partial helper should be down below after the whole html code or wherever you want to display the pagination
 }
 
@@ -57,5 +57,5 @@
 
 @if (Model.MoneyTransfers.Any())
 {
-    <partial name="_Pagination" model="@Model.MoneyTransfers" />
+    <partial name="_PaginationPartial" model="@Model.MoneyTransfers" />
 }
