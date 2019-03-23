@@ -1,6 +1,7 @@
 namespace BankSystem.Services.Models.GlobalTransfer
 {
     using System.ComponentModel.DataAnnotations;
+    using Common;
 
     public class GlobalTransferServiceModel
     {
@@ -8,24 +9,30 @@ namespace BankSystem.Services.Models.GlobalTransfer
         public string SourceAccountId { get; set; }
 
         [Required]
-        [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
+        [Range(typeof(decimal), ModelConstants.MoneyTransfer.MinStartingPrice, ModelConstants.MoneyTransfer.MaxStartingPrice)]
         public decimal Amount { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.User.FullNameMaxLength)]
         public string RecipientName { get; set; }
 
+        [MaxLength(ModelConstants.MoneyTransfer.DescriptionMaxLength)]
         public string Description { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.BankAccount.SwiftCodeMaxLength)]
         public string DestinationBankSwiftCode { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.BankAccount.NameMaxLength)]
         public string DestinationBankName { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.BankAccount.CountryMaxLength)]
         public string DestinationBankCountry { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.BankAccount.UniqueIdMaxLength)]
         public string DestinationBankAccountUniqueId { get; set; }
     }
 }

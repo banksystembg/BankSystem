@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Common;
     using Common.AutoMapping.Interfaces;
     using Services.Models.GlobalTransfer;
     using Web.Models.BankAccount;
@@ -12,15 +13,17 @@
         [Required]
         public GlobalMoneyTransferCreateDestinationBankDto DestinationBank { get; set; }
 
-        [MaxLength(150)]
+        [MaxLength(ModelConstants.MoneyTransfer.DescriptionMaxLength)]
         [Display(Name = "Details of Payment")]
         public string Description { get; set; }
 
         [Required]
-        [Range(typeof(decimal), "0.01", "79228162514264337593543950335", ErrorMessage = "The Amount field cannot be lower than 0.01")]
+        [Range(typeof(decimal), ModelConstants.MoneyTransfer.MinStartingPrice, ModelConstants.MoneyTransfer.MaxStartingPrice, 
+            ErrorMessage = "The Amount field cannot be lower than 0.01")]
         public decimal Amount { get; set; }
 
         [Display(Name = "Name")]
+        [MaxLength(ModelConstants.User.FullNameMaxLength)]
         public string SenderName { get; set; }
 
         public IEnumerable<OwnBankAccountListingViewModel> OwnAccounts { get; set; }

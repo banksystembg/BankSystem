@@ -2,6 +2,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Models.Internal
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Common;
     using Microsoft.Extensions.DependencyInjection;
     using Services.Interfaces;
     using Web.Models.BankAccount;
@@ -11,11 +12,11 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Models.Internal
         private const string DestinationAccountIncorrectError =
             "Destination account is incorrect or belongs to a different bank";
 
-        [MaxLength(150)]
+        [MaxLength(ModelConstants.MoneyTransfer.DescriptionMaxLength)]
         public string Description { get; set; }
 
         [Required]
-        [Range(typeof(decimal), "0.01", "79228162514264337593543950335", ErrorMessage =
+        [Range(typeof(decimal), ModelConstants.MoneyTransfer.MinStartingPrice, ModelConstants.MoneyTransfer.MaxStartingPrice, ErrorMessage =
             "The amount cannot be lower than 0.01")]
         public decimal Amount { get; set; }
 
