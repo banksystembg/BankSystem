@@ -1,6 +1,5 @@
 ﻿namespace BankSystem.Web.Api
 {
-    using Common.EmailSender.Interface;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models;
@@ -18,16 +17,13 @@
     {
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
-        private readonly IEmailSender emailSender;
 
         public ReceiveMoneyTransfersController(
             IMoneyTransferService moneyTransferService,
-            IBankAccountService bankAccountService,
-            IEmailSender emailSender)
+            IBankAccountService bankAccountService)
         {
             this.moneyTransferService = moneyTransferService;
             this.bankAccountService = bankAccountService;
-            this.emailSender = emailSender;
         }
 
         // POST api/values

@@ -18,15 +18,7 @@
         }
 
         public async Task<bool> SendEmailAsync(string receiver, string subject, string htmlMessage)
-        {
-            var client = new SendGridClient(this.options.ApiKey);
-            var from = new EmailAddress(AppEmail);
-            var to = new EmailAddress(receiver, receiver);
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlMessage, htmlMessage);
-            var isSuccessful = await client.SendEmailAsync(msg);
-
-            return isSuccessful.StatusCode == HttpStatusCode.Accepted;
-        }
+            => await this.SendEmailAsync(AppEmail, receiver, subject, htmlMessage);
 
         public async Task<bool> SendEmailAsync(string sender, string receiver, string subject, string htmlMessage)
         {
