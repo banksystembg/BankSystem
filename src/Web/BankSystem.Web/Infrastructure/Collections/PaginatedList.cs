@@ -8,7 +8,11 @@
     {
         private readonly IEnumerable<T> data;
 
-        public PaginatedList(IEnumerable<T> data, int pageIndex, int totalPages, int surroundingPageCount)
+        public PaginatedList(
+            IEnumerable<T> data, 
+            int pageIndex, 
+            int totalPages, 
+            int surroundingPageCount)
         {
             this.data = data;
 

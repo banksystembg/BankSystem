@@ -18,7 +18,8 @@
         private readonly IUserService userService;
         private readonly IGlobalTransferHelper globalTransferHelper;
 
-        public GlobalController(IBankAccountService bankAccountService,
+        public GlobalController(
+            IBankAccountService bankAccountService,
             IUserService userService,
             IGlobalTransferHelper globalTransferHelper)
             : base(bankAccountService)

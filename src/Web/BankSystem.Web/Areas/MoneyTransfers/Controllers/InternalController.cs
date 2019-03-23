@@ -2,7 +2,6 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
     using AutoMapper;
     using Common;
-    using Common.EmailSender.Interface;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Internal;
@@ -18,18 +17,15 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
-        private readonly IEmailSender emailSender;
 
         public InternalController(
             IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
-            IUserService userService, 
-            IEmailSender emailSender)
+            IUserService userService)
             : base(bankAccountService)
         {
             this.moneyTransferService = moneyTransferService;
             this.userService = userService;
-            this.emailSender = emailSender;
             this.bankAccountService = bankAccountService;
         }
 

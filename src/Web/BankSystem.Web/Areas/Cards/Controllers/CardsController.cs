@@ -1,6 +1,5 @@
 ﻿namespace BankSystem.Web.Areas.Cards.Controllers
 {
-    using System;
     using AutoMapper;
     using Common;
     using Infrastructure.Extensions;
@@ -10,6 +9,7 @@
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.Card;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -22,7 +22,9 @@
         private readonly IBankAccountService bankAccountService;
         private readonly ICardService cardService;
 
-        public CardsController(IUserService userService, IBankAccountService bankAccountService,
+        public CardsController(
+            IUserService userService, 
+            IBankAccountService bankAccountService,
             ICardService cardService)
         {
             this.userService = userService;

@@ -16,7 +16,10 @@
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IUserService userService;
 
-        public HomeController(IBankAccountService bankAccountService, IMoneyTransferService moneyTransferService, IUserService userService)
+        public HomeController(
+            IBankAccountService bankAccountService, 
+            IMoneyTransferService moneyTransferService, 
+            IUserService userService)
             : base(bankAccountService)
         {
             this.moneyTransferService = moneyTransferService;

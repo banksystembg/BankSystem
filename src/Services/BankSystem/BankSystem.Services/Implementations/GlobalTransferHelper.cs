@@ -2,7 +2,6 @@ namespace BankSystem.Services.Implementations
 {
     using AutoMapper;
     using Common.AutoMapping.Interfaces;
-    using Common.EmailSender.Interface;
     using Common.Utils;
     using Common.Utils.CustomHandlers;
     using Interfaces;
@@ -19,18 +18,15 @@ namespace BankSystem.Services.Implementations
         private readonly IBankAccountService bankAccountService;
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankConfigurationHelper bankConfigurationHelper;
-        private readonly IEmailSender emailSender;
 
         public GlobalTransferHelper(
             IBankAccountService bankAccountService, 
             IMoneyTransferService moneyTransferService,
-            IBankConfigurationHelper bankConfigurationHelper, 
-            IEmailSender emailSender)
+            IBankConfigurationHelper bankConfigurationHelper)
         {
             this.bankAccountService = bankAccountService;
             this.moneyTransferService = moneyTransferService;
             this.bankConfigurationHelper = bankConfigurationHelper;
-            this.emailSender = emailSender;
         }
 
         public async Task<GlobalTransferResult> TransferMoneyAsync(GlobalTransferServiceModel model)
