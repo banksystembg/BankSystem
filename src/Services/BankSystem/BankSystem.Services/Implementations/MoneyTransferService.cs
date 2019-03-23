@@ -18,7 +18,7 @@
         private const string EmailReceiveMoneyMessage = "{0}€ have been transferred to your account. Please log in your account for additional information.";
         private const string EmailSendMoneySubject = "You've sent money";
         private const string EmailSendMoneyMessage =
-            "{0}€ have been transferred from your account. If it were not you, please contact our support center as fast as possible!";
+            "{0}€ have been transferred from your account. If it was not you, please contact our support center as fast as possible!";
 
         private readonly IEmailSender emailSender;
 
