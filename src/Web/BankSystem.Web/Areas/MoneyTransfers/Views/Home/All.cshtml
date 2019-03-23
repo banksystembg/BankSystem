@@ -1,17 +1,6 @@
 ﻿@model MoneyTransferListingViewModel
 @{
     ViewData["Title"] = "All payments";
-
-    // Pass ViewData with the surroundingPagesCount constant
-    // and the desired number to the partial view if you want to have custom number of surrounding pages
-    // or if you want to use the default one don't pass anything. The default number of surrounding pages is 3.
-
-    // Example:
-    // ViewData[WebConstants.SurroundingPagesCountKey] = 10;
-    // Also don't forget to pass it to the partial helper
-    // Example
-    // <partial name="_PaginationPartial" model="@Model.MoneyTransfers" view-data="@ViewData" />
-    // P.S Keep in mind the partial helper should be down below after the whole html code or wherever you want to display the pagination
 }
 
 <div class="container">

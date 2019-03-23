@@ -8,12 +8,13 @@
     {
         private readonly IEnumerable<T> data;
 
-        public PaginatedList(IEnumerable<T> data, int pageIndex, int totalPages)
+        public PaginatedList(IEnumerable<T> data, int pageIndex, int totalPages, int surroundingPageCount)
         {
             this.data = data;
 
             this.PageIndex = pageIndex;
             this.TotalPages = totalPages;
+            this.SurroundingPageCount = surroundingPageCount;
         }
 
         public IEnumerator<T> GetEnumerator() => this.data.GetEnumerator();
@@ -27,5 +28,7 @@
         public bool HasPreviousPage => this.PageIndex > 1;
 
         public bool HasNextPage => this.PageIndex < this.TotalPages;
+
+        public int SurroundingPageCount { get; }
     }
 }
