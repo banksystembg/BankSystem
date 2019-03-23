@@ -1,8 +1,8 @@
 ﻿namespace BankSystem.Web.Infrastructure.Collections
 {
-    using Interfaces;
     using System.Collections;
     using System.Collections.Generic;
+    using Interfaces;
 
     public class PaginatedList<T> : IPaginatedList, IEnumerable<T>
     {

@@ -1,7 +1,7 @@
 ﻿namespace BankSystem.Services.Models.Card
 {
-    using BankSystem.Models;
     using System.ComponentModel.DataAnnotations;
+    using BankSystem.Models;
 
     public class CardCreateServiceModel : CardBaseServiceModel
     {

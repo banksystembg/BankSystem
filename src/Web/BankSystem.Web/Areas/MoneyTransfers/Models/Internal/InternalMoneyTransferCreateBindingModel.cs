@@ -20,15 +20,15 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Models.Internal
         public decimal Amount { get; set; }
 
         [Required]
-        [Display(Name = "Source account")]
-        public string AccountId { get; set; }
-
-        [Required]
         [Display(Name = "Destination account")]
         [RegularExpression(@"^[A-Z]{4}\d{8}$", ErrorMessage = DestinationAccountIncorrectError)]
         public string DestinationBankAccountUniqueId { get; set; }
 
         public IEnumerable<OwnBankAccountListingViewModel> OwnAccounts { get; set; }
+
+        [Required]
+        [Display(Name = "Source account")]
+        public string AccountId { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

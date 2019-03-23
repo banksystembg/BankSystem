@@ -12,9 +12,9 @@
     [Authorize]
     public class Disable2faModel : BasePageModel
     {
-        private readonly UserManager<BankUser> userManager;
-        private readonly SignInManager<BankUser> signInManager;
         private readonly ILogger<Disable2faModel> logger;
+        private readonly SignInManager<BankUser> signInManager;
+        private readonly UserManager<BankUser> userManager;
 
         public Disable2faModel(UserManager<BankUser> userManager, ILogger<Disable2faModel> logger,
             SignInManager<BankUser> signInManager)

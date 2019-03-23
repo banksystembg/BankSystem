@@ -7,15 +7,15 @@
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "AppId",
-                table: "Banks");
+                "AppId",
+                "Banks");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "AppId",
-                table: "Banks",
+                "AppId",
+                "Banks",
                 nullable: false,
                 defaultValue: "");
         }

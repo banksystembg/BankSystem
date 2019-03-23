@@ -1,5 +1,10 @@
 namespace BankSystem.Web.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Common.Utils;
@@ -13,22 +18,17 @@ namespace BankSystem.Web.Controllers
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.GlobalTransfer;
-    using System;
-    using System.Linq;
-    using System.Security.Cryptography;
-    using System.Text;
-    using System.Threading.Tasks;
 
     [Authorize]
     public class PaymentsController : BaseController
     {
         private const int CookieValidityInMinutes = 5;
         private const string PaymentDataCookie = "PaymentData";
+        private readonly IBankAccountService bankAccountService;
 
         private readonly IBankConfigurationHelper bankConfigurationHelper;
-        private readonly IBankAccountService bankAccountService;
-        private readonly IUserService userService;
         private readonly IGlobalTransferHelper globalTransferHelper;
+        private readonly IUserService userService;
 
         public PaymentsController(
             IBankConfigurationHelper bankConfigurationHelper,

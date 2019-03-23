@@ -1,13 +1,13 @@
 ﻿namespace BankSystem.Web.Pages.Account
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.Threading.Tasks;
     using BankSystem.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Models;
+    using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
 
     [AllowAnonymous]
     public class RegisterModel : BasePageModel

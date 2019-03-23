@@ -1,15 +1,15 @@
 ﻿namespace BankSystem.Data.Migrations
 {
-    using Microsoft.EntityFrameworkCore.Migrations;
     using System;
+    using Microsoft.EntityFrameworkCore.Migrations;
 
     public partial class AddCardsTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cards",
-                columns: table => new
+                "Cards",
+                table => new
                 {
                     Id = table.Column<string>(nullable: false),
                     Number = table.Column<int>(nullable: false),
@@ -23,34 +23,34 @@
                 {
                     table.PrimaryKey("PK_Cards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Cards_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id",
+                        "FK_Cards_Accounts_AccountId",
+                        x => x.AccountId,
+                        "Accounts",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Cards_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        "FK_Cards_AspNetUsers_UserId",
+                        x => x.UserId,
+                        "AspNetUsers",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cards_AccountId",
-                table: "Cards",
-                column: "AccountId");
+                "IX_Cards_AccountId",
+                "Cards",
+                "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cards_UserId",
-                table: "Cards",
-                column: "UserId");
+                "IX_Cards_UserId",
+                "Cards",
+                "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Cards");
+                "Cards");
         }
     }
 }

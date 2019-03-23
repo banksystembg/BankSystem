@@ -11,7 +11,7 @@ namespace BankSystem.Common.Utils
             var validationResults = new List<ValidationResult>();
 
             return Validator.TryValidateObject(model, validationContext, validationResults,
-                validateAllProperties: true);
+                true);
         }
     }
 }

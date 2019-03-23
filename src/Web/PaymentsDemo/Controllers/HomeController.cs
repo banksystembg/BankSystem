@@ -1,8 +1,8 @@
 ﻿namespace PaymentsDemo.Controllers
 {
+    using System.Security.Cryptography;
     using BankSystem.Common.Utils;
     using Microsoft.AspNetCore.Mvc;
-    using System.Security.Cryptography;
 
     public class HomeController : Controller
     {

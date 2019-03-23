@@ -1,5 +1,8 @@
 namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Infrastructure.Filters;
@@ -8,14 +11,11 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class InternalController : BaseMoneyTransferController
     {
-        private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
+        private readonly IMoneyTransferService moneyTransferService;
         private readonly IUserService userService;
 
         public InternalController(

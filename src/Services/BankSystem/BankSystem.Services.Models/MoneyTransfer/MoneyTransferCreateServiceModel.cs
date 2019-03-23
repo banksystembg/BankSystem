@@ -1,10 +1,10 @@
 ﻿namespace BankSystem.Services.Models.MoneyTransfer
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
     using AutoMapper;
     using BankSystem.Models;
     using Common.AutoMapping.Interfaces;
-    using System;
-    using System.ComponentModel.DataAnnotations;
 
     public class MoneyTransferCreateServiceModel : MoneyTransferBaseServiceModel, IHaveCustomMapping
     {

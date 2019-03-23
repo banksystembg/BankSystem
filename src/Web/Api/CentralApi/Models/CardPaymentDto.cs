@@ -4,7 +4,6 @@
 
     public class CardPaymentDto
     {
-
         [Required]
         public decimal Amount { get; set; }
 

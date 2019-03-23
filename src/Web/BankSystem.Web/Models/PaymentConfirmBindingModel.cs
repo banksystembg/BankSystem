@@ -22,10 +22,10 @@ namespace BankSystem.Web.Models
         public IEnumerable<OwnBankAccountListingViewModel> OwnAccounts { get; set; }
 
         [Required]
-        [Display(Name = "Source account")]
-        public string AccountId { get; set; }
+        public string DataHash { get; set; }
 
         [Required]
-        public string DataHash { get; set; }
+        [Display(Name = "Source account")]
+        public string AccountId { get; set; }
     }
 }

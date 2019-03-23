@@ -1,9 +1,9 @@
 ﻿namespace BankSystem.Web.Areas.MoneyTransfers.Models.Global
 {
+    using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
     using Create;
     using Services.Models.MoneyTransfer;
-    using System.ComponentModel.DataAnnotations;
 
     public class GlobalMoneyTransferCentralApiBindingModel : IMapWith<GlobalMoneyTransferCreateBindingModel>,
         IMapWith<MoneyTransferCreateServiceModel>

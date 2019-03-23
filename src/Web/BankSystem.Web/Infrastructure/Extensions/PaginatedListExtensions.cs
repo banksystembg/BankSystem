@@ -1,9 +1,9 @@
 ﻿namespace BankSystem.Web.Infrastructure.Extensions
 {
-    using Collections;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Collections;
 
     public static class PaginatedListExtensions
     {

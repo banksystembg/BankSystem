@@ -1,8 +1,8 @@
 ﻿namespace BankSystem.Services.Interfaces
 {
-    using Models.BankAccount;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Models.BankAccount;
 
     public interface IBankAccountService
     {

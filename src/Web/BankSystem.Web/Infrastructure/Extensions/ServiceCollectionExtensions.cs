@@ -1,10 +1,10 @@
 ﻿namespace BankSystem.Web.Infrastructure.Extensions
 {
+    using System.Linq;
+    using System.Reflection;
     using Common.EmailSender.Interface;
     using Microsoft.Extensions.DependencyInjection;
     using Services.Interfaces;
-    using System.Linq;
-    using System.Reflection;
 
     public static class ServiceCollectionExtensions
     {

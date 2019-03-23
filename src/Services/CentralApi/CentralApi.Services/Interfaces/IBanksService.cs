@@ -1,8 +1,8 @@
 ﻿namespace CentralApi.Services.Interfaces
 {
-    using Models.Banks;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Models.Banks;
 
     public interface IBanksService
     {

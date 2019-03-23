@@ -7,16 +7,16 @@
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<decimal>(
-                name: "Balance",
-                table: "Accounts",
+                "Balance",
+                "Accounts",
                 nullable: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Balance",
-                table: "Accounts");
+                "Balance",
+                "Accounts");
         }
     }
 }

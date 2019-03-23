@@ -7,16 +7,16 @@
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "CardPaymentUrl",
-                table: "Banks",
+                "CardPaymentUrl",
+                "Banks",
                 nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CardPaymentUrl",
-                table: "Banks");
+                "CardPaymentUrl",
+                "Banks");
         }
     }
 }

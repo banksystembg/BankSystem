@@ -7,14 +7,14 @@
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "RecipientName",
-                table: "Transfers",
+                "RecipientName",
+                "Transfers",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
-                name: "SenderName",
-                table: "Transfers",
+                "SenderName",
+                "Transfers",
                 nullable: false,
                 defaultValue: "");
         }
@@ -22,12 +22,12 @@
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "RecipientName",
-                table: "Transfers");
+                "RecipientName",
+                "Transfers");
 
             migrationBuilder.DropColumn(
-                name: "SenderName",
-                table: "Transfers");
+                "SenderName",
+                "Transfers");
         }
     }
 }

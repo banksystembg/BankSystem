@@ -23,7 +23,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse">
-                    @if (this.User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated)
                     {
                         <ul class="navbar-nav mx-auto text-uppercase">
                             <li class="nav-item dropdown auto-dropdown">
@@ -175,6 +175,6 @@
         </script>
     }
 
-    @RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", false)
 </body>
 </html>

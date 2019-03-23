@@ -1,5 +1,6 @@
 ﻿namespace BankSystem.Web
 {
+    using System;
     using AutoMapper;
     using BankSystem.Models;
     using Common.AutoMapping.Profiles;
@@ -18,7 +19,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Net.Http.Headers;
-    using System;
     using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
     public class Startup
@@ -158,11 +158,11 @@
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "areas",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    "areas",
+                    "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
             });
 
             app.InitializeDatabase();

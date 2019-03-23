@@ -1,7 +1,7 @@
 ﻿namespace CentralApi.Models
 {
-    using BankSystem.Common.AutoMapping.Interfaces;
     using System.ComponentModel.DataAnnotations;
+    using BankSystem.Common.AutoMapping.Interfaces;
 
     public class SendTransactionModel : IMapWith<ReceiveTransactionModel>
     {

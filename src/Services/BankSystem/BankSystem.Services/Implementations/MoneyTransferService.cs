@@ -8,6 +8,7 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.MoneyTransfer;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -17,6 +18,7 @@
         private const string EmailReceiveMoneySubject = "You've received money";
         private const string EmailReceiveMoneyMessage = "{0}€ have been transferred to your account. Please log in your account for additional information.";
         private const string EmailSendMoneySubject = "You've sent money";
+
         private const string EmailSendMoneyMessage =
             "{0}€ have been transferred from your account. If it was not you, please contact our support center as fast as possible!";
 
@@ -67,6 +69,7 @@
             var dbModel = Mapper.Map<MoneyTransfer>(model);
             var userAccount = await this.Context
                 .Accounts
+                .Include(u=> u.User)
                 .Where(u => u.Id == dbModel.AccountId)
                 .SingleOrDefaultAsync();
             if (userAccount == null)
@@ -88,7 +91,7 @@
             else
             {
                 await this.emailSender.SendEmailAsync(dbModel.Account.User.Email, EmailSendMoneySubject,
-                    string.Format(EmailSendMoneyMessage, dbModel.Amount));
+                    string.Format(EmailSendMoneyMessage, Math.Abs(dbModel.Amount)));
             }
 
             return true;
