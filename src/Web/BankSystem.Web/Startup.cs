@@ -1,10 +1,10 @@
 ﻿namespace BankSystem.Web
 {
-    using System;
     using AutoMapper;
     using BankSystem.Models;
     using Common.AutoMapping.Profiles;
     using Common.Configuration;
+    using Common.EmailSender;
     using Common.Utils;
     using Data;
     using Infrastructure.Extensions;
@@ -18,6 +18,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Net.Http.Headers;
+    using System;
     using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
     public class Startup
@@ -72,6 +73,7 @@
             services
                 .AddDomainServices()
                 .AddApplicationServices()
+                .AddCommonProjectServices()
                 .AddAuthentication();
 
             services.Configure<SecurityStampValidatorOptions>(options =>
@@ -82,16 +84,27 @@
             services
                 .Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
-            services.Configure<BankConfiguration>(
-                this.Configuration.GetSection(nameof(BankConfiguration)));
+            services
+                .Configure<BankConfiguration>(
+                this.Configuration.GetSection(nameof(BankConfiguration)))
+                .Configure<SendGridConfiguration>(
+                    this.Configuration.GetSection(nameof(SendGridConfiguration)));
 
-            services.PostConfigure<BankConfiguration>(settings =>
-            {
-                if (!ValidationUtil.IsObjectValid(settings))
+            services
+                .PostConfigure<BankConfiguration>(settings =>
                 {
-                    throw new ApplicationException("BankConfiguration is invalid");
-                }
-            });
+                    if (!ValidationUtil.IsObjectValid(settings))
+                    {
+                        throw new ApplicationException("BankConfiguration is invalid");
+                    }
+                })
+                .PostConfigure<SendGridConfiguration>(settings =>
+                {
+                    if (!ValidationUtil.IsObjectValid(settings))
+                    {
+                        throw new ApplicationException("SendGridConfiguration is invalid");
+                    }
+                });
 
             services
                 .AddResponseCompression(options => options.EnableForHttps = true);

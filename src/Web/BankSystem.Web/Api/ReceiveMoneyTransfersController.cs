@@ -18,7 +18,9 @@
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
 
-        public ReceiveMoneyTransfersController(IMoneyTransferService moneyTransferService, IBankAccountService bankAccountService)
+        public ReceiveMoneyTransfersController(
+            IMoneyTransferService moneyTransferService,
+            IBankAccountService bankAccountService)
         {
             this.moneyTransferService = moneyTransferService;
             this.bankAccountService = bankAccountService;
@@ -33,7 +35,7 @@
                 return this.NoContent();
             }
 
-            var account = 
+            var account =
                 await this.bankAccountService.GetByUniqueIdAsync<BankAccountConciseServiceModel>(
                     model.DestinationBankAccountUniqueId);
             if (account == null || !string.Equals(account.UserFullName, model.RecipientName, StringComparison.InvariantCulture))

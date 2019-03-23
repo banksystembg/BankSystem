@@ -2,6 +2,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
     using AutoMapper;
     using Common;
+    using Common.EmailSender.Interface;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Internal;
@@ -17,15 +18,18 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
         private readonly IUserService userService;
+        private readonly IEmailSender emailSender;
 
         public InternalController(
             IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
-            IUserService userService)
+            IUserService userService, 
+            IEmailSender emailSender)
             : base(bankAccountService)
         {
             this.moneyTransferService = moneyTransferService;
             this.userService = userService;
+            this.emailSender = emailSender;
             this.bankAccountService = bankAccountService;
         }
 
@@ -88,7 +92,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 
             var sourceServiceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
             sourceServiceModel.Source = account.UniqueId;
-            sourceServiceModel.Amount = -sourceServiceModel.Amount;
+            sourceServiceModel.Amount *= -1;
             sourceServiceModel.SenderName = account.UserFullName;
             sourceServiceModel.RecipientName = account.UserFullName;
 

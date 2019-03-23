@@ -3,6 +3,7 @@
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
+    using Common.EmailSender.Interface;
     using Data;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,18 @@
 
     public class MoneyTransferService : BaseService, IMoneyTransferService
     {
-        public MoneyTransferService(BankSystemDbContext context)
+        private const string EmailReceiveMoneySubject = "You've received money";
+        private const string EmailReceiveMoneyMessage = "{0}€ have been transferred to your account. Please log in your account for additional information.";
+        private const string EmailSendMoneySubject = "You've sent money";
+        private const string EmailSendMoneyMessage =
+            "{0}€ have been transferred from your account. If it was not you, please contact our support center as fast as possible!";
+
+        private readonly IEmailSender emailSender;
+
+        public MoneyTransferService(BankSystemDbContext context, IEmailSender emailSender)
             : base(context)
         {
+            this.emailSender = emailSender;
         }
 
         public async Task<IEnumerable<T>> GetAllMoneyTransfersAsync<T>(string userId)
@@ -69,6 +79,17 @@
 
             await this.Context.Transfers.AddAsync(dbModel);
             await this.Context.SaveChangesAsync();
+
+            if (dbModel.Amount > 0)
+            {
+                await this.emailSender.SendEmailAsync(dbModel.Account.User.Email, EmailReceiveMoneySubject,
+                    string.Format(EmailReceiveMoneyMessage, dbModel.Amount));
+            }
+            else
+            {
+                await this.emailSender.SendEmailAsync(dbModel.Account.User.Email, EmailSendMoneySubject,
+                    string.Format(EmailSendMoneyMessage, dbModel.Amount));
+            }
 
             return true;
         }
