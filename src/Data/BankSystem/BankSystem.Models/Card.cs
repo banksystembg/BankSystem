@@ -1,6 +1,7 @@
 ﻿namespace BankSystem.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using Common;
 
     public class Card
     {
@@ -10,13 +11,15 @@
         public string Number { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.Card.NameMaxLength)]
         public string Name { get; set; }
 
         [Required]
-        [StringLength(5, MinimumLength = 5)]
+        [StringLength(ModelConstants.Card.ExpiryDateMaxLength, MinimumLength = ModelConstants.Card.ExpiryDateMaxLength)]
         public string ExpiryDate { get; set; }
 
         [Required]
+        [StringLength(ModelConstants.Card.SecurityCodeMaxLength, MinimumLength = ModelConstants.Card.SecurityCodeMaxLength)]
         public int SecurityCode { get; set; }
 
         [Required]
