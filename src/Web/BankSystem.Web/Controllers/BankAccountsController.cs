@@ -20,7 +20,10 @@ namespace BankSystem.Web.Controllers
         private readonly IUserService userService;
         private readonly IMoneyTransferService moneyTransferService;
 
-        public BankAccountsController(IBankAccountService bankAccountService, IUserService userService, IMoneyTransferService moneyTransferService)
+        public BankAccountsController(
+            IBankAccountService bankAccountService, 
+            IUserService userService, 
+            IMoneyTransferService moneyTransferService)
         {
             this.bankAccountService = bankAccountService;
             this.userService = userService;
