@@ -37,7 +37,7 @@ namespace BankSystem.Services.Implementations
             }
 
             var account = await this.bankAccountService
-                .GetByIdAsync<BankAccountIndexServiceModel>(model.SourceAccountId);
+                .GetByIdAsync<BankAccountConciseServiceModel>(model.SourceAccountId);
 
             // check if account exists and recipient name is accurate
             if (account == null)
