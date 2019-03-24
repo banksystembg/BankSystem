@@ -62,12 +62,18 @@ namespace BankSystem.Web.Controllers
 
         public async Task<IActionResult> Details(string id, int pageIndex = 1)
         {
+            var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(id);
+            if (account == null ||
+                account.UserUserName != this.User.Identity.Name)
+            {
+                return this.Forbid();
+            }
+            
             var serviceModelTransfers = (await this.moneyTransferService
                     .GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id))
                 .Select(Mapper.Map<MoneyTransferListingDto>)
                 .ToPaginatedList(pageIndex, ItemsPerPage);
                 
-            var account = await this.bankAccountService.GetByIdAsync<BankAccountConciseServiceModel>(id);
             var transfers = new BankAccountDetailsViewModel
             {
                 BankAccountUniqueId = account.UniqueId,
