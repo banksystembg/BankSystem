@@ -70,10 +70,17 @@
                 model.BankAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
+            
+            var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
+            if (account == null ||
+                account.UserUserName != this.User.Identity.Name)
+            {
+                return this.Forbid();
+            }
 
             var serviceModel = Mapper.Map<CardCreateServiceModel>(model);
             serviceModel.UserId = userId;
-            serviceModel.Name = await this.userService.GetAccountOwnerFullnameAsync(userId);
+            serviceModel.Name = account.UserFullName;
             serviceModel.ExpiryDate = DateTime.UtcNow.AddYears(GlobalConstants.CardValidityInYears)
                 .ToString(GlobalConstants.CardExpirationDateFormat);
 
@@ -94,6 +101,17 @@
             if (id == null)
             {
                 this.ShowErrorMessage(NotificationMessages.CardDoesNotExist);
+                return this.RedirectToAction(nameof(this.Index));
+            }
+
+            var card = await this.cardService.GetAsync<CardDetailsServiceModel>(id);
+
+            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+
+            if (card == null || card.UserId != userId)
+            {
+                this.ShowErrorMessage(NotificationMessages.CardDoesNotExist);
+                return this.RedirectToAction(nameof(this.Index));
             }
 
             var isDeleted = await this.cardService.DeleteAsync(id);

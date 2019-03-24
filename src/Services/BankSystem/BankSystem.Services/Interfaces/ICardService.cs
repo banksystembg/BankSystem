@@ -19,5 +19,8 @@
             string cardSecurityCode,
             string cardOwner)
             where T : CardBaseServiceModel;
+
+        Task<T> GetAsync<T>(string id)
+            where T : CardBaseServiceModel;
     }
 }
