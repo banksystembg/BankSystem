@@ -1,4 +1,4 @@
-namespace BankSystem.Web.Areas.Cards.Controllers
+﻿namespace BankSystem.Web.Areas.Cards.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -101,6 +101,17 @@ namespace BankSystem.Web.Areas.Cards.Controllers
             if (id == null)
             {
                 this.ShowErrorMessage(NotificationMessages.CardDoesNotExist);
+                return this.RedirectToAction(nameof(this.Index));
+            }
+
+            var card = await this.cardService.GetAsync<CardDetailsServiceModel>(id);
+
+            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+
+            if (card == null || card.UserId != userId)
+            {
+                this.ShowErrorMessage(NotificationMessages.CardDoesNotExist);
+                return this.RedirectToAction(nameof(this.Index));
             }
 
             var isDeleted = await this.cardService.DeleteAsync(id);
