@@ -63,6 +63,13 @@
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
 
+        public async Task<T> GetAsync<T>(string id)
+            where T : CardBaseServiceModel
+            => await this.Context.Cards
+                .Where(c => c.Id == id)
+                .ProjectTo<T>()
+                .SingleOrDefaultAsync();
+
         public async Task<IEnumerable<T>> GetAllCardsAsync<T>(string userId)
             where T : CardBaseServiceModel
             => await this.Context
