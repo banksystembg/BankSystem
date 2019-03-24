@@ -1,5 +1,8 @@
 ﻿namespace BankSystem.Web.Controllers
 {
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Areas.MoneyTransfers.Models;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
@@ -9,16 +12,13 @@
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     [AllowAnonymous]
     public class HomeController : BaseController
     {
         private readonly IBankAccountService bankAccountService;
-        private readonly IUserService userService;
         private readonly IMoneyTransferService moneyTransferService;
+        private readonly IUserService userService;
 
         public HomeController(
             IBankAccountService bankAccountService,
@@ -51,20 +51,9 @@
             var viewModel = new HomeViewModel
             {
                 UserBankAccounts = bankAccounts,
-                MoneyTransfers = moneyTransfers,
+                MoneyTransfers = moneyTransfers
             };
             return this.View(viewModel);
-        }
-
-        public IActionResult Privacy()
-        {
-            return this.View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

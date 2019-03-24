@@ -24,15 +24,17 @@ namespace BankSystem.Web.Controllers
     {
         private const int CookieValidityInMinutes = 5;
         private const string PaymentDataCookie = "PaymentData";
+        private readonly IBankAccountService bankAccountService;
 
         private readonly IBankConfigurationHelper bankConfigurationHelper;
-        private readonly IBankAccountService bankAccountService;
-        private readonly IUserService userService;
         private readonly IGlobalTransferHelper globalTransferHelper;
+        private readonly IUserService userService;
 
-        public PaymentsController(IBankConfigurationHelper bankConfigurationHelper,
+        public PaymentsController(
+            IBankConfigurationHelper bankConfigurationHelper,
             IBankAccountService bankAccountService,
-            IUserService userService, IGlobalTransferHelper globalTransferHelper)
+            IUserService userService, 
+            IGlobalTransferHelper globalTransferHelper)
         {
             this.bankConfigurationHelper = bankConfigurationHelper;
             this.bankAccountService = bankAccountService;
@@ -73,7 +75,7 @@ namespace BankSystem.Web.Controllers
         [Route("/pay")]
         public async Task<IActionResult> Process()
         {
-            bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out string data);
+            bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out var data);
 
             if (!cookieExists)
             {
@@ -83,7 +85,6 @@ namespace BankSystem.Web.Controllers
             try
             {
                 dynamic deserializedJson = JsonConvert.DeserializeObject(data);
-
                 string paymentInfoJson = deserializedJson.PaymentInfo;
 
                 if (!ValidateSignatures(deserializedJson))
@@ -92,13 +93,12 @@ namespace BankSystem.Web.Controllers
                 }
 
                 dynamic paymentInfo = JsonConvert.DeserializeObject(paymentInfoJson);
-
                 if (paymentInfo.Amount <= 0)
                 {
                     return this.BadRequest();
                 }
 
-                string userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+                var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
 
                 var model = new PaymentConfirmBindingModel
                 {
@@ -125,7 +125,7 @@ namespace BankSystem.Web.Controllers
         [EnsureOwnership]
         public async Task<IActionResult> PayAsync(PaymentConfirmBindingModel model)
         {
-            bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out string data);
+            bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out var data);
 
             if (!this.ModelState.IsValid ||
                 !cookieExists ||
@@ -140,7 +140,6 @@ namespace BankSystem.Web.Controllers
                 dynamic deserializedJson = JsonConvert.DeserializeObject(data);
 
                 string paymentInfoJson = deserializedJson.PaymentInfo;
-
                 string returnUrl = deserializedJson.ReturnUrl;
 
                 if (!ValidateSignatures(deserializedJson))
@@ -149,7 +148,6 @@ namespace BankSystem.Web.Controllers
                 }
 
                 dynamic paymentInfo = JsonConvert.DeserializeObject(paymentInfoJson);
-
                 if (paymentInfo.Amount <= 0)
                 {
                     return this.PaymentFailed(NotificationMessages.PaymentStateInvalid);
@@ -172,12 +170,8 @@ namespace BankSystem.Web.Controllers
 
                 if (result != GlobalTransferResult.Succeeded)
                 {
-                    if (result == GlobalTransferResult.InsufficientFunds)
-                    {
-                        return this.PaymentFailed(NotificationMessages.InsufficientFunds);
-                    }
-
-                    return this.PaymentFailed(NotificationMessages.TryAgainLaterError);
+                    return this.PaymentFailed(result == GlobalTransferResult.InsufficientFunds ? NotificationMessages.InsufficientFunds 
+                        : NotificationMessages.TryAgainLaterError);
                 }
 
                 // delete cookie to prevent accidental duplicate payments
@@ -232,7 +226,7 @@ namespace BankSystem.Web.Controllers
                 PaymentConfirmationSignature = paymentConfirmationSignature
             };
 
-            string responseJson = JsonConvert.SerializeObject(response);
+            var responseJson = JsonConvert.SerializeObject(response);
 
             return responseJson;
         }
@@ -282,14 +276,14 @@ namespace BankSystem.Web.Controllers
 
         private static string Sha256Hash(string data)
         {
-            using (SHA256 sha256Hash = SHA256.Create())
+            using (var sha256Hash = SHA256.Create())
             {
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(data));
+                var bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(data));
 
                 var builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
+                foreach (var bt in bytes)
                 {
-                    builder.Append(bytes[i].ToString("x2"));
+                    builder.Append(bt.ToString("x2"));
                 }
 
                 return builder.ToString();

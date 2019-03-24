@@ -16,9 +16,9 @@
     {
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         private readonly ILogger<Enable2faModel> logger;
+        private readonly SignInManager<BankUser> signInManager;
         private readonly UrlEncoder urlEncoder;
         private readonly UserManager<BankUser> userManager;
-        private readonly SignInManager<BankUser> signInManager;
 
         public Enable2faModel(UserManager<BankUser> userManager, ILogger<Enable2faModel> logger,
             UrlEncoder urlEncoder, SignInManager<BankUser> signInManager)
@@ -153,7 +153,7 @@
             [DataType(DataType.Text)]
             [Display(Name = "Verification Code")]
             public string Code { get; set; }
-            
+
             [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }

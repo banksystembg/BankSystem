@@ -1,5 +1,8 @@
 ﻿namespace CentralApi.Controllers
 {
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Infrastructure.Filters;
     using Infrastructure.Handlers;
@@ -8,9 +11,6 @@
     using Models;
     using Services.Interfaces;
     using Services.Models.Banks;
-    using System.Net;
-    using System.Net.Http;
-    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]

@@ -1,11 +1,11 @@
 ﻿namespace CentralApi.Infrastructure
 {
+    using System.Linq;
     using Data;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Models;
-    using System.Linq;
 
     public static class ApplicationBuilderExtensions
     {
@@ -37,7 +37,7 @@
                         ApiAddress = "https://localhost:56013/api/ReceiveMoneyTransfers",
                         PaymentUrl = "https://localhost:56013/pay/{0}",
                         CardPaymentUrl = "https://localhost:56013/api/cardPayments",
-                        BankIdentificationCardNumbers = "101",
+                        BankIdentificationCardNumbers = "101"
 
                     }
                     //new Bank

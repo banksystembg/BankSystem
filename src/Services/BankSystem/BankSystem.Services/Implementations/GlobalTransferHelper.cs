@@ -1,36 +1,32 @@
 namespace BankSystem.Services.Implementations
 {
+    using System.Net.Http;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Common.AutoMapping.Interfaces;
-    using Common.EmailSender.Interface;
     using Common.Utils;
     using Common.Utils.CustomHandlers;
     using Interfaces;
     using Models.BankAccount;
     using Models.GlobalTransfer;
     using Models.MoneyTransfer;
-    using System.Net.Http;
-    using System.Threading.Tasks;
 
     public class GlobalTransferHelper : IGlobalTransferHelper
     {
         private const string CentralApiTransferSubmitUrlFormat = "{0}api/ReceiveTransactions";
 
         private readonly IBankAccountService bankAccountService;
-        private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankConfigurationHelper bankConfigurationHelper;
-        private readonly IEmailSender emailSender;
+        private readonly IMoneyTransferService moneyTransferService;
 
         public GlobalTransferHelper(
             IBankAccountService bankAccountService, 
             IMoneyTransferService moneyTransferService,
-            IBankConfigurationHelper bankConfigurationHelper, 
-            IEmailSender emailSender)
+            IBankConfigurationHelper bankConfigurationHelper)
         {
             this.bankAccountService = bankAccountService;
             this.moneyTransferService = moneyTransferService;
             this.bankConfigurationHelper = bankConfigurationHelper;
-            this.emailSender = emailSender;
         }
 
         public async Task<GlobalTransferResult> TransferMoneyAsync(GlobalTransferServiceModel model)
@@ -76,7 +72,7 @@ namespace BankSystem.Services.Implementations
                 AccountId = account.Id,
                 DestinationBankAccountUniqueId = model.DestinationBankAccountUniqueId,
                 SenderName = account.UserFullName,
-                RecipientName = model.RecipientName,
+                RecipientName = model.RecipientName
             };
 
             bool success = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);

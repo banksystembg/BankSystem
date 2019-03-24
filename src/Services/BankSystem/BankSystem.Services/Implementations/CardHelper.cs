@@ -1,18 +1,20 @@
 ﻿namespace BankSystem.Services.Implementations
 {
-    using Interfaces;
     using System;
     using System.Linq;
     using System.Text;
+    using Interfaces;
 
     public class CardHelper : ICardHelper
     {
-        private readonly IBankConfigurationHelper bankConfigurationHelper;
         // Convert to int.
         private static readonly Func<char, int> CharToInt = c => c - '0';
-        private readonly Func<int, bool> isEven = i => i % 2 == 0;
+
+        private readonly IBankConfigurationHelper bankConfigurationHelper;
+
         // New Double Concept => 7 * 2 = 14 => 1 + 4 = 5.
         private readonly Func<int, int> doubleDigit = i => (i * 2).ToString().ToCharArray().Select(CharToInt).Sum();
+        private readonly Func<int, bool> isEven = i => i % 2 == 0;
         private readonly Random random;
 
         public CardHelper(IBankConfigurationHelper bankConfigurationHelper)
@@ -50,12 +52,12 @@
                 sb.Append(this.random.Next(0, 10));
             }
 
-            sb.Append(CreateCheckDigit(sb.ToString()));
+            sb.Append(this.CreateCheckDigit(sb.ToString()));
 
-            return !CheckLuhn(sb.ToString()) ? null : sb.ToString();
+            return !this.CheckLuhn(sb.ToString()) ? null : sb.ToString();
         }
 
-        public int Generate3DigitSecurityCode()
+        public string Generate3DigitSecurityCode()
         {
             var stringBuilder = new StringBuilder();
             while (stringBuilder.Length < 3)
@@ -63,7 +65,7 @@
                 stringBuilder.Append(this.random.Next(10).ToString());
             }
 
-            return int.Parse(stringBuilder.ToString());
+            return stringBuilder.ToString();
         }
 
         private string CreateCheckDigit(string number)

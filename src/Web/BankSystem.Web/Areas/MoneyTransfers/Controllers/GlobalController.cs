@@ -1,5 +1,8 @@
 ﻿namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Infrastructure.Filters;
@@ -8,17 +11,15 @@
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.GlobalTransfer;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class GlobalController : BaseMoneyTransferController
     {
         private readonly IBankAccountService bankAccountService;
-        private readonly IUserService userService;
         private readonly IGlobalTransferHelper globalTransferHelper;
+        private readonly IUserService userService;
 
-        public GlobalController(IBankAccountService bankAccountService,
+        public GlobalController(
+            IBankAccountService bankAccountService,
             IUserService userService,
             IGlobalTransferHelper globalTransferHelper)
             : base(bankAccountService)
@@ -41,7 +42,7 @@
             var model = new GlobalMoneyTransferCreateBindingModel
             {
                 OwnAccounts = userAccounts,
-                SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId),
+                SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId)
             };
 
             return this.View(model);

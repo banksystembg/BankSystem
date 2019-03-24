@@ -1,11 +1,11 @@
 ﻿namespace BankSystem.Common.EmailSender.Implementation
 {
+    using System.Net;
+    using System.Threading.Tasks;
     using Interface;
     using Microsoft.Extensions.Options;
     using SendGrid;
     using SendGrid.Helpers.Mail;
-    using System.Net;
-    using System.Threading.Tasks;
 
     public class EmailSender : IEmailSender
     {

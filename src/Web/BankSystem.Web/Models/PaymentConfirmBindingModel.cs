@@ -4,6 +4,7 @@ namespace BankSystem.Web.Models
     using System.ComponentModel.DataAnnotations;
     using Areas.MoneyTransfers.Models;
     using BankAccount;
+    using Common;
 
     public class PaymentConfirmBindingModel : IMoneyTransferCreateBindingModel
     {
@@ -22,10 +23,10 @@ namespace BankSystem.Web.Models
         public IEnumerable<OwnBankAccountListingViewModel> OwnAccounts { get; set; }
 
         [Required]
-        [Display(Name = "Source account")]
-        public string AccountId { get; set; }
+        public string DataHash { get; set; }
 
         [Required]
-        public string DataHash { get; set; }
+        [Display(Name = "Source account")]
+        public string AccountId { get; set; }
     }
 }

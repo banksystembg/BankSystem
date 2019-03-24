@@ -1,10 +1,10 @@
 ﻿namespace BankSystem.Web.Areas.Cards.Models
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Services.Models.Card;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
 
     public class CardCreateViewModel : IMapWith<CardCreateServiceModel>
     {

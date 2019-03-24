@@ -6,7 +6,7 @@ namespace CentralApi.Data.Migrations
     using Microsoft.EntityFrameworkCore.Metadata;
 
     [DbContext(typeof(CentralApiDbContext))]
-    partial class CentralApiDbContextModelSnapshot : ModelSnapshot
+    internal class CentralApiDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

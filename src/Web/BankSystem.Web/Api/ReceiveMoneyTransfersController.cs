@@ -1,13 +1,13 @@
 ﻿namespace BankSystem.Web.Api
 {
+    using System;
+    using System.Threading.Tasks;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
-    using System;
-    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -15,8 +15,8 @@
     [IgnoreAntiforgeryToken]
     public class ReceiveMoneyTransfersController : ControllerBase
     {
-        private readonly IMoneyTransferService moneyTransferService;
         private readonly IBankAccountService bankAccountService;
+        private readonly IMoneyTransferService moneyTransferService;
 
         public ReceiveMoneyTransfersController(
             IMoneyTransferService moneyTransferService,
@@ -51,7 +51,7 @@
                 DestinationBankAccountUniqueId = model.DestinationBankAccountUniqueId,
                 Source = model.SenderAccountUniqueId,
                 SenderName = model.SenderName,
-                RecipientName = model.RecipientName,
+                RecipientName = model.RecipientName
             };
 
             var isSuccessful = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);

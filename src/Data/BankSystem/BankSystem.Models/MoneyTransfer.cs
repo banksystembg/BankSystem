@@ -2,11 +2,13 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Common;
 
     public class MoneyTransfer
     {
         public string Id { get; set; }
 
+        [MaxLength(ModelConstants.MoneyTransfer.DescriptionMaxLength)]
         public string Description { get; set; }
 
         [Required]
@@ -21,15 +23,19 @@
         public BankAccount Account { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.BankAccount.UniqueIdMaxLength)]
         public string Source { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.User.FullNameMaxLength)]
         public string SenderName { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.User.FullNameMaxLength)]
         public string RecipientName { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.BankAccount.UniqueIdMaxLength)]
         public string Destination { get; set; }
     }
 }

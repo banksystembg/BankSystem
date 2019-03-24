@@ -1,5 +1,8 @@
 ﻿namespace BankSystem.Web.Infrastructure.Filters
 {
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
     using Api.Models;
     using Common.Utils;
     using Microsoft.AspNetCore.Http;
@@ -7,9 +10,6 @@
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
 
     public class EnsureRequest : ActionFilterAttribute
     {

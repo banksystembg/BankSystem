@@ -44,6 +44,7 @@
             // Return encrypted data    
             return encrypted;
         }
+
         public static string Decrypt(byte[] cipherText, byte[] Key, byte[] IV)
         {
             string plaintext = null;

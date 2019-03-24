@@ -1,13 +1,14 @@
 ﻿namespace BankSystem.Web.Pages.Account
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.Threading.Tasks;
     using BankSystem.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Models;
+    using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
+    using Common;
 
     [AllowAnonymous]
     public class RegisterModel : BasePageModel
@@ -94,12 +95,13 @@
             public string Email { get; set; }
 
             [Required]
+            [MaxLength(ModelConstants.User.FullNameMaxLength)]
             [Display(Name = "Full Name")]
             public string FullName { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
-                MinimumLength = 6)]
+            [StringLength(ModelConstants.User.PasswordMaxLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+                MinimumLength = ModelConstants.User.PasswordMinLength)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }

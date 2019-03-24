@@ -1,5 +1,6 @@
 ﻿namespace CentralApi
 {
+    using System;
     using AutoMapper;
     using BankSystem.Common.AutoMapping.Profiles;
     using BankSystem.Common.Utils;
@@ -13,13 +14,12 @@
     using Microsoft.Extensions.DependencyInjection;
     using Services.Implementations;
     using Services.Interfaces;
-    using System;
 
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }

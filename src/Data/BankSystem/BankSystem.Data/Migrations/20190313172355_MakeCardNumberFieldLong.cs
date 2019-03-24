@@ -7,8 +7,8 @@
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<long>(
-                name: "Number",
-                table: "Cards",
+                "Number",
+                "Cards",
                 nullable: false,
                 oldClrType: typeof(int));
         }
@@ -16,8 +16,8 @@
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(
-                name: "Number",
-                table: "Cards",
+                "Number",
+                "Cards",
                 nullable: false,
                 oldClrType: typeof(long));
         }

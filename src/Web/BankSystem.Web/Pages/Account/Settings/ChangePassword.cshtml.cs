@@ -12,9 +12,9 @@
     [Authorize]
     public class ChangePasswordModel : BasePageModel
     {
-        private readonly UserManager<BankUser> userManager;
-        private readonly SignInManager<BankUser> signInManager;
         private readonly ILogger<ChangePasswordModel> logger;
+        private readonly SignInManager<BankUser> signInManager;
+        private readonly UserManager<BankUser> userManager;
 
         public ChangePasswordModel(
             UserManager<BankUser> userManager,
@@ -28,26 +28,6 @@
 
         [BindProperty]
         public InputModel Input { get; set; }
-
-        public class InputModel
-        {
-            [Required]
-            [DataType(DataType.Password)]
-            [Display(Name = "Current password")]
-            public string OldPassword { get; set; }
-
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
-                MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "New password")]
-            public string NewPassword { get; set; }
-
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm new password")]
-            [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
-        }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -90,6 +70,26 @@
 
             this.ShowSuccessMessage(NotificationMessages.PasswordChangeSuccessful);
             return this.RedirectToPage("./Index");
+        }
+
+        public class InputModel
+        {
+            [Required]
+            [DataType(DataType.Password)]
+            [Display(Name = "Current password")]
+            public string OldPassword { get; set; }
+
+            [Required]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+                MinimumLength = 6)]
+            [DataType(DataType.Password)]
+            [Display(Name = "New password")]
+            public string NewPassword { get; set; }
+
+            [DataType(DataType.Password)]
+            [Display(Name = "Confirm new password")]
+            [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+            public string ConfirmPassword { get; set; }
         }
     }
 }

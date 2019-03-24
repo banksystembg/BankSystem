@@ -1,13 +1,13 @@
 ﻿namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Interfaces;
     using Services.Models.MoneyTransfer;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class HomeController : BaseMoneyTransferController
     {
@@ -16,7 +16,10 @@
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IUserService userService;
 
-        public HomeController(IBankAccountService bankAccountService, IMoneyTransferService moneyTransferService, IUserService userService)
+        public HomeController(
+            IBankAccountService bankAccountService, 
+            IMoneyTransferService moneyTransferService, 
+            IUserService userService)
             : base(bankAccountService)
         {
             this.moneyTransferService = moneyTransferService;

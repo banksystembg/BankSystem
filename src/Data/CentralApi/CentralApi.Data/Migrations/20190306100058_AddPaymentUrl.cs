@@ -1,22 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace CentralApi.Data.Migrations
+﻿namespace CentralApi.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class AddPaymentUrl : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "PaymentUrl",
-                table: "Banks",
+                "PaymentUrl",
+                "Banks",
                 nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PaymentUrl",
-                table: "Banks");
+                "PaymentUrl",
+                "Banks");
         }
     }
 }

@@ -3,18 +3,21 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Common;
 
     public class BankAccount
     {
         public string Id { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.BankAccount.NameMaxLength)]
         public string Name { get; set; }
 
         [Required]
         public decimal Balance { get; set; }
 
         [Required]
+        [MaxLength(ModelConstants.BankAccount.UniqueIdMaxLength)]
         public string UniqueId { get; set; }
 
         [Required]

@@ -6,6 +6,6 @@
 
         string Generate16DigitNumber();
 
-        int Generate3DigitSecurityCode();
+        string Generate3DigitSecurityCode();
     }
 }

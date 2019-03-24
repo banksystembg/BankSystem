@@ -1,12 +1,12 @@
 namespace PaymentsDemo.Controllers
 {
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
     using BankSystem.Common.Utils;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Newtonsoft.Json;
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
 
     public class DemoPaymentsController : Controller
     {
@@ -19,7 +19,7 @@ namespace PaymentsDemo.Controllers
             "<RSAKeyValue><Modulus>v76m9MR9WiAq7W/A9xiAh5rxjm354nnm619Phns5CDtHhf4A4Vos+eqAhqU/+S3jHXZyUmfRLvplvUkXqu25RaUxXNQCrDOoSyPoYzlVJOVNQfvXPlCeHhk/a/owg7wrAe8RwC12dRysT7dgPysA2jmvEDLJjGgSAslbmVXgqFc3wH+XueChA60lyMbu5nvCG+G38qyVQHrFyX0UtlYuLcPfg8qnw/it7SjdlO4oi8iDRDXjMTmpYN48KQYzyH3i9MJW2HNnGs2EHt7+UR5/3cPdsvKOQvO6wq6tgvzb/u6wq2aUITld/X3hKscKhMi18IJgXKBU5xAf677ge4eFWjBY+UMKKXPC1HRFEPdu7qMTjaGQkucI3fx2zf5e5dERyvhjkYROCRR/jJbi7iiEapUVKlLTLWsshA2VtcUz9rrYOj0DwS8s9IeQEIrCqb2xrVEEsyvn9y1GX5oLKZ58Uf+DdW4xe9lLmMZoC46QwPX+jzq+5iolp7a8P2RHsusqoWTLHmsq3fUXufzm7flOe5yTB+84ZsuODqMkis5QNKbnqlDMkkwH190TeftHrBdq5SyPpCAvpQMtk2/ShCkSqbgsoR3gu2ThThmpYQgo/wTx0up4U48NLh68HxqZs9A9glOKlNWm2MTKnvRkmCRssYRit099YxaG6zrgfwn1VME=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
 
         private const string ReturnUrl = "https://localhost:6001/DemoPayments/ReceivePaymentConfirmation?data={0}";
-        private const string CentralApiUrl = "http://localhost:5000/pay/{0}";
+        private const string CentralApiUrl = "https://localhost:5001/pay/{0}";
 
         [HttpPost]
         public IActionResult CreatePaymentRequest(CreateDemoPaymentBindingModel model)

@@ -1,6 +1,9 @@
 ﻿namespace BankSystem.Web.Areas.Cards.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Infrastructure.Extensions;
@@ -10,19 +13,18 @@
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.Card;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class CardsController : BaseCardsController
     {
         private const int CardsCountPerPage = 10;
-
-        private readonly IUserService userService;
         private readonly IBankAccountService bankAccountService;
         private readonly ICardService cardService;
 
-        public CardsController(IUserService userService, IBankAccountService bankAccountService,
+        private readonly IUserService userService;
+
+        public CardsController(
+            IUserService userService, 
+            IBankAccountService bankAccountService,
             ICardService cardService)
         {
             this.userService = userService;
@@ -40,7 +42,7 @@
 
             var cards = new CardListingViewModel
             {
-                Cards = allCards,
+                Cards = allCards
             };
 
             return this.View(cards);
@@ -53,7 +55,7 @@
 
             var model = new CardCreateViewModel
             {
-                BankAccounts = userAccounts,
+                BankAccounts = userAccounts
             };
 
             return this.View(model);
@@ -79,6 +81,7 @@
             if (id == null)
             {
                 this.ShowErrorMessage(NotificationMessages.CardCreateError);
+                return this.RedirectToHome();
             }
 
             this.ShowSuccessMessage(NotificationMessages.CardCreatedSuccessfully);

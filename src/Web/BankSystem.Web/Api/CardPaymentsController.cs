@@ -1,5 +1,8 @@
 ﻿namespace BankSystem.Web.Api
 {
+    using System;
+    using System.Globalization;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Infrastructure.Filters;
@@ -8,9 +11,6 @@
     using Services.Interfaces;
     using Services.Models.Card;
     using Services.Models.GlobalTransfer;
-    using System;
-    using System.Globalization;
-    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [IgnoreAntiforgeryToken]
@@ -18,8 +18,8 @@
     [ApiController]
     public class CardPaymentsController : ControllerBase
     {
-        private readonly IGlobalTransferHelper globalTransferHelper;
         private readonly ICardService cardService;
+        private readonly IGlobalTransferHelper globalTransferHelper;
 
         public CardPaymentsController(IGlobalTransferHelper globalTransferHelper, ICardService cardService)
         {

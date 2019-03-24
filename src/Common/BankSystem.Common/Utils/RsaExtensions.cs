@@ -75,7 +75,7 @@
             }
 
             sb.Append("</RSAKeyValue>");
-            return (sb.ToString());
+            return sb.ToString();
         }
     }
 }

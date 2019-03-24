@@ -1,5 +1,8 @@
 ﻿namespace BankSystem.Services.Implementations
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
@@ -7,9 +10,6 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Card;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class CardService : BaseService, ICardService
     {
@@ -30,7 +30,7 @@
             }
 
             string generatedNumber;
-            int generated3DigitSecurityCode;
+            string generated3DigitSecurityCode;
             do
             {
                 generatedNumber = this.cardHelper.Generate16DigitNumber();
@@ -50,7 +50,7 @@
         public async Task<T> GetAsync<T>(
             string cardNumber,
             string cardExpiryDate,
-            int cardSecurityCode,
+            string cardSecurityCode,
             string cardOwner)
             where T : CardBaseServiceModel
             => await this.Context

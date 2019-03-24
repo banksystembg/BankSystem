@@ -25,7 +25,7 @@ namespace PaymentsDemo.Models
         public string ExpiryDate { get; set; }
 
         [Required]
-        public int SecurityCode { get; set; }
+        public string SecurityCode { get; set; }
 
         public string DestinationBankName { get; set; }
 

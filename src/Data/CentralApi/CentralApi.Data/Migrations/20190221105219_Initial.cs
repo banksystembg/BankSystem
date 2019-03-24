@@ -7,8 +7,8 @@
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Banks",
-                columns: table => new
+                "Banks",
+                table => new
                 {
                     Id = table.Column<string>(nullable: false),
                     ShortName = table.Column<string>(nullable: false),
@@ -28,7 +28,7 @@
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Banks");
+                "Banks");
         }
     }
 }

@@ -1,5 +1,7 @@
 namespace BankSystem.Web.Controllers
 {
+    using System.Linq;
+    using System.Threading.Tasks;
     using Areas.MoneyTransfers.Models;
     using AutoMapper;
     using Common;
@@ -9,18 +11,19 @@ namespace BankSystem.Web.Controllers
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class BankAccountsController : BaseController
     {
         private const int ItemsPerPage = 10;
 
         private readonly IBankAccountService bankAccountService;
-        private readonly IUserService userService;
         private readonly IMoneyTransferService moneyTransferService;
+        private readonly IUserService userService;
 
-        public BankAccountsController(IBankAccountService bankAccountService, IUserService userService, IMoneyTransferService moneyTransferService)
+        public BankAccountsController(
+            IBankAccountService bankAccountService, 
+            IUserService userService, 
+            IMoneyTransferService moneyTransferService)
         {
             this.bankAccountService = bankAccountService;
             this.userService = userService;
@@ -68,7 +71,7 @@ namespace BankSystem.Web.Controllers
             var transfers = new BankAccountDetailsViewModel
             {
                 BankAccountUniqueId = account.UniqueId,
-                MoneyTransfers = serviceModelTransfers,
+                MoneyTransfers = serviceModelTransfers
             };
             return this.View(transfers);
         }

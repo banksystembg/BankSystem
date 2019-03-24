@@ -1,12 +1,11 @@
 ﻿namespace BankSystem.Web.Pages.Account
 {
-    using System.Threading.Tasks;
     using BankSystem.Models;
-    using Common;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using System.Threading.Tasks;
 
     [AllowAnonymous]
     public class LogoutModel : BasePageModel
@@ -22,12 +21,7 @@
 
         public IActionResult OnGet()
         {
-            if (!this.User.Identity.IsAuthenticated)
-            {
-                return this.RedirectToHome();
-            }
-
-            return this.Page();
+            return !this.User.Identity.IsAuthenticated ? this.RedirectToHome() : this.Page();
         }
 
         public async Task<IActionResult> OnPost()

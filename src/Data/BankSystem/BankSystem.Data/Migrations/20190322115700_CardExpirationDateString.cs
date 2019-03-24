@@ -1,15 +1,15 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace BankSystem.Data.Migrations
+﻿namespace BankSystem.Data.Migrations
 {
+    using System;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class CardExpirationDateString : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "ExpiryDate",
-                table: "Cards",
+                "ExpiryDate",
+                "Cards",
                 maxLength: 5,
                 nullable: false,
                 oldClrType: typeof(DateTime));
@@ -18,8 +18,8 @@ namespace BankSystem.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<DateTime>(
-                name: "ExpiryDate",
-                table: "Cards",
+                "ExpiryDate",
+                "Cards",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 5);
