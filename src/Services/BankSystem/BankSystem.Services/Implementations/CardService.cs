@@ -21,12 +21,12 @@
             this.cardHelper = cardHelper;
         }
 
-        public async Task<string> CreateAsync(CardCreateServiceModel model)
+        public async Task<bool> CreateAsync(CardCreateServiceModel model)
         {
             if (!this.IsEntityStateValid(model) ||
                 !this.Context.Users.Any(u => u.Id == model.UserId))
             {
-                return null;
+                return false;
             }
 
             string generatedNumber;
@@ -44,7 +44,7 @@
             await this.Context.Cards.AddAsync(dbModel);
             await this.Context.SaveChangesAsync();
 
-            return dbModel.Id;
+            return true;
         }
 
         public async Task<T> GetAsync<T>(
