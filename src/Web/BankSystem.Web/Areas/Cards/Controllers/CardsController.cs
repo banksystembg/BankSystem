@@ -84,8 +84,8 @@
             serviceModel.ExpiryDate = DateTime.UtcNow.AddYears(GlobalConstants.CardValidityInYears)
                 .ToString(GlobalConstants.CardExpirationDateFormat);
 
-            var id = await this.cardService.CreateAsync(serviceModel);
-            if (id == null)
+            var isCreated = await this.cardService.CreateAsync(serviceModel);
+            if (!isCreated)
             {
                 this.ShowErrorMessage(NotificationMessages.CardCreateError);
                 return this.RedirectToHome();

@@ -6,7 +6,7 @@
 
     public interface ICardService
     {
-        Task<string> CreateAsync(CardCreateServiceModel model);
+        Task<bool> CreateAsync(CardCreateServiceModel model);
 
         Task<IEnumerable<T>> GetAllCardsAsync<T>(string userId)
             where T : CardBaseServiceModel;
