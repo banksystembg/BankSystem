@@ -17,5 +17,7 @@ namespace BankSystem.Services.Models.BankAccount
         public string UserId { get; set; }
 
         public string UserUserName { get; set; }
+        
+        public string UserFullName { get; set; }
     }
 }

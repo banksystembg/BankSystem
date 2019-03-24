@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Web.Areas.Cards.Controllers
+namespace BankSystem.Web.Areas.Cards.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -70,10 +70,17 @@
                 model.BankAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
+            
+            var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
+            if (account == null ||
+                account.UserUserName != this.User.Identity.Name)
+            {
+                return this.Forbid();
+            }
 
             var serviceModel = Mapper.Map<CardCreateServiceModel>(model);
             serviceModel.UserId = userId;
-            serviceModel.Name = await this.userService.GetAccountOwnerFullnameAsync(userId);
+            serviceModel.Name = account.UserFullName;
             serviceModel.ExpiryDate = DateTime.UtcNow.AddYears(GlobalConstants.CardValidityInYears)
                 .ToString(GlobalConstants.CardExpirationDateFormat);
 
