@@ -7,6 +7,7 @@
 <div class="container">
     @if (Model.Cards.Any())
     {
+        <a class="btn btn-outline-primary float-right" asp-controller="Cards" asp-action="Create">Create card</a>
         <h3>All cards</h3>
         <div class="row">
             @foreach (var card in Model.Cards)
@@ -32,7 +33,10 @@
     }
     else
     {
-        <h3 class="text-center">You don't have any cards. Create one by clicking <a asp-controller="Cards" asp-action="Create">here</a></h3>
+        <div class="text-center">
+            <h3>You don't have any cards.</h3>
+            <a class="btn btn-primary mt-2" asp-controller="Cards" asp-action="Create">Create card</a>
+        </div>
     }
 </div>
 
