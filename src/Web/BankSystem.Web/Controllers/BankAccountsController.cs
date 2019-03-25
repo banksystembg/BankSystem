@@ -19,15 +19,17 @@ namespace BankSystem.Web.Controllers
         private readonly IBankAccountService bankAccountService;
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IUserService userService;
+        private readonly IBankConfigurationHelper bankConfigurationHelper;
 
         public BankAccountsController(
             IBankAccountService bankAccountService, 
             IUserService userService, 
-            IMoneyTransferService moneyTransferService)
+            IMoneyTransferService moneyTransferService, IBankConfigurationHelper bankConfigurationHelper)
         {
             this.bankAccountService = bankAccountService;
             this.userService = userService;
             this.moneyTransferService = moneyTransferService;
+            this.bankConfigurationHelper = bankConfigurationHelper;
         }
 
         public IActionResult Create()
@@ -68,18 +70,20 @@ namespace BankSystem.Web.Controllers
             {
                 return this.Forbid();
             }
-            
-            var serviceModelTransfers = (await this.moneyTransferService
+
+            var transfers = (await this.moneyTransferService
                     .GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id))
                 .Select(Mapper.Map<MoneyTransferListingDto>)
                 .ToPaginatedList(pageIndex, ItemsPerPage);
-                
-            var transfers = new BankAccountDetailsViewModel
-            {
-                BankAccountUniqueId = account.UniqueId,
-                MoneyTransfers = serviceModelTransfers
-            };
-            return this.View(transfers);
+
+            var viewModel = Mapper.Map<BankAccountDetailsViewModel>(account);
+
+            viewModel.MoneyTransfers = transfers;
+
+            viewModel.BankName = this.bankConfigurationHelper.BankName;
+            viewModel.BankCode = this.bankConfigurationHelper.UniqueIdentifier;
+
+            return this.View(viewModel);
         }
 
         [HttpPost]
