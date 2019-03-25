@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BankSystem.Web</title>
+    <title>@ViewData["Title"] - BankSystem</title>
 
     <link rel="stylesheet" href="~/bundle/vendor.min.css" asp-append-version="true" />
 
@@ -155,6 +155,9 @@
             </div>
         }
     </header>
+
+    @RenderSection("UnderNavbar", false)
+
     <div class="container">
         <main role="main" class="py-4">
             @RenderBody()

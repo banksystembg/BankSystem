@@ -1,10 +1,58 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="container">
-    <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+@section UnderNavbar
+{
+    <div id="carousel" class="carousel slide shadow" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel" data-slide-to="1"></li>
+            <li data-target="#carousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner home-carousel" role="listbox">
+            <div class="carousel-item home-carousel-item active" style="background-image: url('/img/home-1.jpg')">
+                <div class="carousel-caption">
+                    <h1>BankSystem</h1>
+                </div>
+            </div>
+
+            <div class="carousel-item home-carousel-item" style="background-image: url('/img/home-2.jpg')">
+                <div class="carousel-caption">
+                    <h3>Modern banking</h3>
+                </div>
+            </div>
+
+            <div class="carousel-item home-carousel-item" style="background-image: url('/img/home-3.jpg')">
+                <div class="carousel-caption">
+                    <h3>Direct &amp; card payments</h3>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
+}
+
+<div class="mx-auto my-4 text-center pb-3">
+    <h2>Welcome to BankSystem</h2>
+    <a class="btn btn-primary btn-lg m-3" asp-page="/Account/Register">Register</a>
+    <a class="btn btn-outline-primary btn-lg m-3" asp-page="/Account/Login">Login</a>
 </div>
+
+@section Scripts
+{
+    <script>
+        $('#carousel').carousel({
+            interval: 5000,
+            pause: false
+        });
+    </script>
+}

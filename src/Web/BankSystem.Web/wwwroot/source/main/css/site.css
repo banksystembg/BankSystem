@@ -104,3 +104,27 @@ html {
 .text-primary-hover:hover {
     color: #0069d9 !important;
 }
+
+.home-carousel-item {
+    height: 65vh;
+    min-height: 300px;
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.home-carousel .carousel-item {
+    max-height: 55vh;
+}
+
+@media (min-width: 992px) {
+    .home-carousel .carousel-item {
+        max-height: 75vh;
+    }
+}
+
+.home-carousel .carousel-caption {
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.5);
+}
