@@ -14,7 +14,7 @@
 
     [Route("api/[controller]")]
     [IgnoreAntiforgeryToken]
-    [EnsureRequest]
+    [EnsureRequestIsSigned]
     [ApiController]
     public class CardPaymentsController : ControllerBase
     {

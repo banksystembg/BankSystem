@@ -13,13 +13,15 @@
         private readonly string bankKey;
         private readonly string bankName;
         private readonly string bankSwiftCode;
+        private readonly string bankCountry;
 
-        public CustomDelegatingHandler(string apiSigningKey, string bankKey, string bankName, string bankSwiftCode)
+        public CustomDelegatingHandler(string apiSigningKey, string bankKey, string bankName, string bankSwiftCode, string bankCountry)
         {
             this.apiSigningKey = apiSigningKey;
             this.bankKey = bankKey;
             this.bankName = bankName;
             this.bankSwiftCode = bankSwiftCode;
+            this.bankCountry = bankCountry;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -45,8 +47,8 @@
                 }
 
                 //Setting the values in the Authorization header using custom scheme (bsw)
-                request.Headers.Authorization = new AuthenticationHeaderValue("bsw",
-                    $"{this.bankName},{this.bankSwiftCode},{encryptedKey},{encryptedIV},{Convert.ToBase64String(requestSignedData)}");
+                request.Headers.Authorization = new AuthenticationHeaderValue(GlobalConstants.AuthenticationScheme,
+                    $"{this.bankName},{this.bankSwiftCode},{this.bankCountry},{encryptedKey},{encryptedIV},{Convert.ToBase64String(requestSignedData)}");
 
                 var response = await base.SendAsync(request, cancellationToken);
                 return response;
