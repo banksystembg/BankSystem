@@ -10,5 +10,8 @@ namespace BankSystem.Common
 
         public const string CardExpirationDateFormat = "MM/yy";
         public const int CardValidityInYears = 4;
+
+        public const string AuthorizationHeader = "Authorization";
+        public const string AuthenticationScheme = "bsw";
     }
 }
