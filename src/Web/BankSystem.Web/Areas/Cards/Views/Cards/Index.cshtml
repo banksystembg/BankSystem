@@ -5,28 +5,39 @@
 }
 
 <div class="container">
-    <h3>All cards</h3>
-    <div class="row">
-        @foreach (var card in Model.Cards)
-        {
-        <div class="col-12 col-md-6 col-lg-4 p-1">
-            <div class="card shadow m-2 floating-card">
-                <div class="card-body">
-                    <h5 class="card-title">Card number: @card.Number</h5>
-                    <p class="card-text">Expiration: @card.ExpiryDate</p>
-                    <p class="card-text">Account: @card.AccountName</p>
-                    <p class="card-text">Cardholder name: @card.Name</p>
-                    <p class="card-text">Security code: @card.SecurityCode</p>
+    @if (Model.Cards.Any())
+    {
+        <a class="btn btn-outline-primary float-right" asp-controller="Cards" asp-action="Create">Create card</a>
+        <h3>All cards</h3>
+        <div class="row">
+            @foreach (var card in Model.Cards)
+            {
+                <div class="col-12 col-md-6 col-lg-4 p-1">
+                    <div class="card shadow m-2 floating-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Card number: @card.Number</h5>
+                            <p class="card-text">Expiration: @card.ExpiryDate</p>
+                            <p class="card-text">Account: @card.AccountName</p>
+                            <p class="card-text">Cardholder name: @card.Name</p>
+                            <p class="card-text">Security code: @card.SecurityCode</p>
 
-                    <button class="btn btn-outline-danger" data-toggle="modal"
-                            data-target="#deleteModal" data-id="@card.Id">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
+                            <button class="btn btn-outline-danger" data-toggle="modal"
+                                    data-target="#deleteModal" data-id="@card.Id">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
-        }
-    </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <h3>You don't have any cards.</h3>
+            <a class="btn btn-primary mt-2" asp-controller="Cards" asp-action="Create">Create card</a>
+        </div>
+    }
 </div>
 
 <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
