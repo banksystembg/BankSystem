@@ -1,16 +1,15 @@
 ﻿namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
-    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Global.Create;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.GlobalTransfer;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class GlobalController : BaseMoneyTransferController
     {
@@ -49,7 +48,6 @@
         }
 
         [HttpPost]
-        [EnsureOwnership]
         public async Task<IActionResult> Create(GlobalMoneyTransferCreateBindingModel model)
         {
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
@@ -61,7 +59,12 @@
             }
 
             var account =
-                await this.bankAccountService.GetByIdAsync<BankAccountIndexServiceModel>(model.AccountId);
+                await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
+            if (account == null || account.UserUserName != this.User.Identity.Name)
+            {
+                return this.Forbid();
+            }
+
             if (string.Equals(account.UniqueId, model.DestinationBank.Account.UniqueId,
                 StringComparison.InvariantCulture))
             {

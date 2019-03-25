@@ -11,7 +11,7 @@
 
     [Route("api/[controller]")]
     [ApiController]
-    [EnsureRequest]
+    [EnsureRequestIsSigned]
     [IgnoreAntiforgeryToken]
     public class ReceiveMoneyTransfersController : ControllerBase
     {

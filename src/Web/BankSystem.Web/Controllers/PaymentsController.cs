@@ -1,14 +1,8 @@
 namespace BankSystem.Web.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Security.Cryptography;
-    using System.Text;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Common.Utils;
-    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -18,6 +12,11 @@ namespace BankSystem.Web.Controllers
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.GlobalTransfer;
+    using System;
+    using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading.Tasks;
 
     [Authorize]
     public class PaymentsController : BaseController
@@ -33,7 +32,7 @@ namespace BankSystem.Web.Controllers
         public PaymentsController(
             IBankConfigurationHelper bankConfigurationHelper,
             IBankAccountService bankAccountService,
-            IUserService userService, 
+            IUserService userService,
             IGlobalTransferHelper globalTransferHelper)
         {
             this.bankConfigurationHelper = bankConfigurationHelper;
@@ -122,7 +121,6 @@ namespace BankSystem.Web.Controllers
 
         [HttpPost]
         [Route("/pay")]
-        [EnsureOwnership]
         public async Task<IActionResult> PayAsync(PaymentConfirmBindingModel model)
         {
             bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out var data);
@@ -132,6 +130,13 @@ namespace BankSystem.Web.Controllers
                 model.DataHash != Sha256Hash(data))
             {
                 return this.PaymentFailed(NotificationMessages.PaymentStateInvalid);
+            }
+
+            var account =
+                await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
+            if (account == null || account.UserUserName != this.User.Identity.Name)
+            {
+                return this.Forbid();
             }
 
             try
@@ -170,7 +175,7 @@ namespace BankSystem.Web.Controllers
 
                 if (result != GlobalTransferResult.Succeeded)
                 {
-                    return this.PaymentFailed(result == GlobalTransferResult.InsufficientFunds ? NotificationMessages.InsufficientFunds 
+                    return this.PaymentFailed(result == GlobalTransferResult.InsufficientFunds ? NotificationMessages.InsufficientFunds
                         : NotificationMessages.TryAgainLaterError);
                 }
 

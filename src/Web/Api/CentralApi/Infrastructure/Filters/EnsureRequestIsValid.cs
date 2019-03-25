@@ -1,46 +1,48 @@
 ﻿namespace CentralApi.Infrastructure.Filters
 {
-    using System;
-    using System.Linq;
-    using System.Security.Cryptography;
-    using System.Text;
-    using System.Threading.Tasks;
+    using BankSystem.Common;
     using BankSystem.Common.Utils;
-    using Data;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Models;
+    using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
+    using Services.Implementations;
+    using Services.Interfaces;
+    using Services.Models.Banks;
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading.Tasks;
 
     public class EnsureRequestIsValid : ActionFilterAttribute
     {
-        private const string Id = "model";
-        private const string AuthenticationScheme = "bsw";
+        private CentralApiConfiguration configuration;
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var request = context.HttpContext.Request;
             // check the scheme and auth header
-            if (!request.Headers.ContainsKey("Authorization") && !request.Headers["Authorization"][0]
-                    .Contains(AuthenticationScheme, StringComparison.Ordinal))
+            if (!request.Headers.ContainsKey(GlobalConstants.AuthorizationHeader) && !request.Headers[GlobalConstants.AuthorizationHeader][0]
+                    .Contains(GlobalConstants.AuthenticationScheme, StringComparison.Ordinal))
             {
                 context.Result = new ForbidResult();
                 return;
             }
 
-            var authHeader = request.Headers.GetCommaSeparatedValues("Authorization");
+            var authHeader = request.Headers.GetCommaSeparatedValues(GlobalConstants.AuthorizationHeader);
             if (authHeader != null)
             {
-                var bankName = authHeader[0].Remove(0, AuthenticationScheme.Length).Trim();
+                var bankName = authHeader[0].Remove(0, GlobalConstants.AuthenticationScheme.Length).Trim();
                 var bankSwiftCode = authHeader[1];
-                var encryptedKey = authHeader[2];
-                var encryptedIV = authHeader[3];
-                var incomingBase64Signature = authHeader[4];
+                var bankCountry = authHeader[2];
+                var encryptedKey = authHeader[3];
+                var encryptedIV = authHeader[4];
+                var incomingBase64Signature = authHeader[5];
 
-                var isValid = this.IsValidRequest(context, bankName, bankSwiftCode, encryptedKey, encryptedIV, incomingBase64Signature).GetAwaiter().GetResult();
+                var isValid = this.IsValidRequest(context, bankName, bankSwiftCode, bankCountry, encryptedKey, encryptedIV, incomingBase64Signature)
+                    .GetAwaiter()
+                    .GetResult();
 
                 if (!isValid)
                 {
@@ -52,26 +54,33 @@
             base.OnActionExecuting(context);
         }
 
-        private async Task<bool> IsValidRequest(ActionExecutingContext context, string bankName, string bankSwiftCode, string encryptedKey,
+        private async Task<bool> IsValidRequest(
+            ActionExecutingContext context,
+            string bankName,
+            string bankSwiftCode,
+            string bankCountry,
+            string encryptedKey,
             string encryptedIV,
             string incomingBase64Signature)
         {
             var request = context.HttpContext.Request;
-            var dbContext = request.HttpContext.RequestServices.GetService(typeof(CentralApiDbContext)) as CentralApiDbContext;
-            var configuration = request.HttpContext.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+            var bankService = request.HttpContext.RequestServices.GetService(typeof(IBanksService)) as BanksService;
+            var configOptions = request.HttpContext.RequestServices
+                .GetService(typeof(IOptions<CentralApiConfiguration>)) as IOptions<CentralApiConfiguration>;
+            this.configuration = configOptions?.Value;
 
             var actionArguments = context.ActionArguments;
-            if (actionArguments.ContainsKey(Id))
+            if (actionArguments.Values != null)
             {
-                var model = actionArguments[Id] as ReceiveTransactionModel;
+                var model = ActionArgumentsUtil.GetModel(actionArguments);
 
-                var bankApiKey = await dbContext.Banks
-                    .Where(b => string.Equals(b.Name, bankName, StringComparison.CurrentCultureIgnoreCase) &&
-                                string.Equals(b.SwiftCode, bankSwiftCode, StringComparison.CurrentCultureIgnoreCase))
-                    .Select(b => b.ApiKey)
-                    .SingleOrDefaultAsync();
+                if (model == null)
+                {
+                    return false;
+                }
 
-                if (bankApiKey == null)
+                var bank = await bankService.GetBankAsync<BankServiceModel>(bankName, bankSwiftCode, bankCountry);
+                if (bank.ApiKey == null)
                 {
                     return false;
                 }
@@ -83,7 +92,7 @@
                 string decrypted;
                 using (var rsa = RSA.Create())
                 {
-                    RsaExtensions.FromXmlString(rsa, configuration.GetSection("CentralApiConfiguration:Key").Value);
+                    RsaExtensions.FromXmlString(rsa, this.configuration?.Key);
                     var decryptedKey = rsa.Decrypt(Convert.FromBase64String(encryptedKey), RSAEncryptionPadding.Pkcs1);
                     var decryptedIV = rsa.Decrypt(Convert.FromBase64String(encryptedIV), RSAEncryptionPadding.Pkcs1);
 
@@ -93,7 +102,7 @@
                 // Verify signature with bank api key
                 using (var rsa = RSA.Create())
                 {
-                    RsaExtensions.FromXmlString(rsa, bankApiKey);
+                    RsaExtensions.FromXmlString(rsa, bank.ApiKey);
                     var decrypt = Convert.FromBase64String(decrypted);
                     var isVerified = rsa.VerifyData(signature, decrypt, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
                     return isVerified;

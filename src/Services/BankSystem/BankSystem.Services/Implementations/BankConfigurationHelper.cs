@@ -19,5 +19,6 @@
         public string First3CardDigits => this.bankConfiguration.First3CardDigits;
         public string BankName => this.bankConfiguration.BankName;
         public string CentralApiAddress => this.bankConfiguration.CentralApiAddress;
+        public string BankCountry => this.bankConfiguration.Country;
     }
 }
