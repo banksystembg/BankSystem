@@ -104,3 +104,7 @@ html {
 .text-primary-hover:hover {
     color: #0069d9 !important;
 }
+
+.word-break-all {
+    word-break: break-all;
+}

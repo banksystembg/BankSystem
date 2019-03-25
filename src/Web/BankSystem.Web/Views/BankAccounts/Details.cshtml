@@ -77,7 +77,7 @@ else
         @foreach (var moneyTransfer in Model.MoneyTransfers)
         {
             <tr>
-                <td>@moneyTransfer.Description</td>
+                <td class="word-break-all">@moneyTransfer.Description</td>
                 <td>
                     <p>@moneyTransfer.SenderName</p>
                     <p>@moneyTransfer.Source</p>
