@@ -1,12 +1,10 @@
 namespace BankSystem.Web.Models
 {
+    using BankAccount;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Areas.MoneyTransfers.Models;
-    using BankAccount;
-    using Common;
 
-    public class PaymentConfirmBindingModel : IMoneyTransferCreateBindingModel
+    public class PaymentConfirmBindingModel
     {
         public decimal Amount { get; set; }
 

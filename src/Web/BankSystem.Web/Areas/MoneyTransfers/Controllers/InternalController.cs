@@ -1,16 +1,15 @@
 namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
-    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Internal;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class InternalController : BaseMoneyTransferController
     {
@@ -49,7 +48,6 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
         }
 
         [HttpPost]
-        [EnsureOwnership]
         public async Task<IActionResult> Create(InternalMoneyTransferCreateBindingModel model)
         {
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
@@ -61,7 +59,12 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             }
 
             var account =
-                await this.bankAccountService.GetByIdAsync<BankAccountIndexServiceModel>(model.AccountId);
+                await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
+            if (account == null || account.UserUserName != this.User.Identity.Name)
+            {
+                return this.Forbid();
+            }
+
             if (string.Equals(account.UniqueId, model.DestinationBankAccountUniqueId, StringComparison.InvariantCulture))
             {
                 this.ShowErrorMessage(NotificationMessages.SameAccountsError);
