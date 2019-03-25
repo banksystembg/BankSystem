@@ -8,5 +8,6 @@
         string First3CardDigits { get; }
         string BankName { get; }
         string CentralApiAddress { get; }
+        string BankCountry { get; }
     }
 }
