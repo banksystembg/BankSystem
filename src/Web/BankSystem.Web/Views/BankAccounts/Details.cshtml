@@ -1,50 +1,162 @@
 ﻿@model BankAccountDetailsViewModel
 @{
-    var account = Model.BankAccountUniqueId;
-    ViewData["Title"] = $"Money transfers {account}";
+    ViewData["Title"] = Model.UniqueId;
 }
 
-<div class="container">
-    <h3 class="text-center mb-4">All money transfers for @account bank account</h3>
-    @if (!Model.MoneyTransfers.Any())
-    {
-        <h5 class="text-center text-muted">No money transfers have been made yet</h5>
-    }
-    else
-    {
-        <table class="table table-hover table-bordered">
-            <thead>
-                <tr>
-                    <th>Details</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var moneyTransfer in Model.MoneyTransfers)
-                {
-                    <tr>
-                        <td>@moneyTransfer.Description</td>
-                        <td>
-                            <p>@moneyTransfer.SenderName</p>
-                            <p>@moneyTransfer.Source</p>
-                        </td>
-                        <td>
-                            <p>@moneyTransfer.RecipientName</p>
-                            <p>@moneyTransfer.Destination</p>
-                        </td>
-                        <td class="text-green">@Math.Abs(moneyTransfer.Amount) EUR</td>
-                        <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+<div class="card mb-3">
+    <div class="card-body hover-parent">
+        <h2 class="card-title text-center">
+            <span id="accountName">@Model.Name</span>
+            <i class="fas fa-pen fa-xs cursor-pointer hover-visible text-muted text-primary-hover"
+               data-toggle="modal" data-target="#editModal">
+            </i>
+        </h2>
+
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-5">
+                <h5 class="text-center">Account details</h5>
+                <div class="d-flex flex-row justify-content-between">
+                    <p>Name</p>
+                    <p class="ml-3">@Model.UserFullName</p>
+                </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <p>Current balance</p>
+                    <p class="text-green ml-3">€@Model.Balance</p>
+                </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <p>Account number</p>
+                    <p class="ml-3">@Model.UniqueId</p>
+                </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <p>Date of creation</p>
+                    <p class="ml-3 auto-format-date">@Model.CreatedOn.ToString("O")</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 offset-lg-2 col-lg-5">
+                <h5 class="text-center">Transfer information</h5>
+                <div class="d-flex flex-row justify-content-between">
+                    <p>Name</p>
+                    <p class="ml-3">@Model.UserFullName</p>
+                </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <p>Account</p>
+                    <p class="ml-3">@Model.UniqueId</p>
+                </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <p>Bank name</p>
+                    <p class="ml-3">@Model.BankName</p>
+                </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <p>Bank code</p>
+                    <p class="ml-3">@Model.BankCode</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
-@if (Model.MoneyTransfers.Any())
+@if (!Model.MoneyTransfers.Any())
 {
-    <partial name="_PaginationPartial" model="@Model.MoneyTransfers" />
+    <h5 class="text-center text-muted">No money transfers have been made yet</h5>
+}
+else
+{
+    <h3 class="text-center">Last transfers</h3>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>Details</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Amount</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var moneyTransfer in Model.MoneyTransfers)
+        {
+            <tr>
+                <td>@moneyTransfer.Description</td>
+                <td>
+                    <p>@moneyTransfer.SenderName</p>
+                    <p>@moneyTransfer.Source</p>
+                </td>
+                <td>
+                    <p>@moneyTransfer.RecipientName</p>
+                    <p>@moneyTransfer.Destination</p>
+                </td>
+                <td class="text-green">@Math.Abs(moneyTransfer.Amount) EUR</td>
+                <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <partial name="_PaginationPartial" model="@Model.MoneyTransfers"/>
+}
+
+<div id="editModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit account display name</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <input type="hidden" name="accountId" value="@Model.Id">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input required class="form-control" type="text" name="name">
+                    </div>
+                    <div class="text-center d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">OK</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $('#editModal').on('show.bs.modal',
+            function() {
+                let modal = $(this);
+                let name = $('#accountName').text();
+
+                modal.find('.modal-body input[name=name]').val(name);
+            });
+
+        $('#editModal').on('shown.bs.modal',
+            function() {
+                $(this).find('.modal-body input[name=name]').trigger('focus');
+            });
+
+        $('#editModal form').submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '@Url.Action("ChangeAccountNameAsync", "BankAccounts")',
+                type: 'post',
+                data: $(event.target).serialize()
+
+            }).always(function() {
+                $('#editModal').modal('hide');
+            }).done(function(response) {
+                if (!response.success) {
+                    return;
+                }
+
+                let newName = $('#editModal input[name=name]').val();
+
+                $('#accountName').text(newName);
+            });
+        });
+    </script>
 }

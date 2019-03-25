@@ -76,5 +76,14 @@
     "minify": {
       "enabled": true
     }
+  },
+  {
+    "outputFileName": "wwwroot/bundle/home-guest.min.css",
+    "inputFiles": [
+      "wwwroot/source/home-guest/css/home-guest.css"
+    ],
+    "minify": {
+      "enabled": true
+    }
   }
 ]

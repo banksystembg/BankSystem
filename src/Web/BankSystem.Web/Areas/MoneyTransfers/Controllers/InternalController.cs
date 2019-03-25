@@ -58,13 +58,12 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
                 return this.View(model);
             }
 
-            var account =
-                await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
+            var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
             if (account == null || account.UserUserName != this.User.Identity.Name)
             {
                 return this.Forbid();
             }
-
+            
             if (string.Equals(account.UniqueId, model.DestinationBankAccountUniqueId, StringComparison.InvariantCulture))
             {
                 this.ShowErrorMessage(NotificationMessages.SameAccountsError);

@@ -58,11 +58,10 @@
     <script>
         $('#deleteModal').on('show.bs.modal',
             function (event) {
-                var button = $(event.relatedTarget);
-                var key = button.data('id');
-                var modal = $(this);
+                const button = $(event.relatedTarget);
+                const key = button.data('id');
+                const modal = $(this);
                 modal.find('.modal-footer input[name=id]').val(key);
-                console.log($("input[name=id]"));
             })
     </script>
 }
