@@ -1,4 +1,4 @@
-namespace DemoShop.Services.Models
+namespace DemoShop.Services.Models.Product
 {
     using System.ComponentModel.DataAnnotations;
 

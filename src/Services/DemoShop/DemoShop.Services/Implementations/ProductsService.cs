@@ -1,10 +1,13 @@
 namespace DemoShop.Services.Implementations
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Data;
     using DemoShop.Models;
     using Interfaces;
-    using Models;
+    using Microsoft.EntityFrameworkCore;
+    using Models.Product;
 
     public class ProductsService : BaseService, IProductsService
     {
@@ -29,6 +32,22 @@ namespace DemoShop.Services.Implementations
             await this.Context.Products.AddAsync(dbModel);
 
             await this.Context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ProductDetailsServiceModel>> GetAllAsync()
+        {
+            var products = await this.Context.Products
+                .OrderBy(p => p.Name)
+                .Select(p => new ProductDetailsServiceModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    ImageUrl = p.ImageUrl
+                })
+                .ToArrayAsync();
+
+            return products;
         }
     }
 }
