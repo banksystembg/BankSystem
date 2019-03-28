@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28705.295
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{04FA0FEB-7655-45AB-94A8-C7DEA8768D78}"
 EndProject
@@ -45,7 +45,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralApi.Models", "Data\C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{6E57111F-F02D-41FC-AFC1-E78E0EE7FADE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentsDemo", "Web\PaymentsDemo\PaymentsDemo.csproj", "{DFA86A9E-8135-4FC6-9F10-61639CEC0D89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentsDemo", "Web\PaymentsDemo\PaymentsDemo.csproj", "{DFA86A9E-8135-4FC6-9F10-61639CEC0D89}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{996251B7-5C3E-4139-A666-5DF724ACF871}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankSystem.Services.Tests", "Tests\BankSystem.Services.Tests\BankSystem.Services.Tests.csproj", "{4F179C66-34AA-4B3E-A32B-0E6E4A435E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +105,10 @@ Global
 		{DFA86A9E-8135-4FC6-9F10-61639CEC0D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFA86A9E-8135-4FC6-9F10-61639CEC0D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFA86A9E-8135-4FC6-9F10-61639CEC0D89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F179C66-34AA-4B3E-A32B-0E6E4A435E13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F179C66-34AA-4B3E-A32B-0E6E4A435E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F179C66-34AA-4B3E-A32B-0E6E4A435E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F179C66-34AA-4B3E-A32B-0E6E4A435E13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,6 +132,7 @@ Global
 		{7C53E472-623C-4D2D-88F9-8AD11B8CE9DF} = {A5A2B017-8FE3-4120-ACC3-2A06F65809F7}
 		{6E57111F-F02D-41FC-AFC1-E78E0EE7FADE} = {04FA0FEB-7655-45AB-94A8-C7DEA8768D78}
 		{DFA86A9E-8135-4FC6-9F10-61639CEC0D89} = {6E57111F-F02D-41FC-AFC1-E78E0EE7FADE}
+		{4F179C66-34AA-4B3E-A32B-0E6E4A435E13} = {996251B7-5C3E-4139-A666-5DF724ACF871}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F62841D5-44C0-4CD6-891F-26C7E9369122}
