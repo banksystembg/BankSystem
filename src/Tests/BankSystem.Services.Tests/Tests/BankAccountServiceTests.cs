@@ -10,6 +10,7 @@
     using Models.BankAccount;
     using Moq;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -178,6 +179,36 @@
                 .Match(x => x.As<BankAccountIndexServiceModel>().Id == expectedId)
                 .And
                 .Match(x => x.As<BankAccountIndexServiceModel>().UniqueId == expectedUniqueId);
+        }
+
+        [Fact]
+        public async Task GetAllAccountsByUserIdAsync_WithInvalidId_ShouldReturnEmptyModel()
+        {
+            // Arrange
+            await this.SeedBankAccount();
+            // Act
+            var result =
+                await this.bankAccountService.GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(null);
+
+            // Assert
+            result
+                .Should()
+                .BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task GetAllAccountsByUserIdAsync_WithValidId_ShouldReturnCorrectModel()
+        {
+            // Arrange
+            var model = await this.SeedBankAccount();
+            // Act
+            var result =
+                await this.bankAccountService.GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(model.UserId);
+
+            // Assert
+            result
+                .Should()
+                .BeAssignableTo<IEnumerable<BankAccountIndexServiceModel>>();
         }
 
         #region privateMethods
