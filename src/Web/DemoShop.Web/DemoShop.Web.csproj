@@ -13,10 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Data\DemoShop\DemoShop.Data\DemoShop.Data.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Models" />
+      <ProjectReference Include="..\..\Services\DemoShop\DemoShop.Services\DemoShop.Services.csproj" />
     </ItemGroup>
 
 </Project>

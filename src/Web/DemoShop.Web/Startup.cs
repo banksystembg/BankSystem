@@ -1,4 +1,4 @@
-﻿﻿namespace DemoShop.Web
+﻿namespace DemoShop.Web
 {
     using Data;
     using DemoShop.Models;
@@ -11,6 +11,8 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Services.Implementations;
+    using Services.Interfaces;
 
     public class Startup
     {
