@@ -13,7 +13,10 @@
                 <div class="card-body">
                     <h4 class="card-title">@product.Name</h4>
                     <p class="card-text">€@product.Price</p>
-                    <button class="btn btn-primary">Buy now</button>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#orderModal"
+                            data-id="@product.Id" data-name="@product.Name" data-price="@product.Price">
+                        Buy now
+                    </button>
                 </div>
             </div>
         </div>
@@ -25,3 +28,41 @@
         <i class="fas fa-plus"></i> Create product
     </a>
 </div>
+
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Cancel</button>
+
+                <form asp-action="OrderProduct" asp-controller="Orders" method="post">
+                    <input type="hidden" name="productId">
+                    <button type="submit" class="btn btn-primary">Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('#orderModal').on('show.bs.modal',
+            function(event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var name = button.data('name');
+                var price = button.data('price');
+                var modal = $(this);
+                modal.find('.modal-title').text('Order ' + name);
+                modal.find('.modal-body').text('Price: €' + price);
+                modal.find('.modal-footer input[name=productId]').val(id);
+            })
+    </script>
+}
