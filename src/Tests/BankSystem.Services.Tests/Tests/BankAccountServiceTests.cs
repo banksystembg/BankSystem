@@ -112,6 +112,39 @@
         }
 
         [Fact]
+        public async Task GetByUniqueIdAsync_WithInvalidUniqueId_ShouldReturnNull()
+        {
+            // Arrange
+            await this.SeedBankAccount();
+
+            // Act
+            var result = await this.bankAccountService.GetByUniqueIdAsync<BankAccountIndexServiceModel>(null);
+
+            // Arrange
+            result
+                .Should()
+                .BeNull();
+        }
+
+        [Fact]
+        public async Task GetByUniqueIdAsync_WithValidUniqueId_ShouldReturnCorrectEntity()
+        {
+            // Arrange
+            var model = await this.SeedBankAccount();
+            var expectedUniqueId = model.UniqueId;
+
+            // Act
+            var result = await this.bankAccountService.GetByUniqueIdAsync<BankAccountIndexServiceModel>(model.UniqueId);
+
+            // Arrange
+            result
+                .Should()
+                .NotBeNull()
+                .And
+                .Match(x => x.As<BankAccountIndexServiceModel>().UniqueId == expectedUniqueId);
+        }
+
+        [Fact]
         public async Task GetByIdAsync_WithInvalidBankAccountId_ShouldReturnNull()
         {
             // Arrange
