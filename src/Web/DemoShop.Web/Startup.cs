@@ -42,6 +42,8 @@
                 .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddScoped<IProductsService, ProductsService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
