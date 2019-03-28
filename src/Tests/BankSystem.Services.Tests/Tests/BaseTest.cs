@@ -2,10 +2,16 @@
 {
     using Data;
     using Microsoft.EntityFrameworkCore;
+    using Setup;
     using System;
 
     public abstract class BaseTest
     {
+        protected BaseTest()
+        {
+            TestSetup.InitializeMapper();
+        }
+
         protected BankSystemDbContext DatabaseInstance
         {
             get
