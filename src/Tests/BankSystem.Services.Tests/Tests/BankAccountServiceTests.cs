@@ -111,11 +111,47 @@
                 .BeAssignableTo<string>();
         }
 
+        [Fact]
+        public async Task GetByIdAsync_WithInvalidBankAccountId_ShouldReturnNull()
+        {
+            // Arrange
+            await this.SeedBankAccount();
+
+            // Act
+            var result = await this.bankAccountService.GetByIdAsync<BankAccountConciseServiceModel>(null);
+
+            // Arrange
+            result
+                .Should()
+                .BeNull();
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_WithValidBankAccountId_ShouldReturnCorrectEntity()
+        {
+            // Arrange
+            var model = await this.SeedBankAccount();
+            var expectedId = model.Id;
+            var expectedUniqueId = model.UniqueId;
+
+            // Act
+            var result = await this.bankAccountService.GetByIdAsync<BankAccountIndexServiceModel>(model.Id);
+
+            // Arrange
+            result
+                .Should()
+                .NotBeNull()
+                .And
+                .Match(x => x.As<BankAccountIndexServiceModel>().Id == expectedId)
+                .And
+                .Match(x => x.As<BankAccountIndexServiceModel>().UniqueId == expectedUniqueId);
+        }
+
         #region privateMethods
 
         private async Task SeedUser()
         {
-            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleBankAccountUserId });
+            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleBankAccountUserId, FullName = SampleBankAccountUniqueId });
             await this.dbContext.SaveChangesAsync();
         }
 
@@ -124,6 +160,7 @@
             var model = new BankAccount
             {
                 Id = SampleBankAccountId,
+                Name = SampleBankAccountName,
                 UniqueId = SampleBankAccountUniqueId,
                 UserId = SampleBankAccountUserId,
 
