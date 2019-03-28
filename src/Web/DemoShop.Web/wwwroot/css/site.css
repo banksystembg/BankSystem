@@ -1,3 +1,13 @@
 ﻿.bg-darker {
     background-color: #232426;
 }
+
+.product-thumbnail-img {
+    height: 30vh;
+    object-fit: cover;
+}
+
+.product-listing-img {
+    height: 20vh;
+    object-fit: cover;
+}

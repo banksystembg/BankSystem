@@ -5,6 +5,7 @@ namespace DemoShop.Web.Controllers
     using Models;
     using Services.Interfaces;
     using Services.Models;
+    using Services.Models.Product;
 
     [Authorize]
     public class ProductsController : Controller
