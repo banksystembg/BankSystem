@@ -1,5 +1,7 @@
 namespace DemoShop.Services.Implementations
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Data;
     using DemoShop.Models;
@@ -41,6 +43,25 @@ namespace DemoShop.Services.Implementations
             await this.Context.SaveChangesAsync();
 
             return order.Id;
+        }
+
+        public async Task<IEnumerable<OrderDetailsServiceModel>> GetAllForUserAsync(string userName)
+        {
+            var orders = await this.Context.Orders
+                .Where(p => p.User.UserName == userName)
+                .OrderByDescending(p => p.CreatedOn)
+                .Select(o => new OrderDetailsServiceModel
+                {
+                    Id = o.Id,
+                    CreatedOn = o.CreatedOn,
+                    ProductName = o.Product.Name,
+                    ProductImageUrl = o.Product.ImageUrl,
+                    ProductPrice = o.Product.Price,
+                    PaymentStatus = o.PaymentStatus
+                })
+                .ToArrayAsync();
+
+            return orders;
         }
     }
 }
