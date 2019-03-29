@@ -1,9 +1,11 @@
 namespace DemoShop.Web.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Models;
     using Services.Interfaces;
     using Services.Models.Order;
 
@@ -15,6 +17,23 @@ namespace DemoShop.Web.Controllers
         public OrdersController(IOrdersService ordersService)
         {
             this.ordersService = ordersService;
+        }
+
+        public async Task<IActionResult> My()
+        {
+            var orders = (await this.ordersService.GetAllForUserAsync(this.User.Identity.Name))
+                .Select(o => new OrderDetailsViewModel
+                {
+                    Id = o.Id,
+                    CreatedOn = o.CreatedOn,
+                    ProductName = o.ProductName,
+                    ProductImageUrl = o.ProductImageUrl,
+                    ProductPrice = o.ProductPrice,
+                    PaymentStatus = o.PaymentStatus
+                })
+                .ToArray();
+
+            return this.View(orders);
         }
 
         [HttpPost]

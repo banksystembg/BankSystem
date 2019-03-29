@@ -1,0 +1,37 @@
+@using System.Globalization
+@model IEnumerable<OrderDetailsViewModel>
+
+@{
+    ViewData["Title"] = "My orders";
+    const string dateFormat = "dddd, dd/MM/yyyy";
+}
+
+<div class="w-75 mx-auto">
+    <h1 class="text-center my-3">My orders</h1>
+    <hr/>
+    @foreach (var order in Model)
+    {
+        <div class="row">
+            <div class="col-12 col-lg-3 text-center">
+                <img src="@order.ProductImageUrl" class="product-listing-img" alt="@order.ProductName"/>
+            </div>
+            <div class="col-12 col-lg-7">
+                <div class="mx-3">
+                    <h4 class="mt-2">@order.ProductName</h4>
+                    <p class="text-secondary">€@order.ProductPrice</p>
+                    <p class="text-secondary">
+                        Ordered on
+                        @order.CreatedOn.ToString(dateFormat, CultureInfo.InvariantCulture),
+                        @order.PaymentStatus
+                    </p>
+                </div>
+            </div>
+            <div class="col-12 col-lg-2 text-right d-flex flex-column justify-content-center">
+                <button class="btn btn-primary">
+                    Pay
+                </button>
+            </div>
+        </div>
+        <hr/>
+    }
+</div>
