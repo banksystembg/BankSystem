@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
@@ -82,7 +83,7 @@
             serviceModel.UserId = userId;
             serviceModel.Name = account.UserFullName;
             serviceModel.ExpiryDate = DateTime.UtcNow.AddYears(GlobalConstants.CardValidityInYears)
-                .ToString(GlobalConstants.CardExpirationDateFormat);
+                .ToString(GlobalConstants.CardExpirationDateFormat, CultureInfo.InvariantCulture);
 
             var isCreated = await this.cardService.CreateAsync(serviceModel);
             if (!isCreated)
