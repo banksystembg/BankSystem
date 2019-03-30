@@ -1,4 +1,5 @@
 @using System.Globalization
+@using DemoShop.Models
 @model IEnumerable<OrderDetailsViewModel>
 
 @{
@@ -15,7 +16,7 @@
             <div class="col-12 col-lg-3 text-center">
                 <img src="@order.ProductImageUrl" class="product-listing-img" alt="@order.ProductName"/>
             </div>
-            <div class="col-12 col-lg-7">
+            <div class="col-12 col-lg-6">
                 <div class="mx-3">
                     <h4 class="mt-2">@order.ProductName</h4>
                     <p class="text-secondary">€@order.ProductPrice</p>
@@ -26,10 +27,19 @@
                     </p>
                 </div>
             </div>
-            <div class="col-12 col-lg-2 text-right d-flex flex-column justify-content-center">
-                <button class="btn btn-primary">
-                    Pay
-                </button>
+            <div class="col-12 col-lg-3 text-right d-flex flex-column justify-content-center">
+                @if (order.PaymentStatus == PaymentStatus.Pending)
+                {
+                    <a class="btn btn-primary" asp-controller="DirectPayments", asp-action="Pay" asp-route-id="@order.Id">
+                        Direct payment
+                    </a>
+                }
+                else
+                {
+                    <button class="btn btn-success" disabled="disabled">
+                        Completed
+                    </button>
+                }
             </div>
         </div>
         <hr/>
