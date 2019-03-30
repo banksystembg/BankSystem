@@ -7,6 +7,7 @@ namespace DemoShop.Services.Interfaces
     public interface IOrdersService
     {
         Task<string> CreateAsync(OrderCreateServiceModel model);
+        Task<OrderDetailsServiceModel> GetByIdAsync(string id);
         Task<IEnumerable<OrderDetailsServiceModel>> GetAllForUserAsync(string userName);
     }
 }

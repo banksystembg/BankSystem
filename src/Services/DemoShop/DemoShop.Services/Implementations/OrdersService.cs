@@ -45,6 +45,24 @@ namespace DemoShop.Services.Implementations
             return order.Id;
         }
 
+        public async Task<OrderDetailsServiceModel> GetByIdAsync(string id)
+        {
+            var order = await this.Context.Orders
+                .Select(o => new OrderDetailsServiceModel
+                {
+                    Id = o.Id,
+                    CreatedOn = o.CreatedOn,
+                    ProductName = o.Product.Name,
+                    ProductImageUrl = o.Product.ImageUrl,
+                    UserName = o.User.UserName,
+                    ProductPrice = o.Product.Price,
+                    PaymentStatus = o.PaymentStatus
+                })
+                .SingleOrDefaultAsync(p => p.Id == id);
+
+            return order;
+        }
+
         public async Task<IEnumerable<OrderDetailsServiceModel>> GetAllForUserAsync(string userName)
         {
             var orders = await this.Context.Orders
@@ -56,6 +74,7 @@ namespace DemoShop.Services.Implementations
                     CreatedOn = o.CreatedOn,
                     ProductName = o.Product.Name,
                     ProductImageUrl = o.Product.ImageUrl,
+                    UserName = o.User.UserName,
                     ProductPrice = o.Product.Price,
                     PaymentStatus = o.PaymentStatus
                 })

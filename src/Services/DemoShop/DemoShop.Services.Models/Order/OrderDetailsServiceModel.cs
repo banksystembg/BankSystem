@@ -13,6 +13,8 @@ namespace DemoShop.Services.Models.Order
 
         public decimal ProductPrice { get; set; }
 
+        public string UserName { get; set; }
+
         public PaymentStatus PaymentStatus { get; set; }
 
         public DateTime CreatedOn { get; set; }
