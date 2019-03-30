@@ -1,6 +1,6 @@
 namespace DemoShop.Web.Configuration
 {
-    public class DirectPaymentConfiguration
+    public class DirectPaymentsConfiguration
     {
         public string SiteKey { get; set; }
 

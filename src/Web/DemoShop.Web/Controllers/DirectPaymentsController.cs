@@ -15,15 +15,15 @@ namespace DemoShop.Web.Controllers
         private const string ReturnPath = "DirectPayments/ReceiveConfirmation?data={0}";
         private readonly IOrdersService ordersService;
 
-        private readonly DirectPaymentConfiguration directPaymentConfiguration;
+        private readonly DirectPaymentsConfiguration directPaymentsConfiguration;
         private readonly DestinationBankAccountConfiguration destinationBankAccountConfiguration;
 
         public DirectPaymentsController(IOrdersService ordersService,
-            IOptions<DirectPaymentConfiguration> directPaymentConfigurationOptions,
+            IOptions<DirectPaymentsConfiguration> directPaymentsConfigurationOptions,
             IOptions<DestinationBankAccountConfiguration> destinationBankAccountConfigurationOptions)
         {
             this.ordersService = ordersService;
-            this.directPaymentConfiguration = directPaymentConfigurationOptions.Value;
+            this.directPaymentsConfiguration = directPaymentsConfigurationOptions.Value;
             this.destinationBankAccountConfiguration = destinationBankAccountConfigurationOptions.Value;
         }
 
@@ -58,14 +58,14 @@ namespace DemoShop.Web.Controllers
                 };
 
                 // generate the returnUrl where the payment result will be received
-                var returnUrl = this.directPaymentConfiguration.SiteUrl + ReturnPath;
+                var returnUrl = this.directPaymentsConfiguration.SiteUrl + ReturnPath;
 
                 // generate signed payment request
                 var paymentRequest = DirectPaymentsHelper.GeneratePaymentRequest(
-                    paymentInfo, this.directPaymentConfiguration.SiteKey, returnUrl);
+                    paymentInfo, this.directPaymentsConfiguration.SiteKey, returnUrl);
 
                 var centralApiRedirectUrl = string.Format(
-                    this.directPaymentConfiguration.CentralApiPaymentUrl,
+                    this.directPaymentsConfiguration.CentralApiPaymentUrl,
                     paymentRequest);
 
                 // redirect the user to the CentralApi for payment processing
@@ -87,8 +87,8 @@ namespace DemoShop.Web.Controllers
 
             dynamic paymentInfo = DirectPaymentsHelper.ProcessPaymentResult(
                 data,
-                this.directPaymentConfiguration.SiteKey,
-                this.directPaymentConfiguration.CentralApiPublicKey);
+                this.directPaymentsConfiguration.SiteKey,
+                this.directPaymentsConfiguration.CentralApiPublicKey);
 
             if (paymentInfo == null)
             {
