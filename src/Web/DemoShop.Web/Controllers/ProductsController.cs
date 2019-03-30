@@ -1,10 +1,10 @@
 namespace DemoShop.Web.Controllers
 {
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Interfaces;
-    using Services.Models;
     using Services.Models.Product;
 
     [Authorize]
@@ -23,7 +23,7 @@ namespace DemoShop.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(ProductCreateBindingModel model)
+        public async Task<IActionResult> Create(ProductCreateBindingModel model)
         {
             if (!this.ModelState.IsValid)
             {
@@ -37,7 +37,7 @@ namespace DemoShop.Web.Controllers
                 ImageUrl = model.ImageUrl
             };
 
-            this.productsService.CreateAsync(serviceProduct);
+            await this.productsService.CreateAsync(serviceProduct);
 
             return this.RedirectToAction("Index", "Home");
         }
