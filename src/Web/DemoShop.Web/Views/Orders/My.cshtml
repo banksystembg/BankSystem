@@ -27,11 +27,14 @@
                     </p>
                 </div>
             </div>
-            <div class="col-12 col-lg-3 text-right d-flex flex-column justify-content-center">
+            <div class="col-12 col-lg-3 text-right d-flex flex-column justify-content-around">
                 @if (order.PaymentStatus == PaymentStatus.Pending)
                 {
                     <a class="btn btn-primary" asp-controller="DirectPayments", asp-action="Pay" asp-route-id="@order.Id">
                         Direct payment
+                    </a>
+                    <a class="btn btn-info" asp-controller="CardPayments", asp-action="Pay" asp-route-id="@order.Id">
+                        Card payment
                     </a>
                 }
                 else
