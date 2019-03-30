@@ -82,5 +82,26 @@ namespace DemoShop.Services.Implementations
 
             return orders;
         }
+
+        public async Task SetPaymentStatus(string orderId, PaymentStatus paymentStatus)
+        {
+            if (orderId == null)
+            {
+                return;
+            }
+
+            var order = await this.Context.Orders.SingleOrDefaultAsync(p => p.Id == orderId);
+
+            if (order == null)
+            {
+                return;
+            }
+
+            order.PaymentStatus = paymentStatus;
+
+            this.Context.Orders.Update(order);
+
+            await this.Context.SaveChangesAsync();
+        }
     }
 }
