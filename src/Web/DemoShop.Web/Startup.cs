@@ -46,7 +46,9 @@
                 .Configure<DestinationBankAccountConfiguration>(
                     this.Configuration.GetSection(nameof(DestinationBankAccountConfiguration)))
                 .Configure<DirectPaymentsConfiguration>(
-                    this.Configuration.GetSection(nameof(DirectPaymentsConfiguration)));
+                    this.Configuration.GetSection(nameof(DirectPaymentsConfiguration)))
+                .Configure<CardPaymentsConfiguration>(
+                    this.Configuration.GetSection(nameof(CardPaymentsConfiguration)));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
