@@ -1,5 +1,6 @@
 ﻿namespace DemoShop.Web
 {
+    using Configuration;
     using Data;
     using DemoShop.Models;
     using Extensions;
@@ -40,6 +41,10 @@
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<DemoShopDbContext>()
                 .AddDefaultTokenProviders();
+
+            services
+                .Configure<DestinationBankAccountConfiguration>(
+                    this.Configuration.GetSection(nameof(DestinationBankAccountConfiguration)));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
