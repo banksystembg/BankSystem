@@ -42,6 +42,8 @@
                 .AddEntityFrameworkStores<DemoShopDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.ConfigureApplicationCookie(options => { options.Cookie.Name = "DemoShopLogin"; });
+
             services
                 .Configure<DestinationBankAccountConfiguration>(
                     this.Configuration.GetSection(nameof(DestinationBankAccountConfiguration)))
