@@ -1,0 +1,41 @@
+@model CardPaymentBindingModel
+
+@{
+    ViewData["Title"] = "Card payment";
+}
+
+<div class="text-center w-50 mx-auto my-4">
+    <h3 class="mb-4">@ViewData["Title"]</h3>
+    <h4>@Model.ProductName</h4>
+    <h2>€@Model.ProductPrice</h2>
+    <form method="post">
+        <hr class="w-75"/>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Number"></label>
+            <input class="form-control" asp-for="Number"/>
+            <span asp-validation-for="Number" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input class="form-control" asp-for="Name"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="row">
+            <div class="form-group col">
+                <label asp-for="ExpiryDate"></label>
+                <input class="form-control" asp-for="ExpiryDate"/>
+                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="SecurityCode"></label>
+                <input class="form-control" asp-for="SecurityCode"/>
+                <span asp-validation-for="SecurityCode" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <a class="btn btn-outline-secondary col mx-4" asp-controller="Orders" asp-action="My">Cancel</a>
+            <button type="submit" class="btn btn-primary col mx-4">Pay</button>
+        </div>
+    </form>
+</div>
