@@ -26,9 +26,17 @@
             var from = new EmailAddress(sender);
             var to = new EmailAddress(receiver, receiver);
             var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlMessage, htmlMessage);
-            var isSuccessful = await client.SendEmailAsync(msg);
 
-            return isSuccessful.StatusCode == HttpStatusCode.Accepted;
+            try
+            {
+                var isSuccessful = await client.SendEmailAsync(msg);
+                return isSuccessful.StatusCode == HttpStatusCode.Accepted;
+            }
+            catch
+            {
+                // Ignored
+                return false;
+            }
         }
     }
 }
