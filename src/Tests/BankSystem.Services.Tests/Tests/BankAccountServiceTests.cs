@@ -211,6 +211,50 @@
                 .BeAssignableTo<IEnumerable<BankAccountIndexServiceModel>>();
         }
 
+        [Theory]
+        [InlineData("-1")]
+        [InlineData("   ")]
+        [InlineData("")]
+        [InlineData("someRandomValue")]
+        public async Task ChangeAccountNameAsync_WithInvalidId_ShouldReturnFalse(string id)
+        {
+            // Arrange
+            await this.SeedBankAccount();
+
+            // Act
+            var result = await this.bankAccountService.ChangeAccountNameAsync(id, SampleBankAccountName);
+
+            // Assert
+            result
+                .Should()
+                .BeFalse();
+        }
+
+        [Fact]
+        public async Task ChangeAccountNameAsync_WithValidId_ShouldReturnTrue_And_ChangeNameSuccessfully()
+        {
+            // Arrange
+            var model = await this.SeedBankAccount();
+            var newName = "changed!";
+
+            // Act
+            var result = await this.bankAccountService.ChangeAccountNameAsync(model.Id, newName);
+
+            // Assert
+            result
+                .Should()
+                .BeTrue();
+
+            // Ensure that name is changed
+            var dbModel = await this.dbContext
+                .Accounts
+                .FindAsync(model.Id);
+
+            dbModel.Name
+                .Should()
+                .BeEquivalentTo(newName);
+        }
+
         #region privateMethods
 
         private async Task SeedUser()
