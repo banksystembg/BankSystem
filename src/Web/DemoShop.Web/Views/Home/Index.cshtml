@@ -1,4 +1,5 @@
-﻿@model HomeViewModel
+﻿@using DemoShop.Web.Controllers
+@model HomeViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -53,7 +54,14 @@
 
                     <form asp-action="OrderProduct" asp-controller="Orders" method="post">
                         <input type="hidden" name="productId">
-                        <button type="submit" class="btn btn-primary">Order</button>
+                        <button type="submit" class="btn btn-info" name="paymentMethod"
+                                value="@OrdersController.CardPaymentMethodName">
+                            Pay by card
+                        </button>
+                        <button type="submit" class="btn btn-primary" name="paymentMethod"
+                                value="@OrdersController.DirectPaymentMethodName">
+                            Direct payment
+                        </button>
                     </form>
                 </div>
             </div>

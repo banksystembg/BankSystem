@@ -12,6 +12,9 @@ namespace DemoShop.Web.Controllers
     [Authorize]
     public class OrdersController : Controller
     {
+        public const string CardPaymentMethodName = "Card";
+        public const string DirectPaymentMethodName = "Direct";
+
         private readonly IOrdersService ordersService;
 
         public OrdersController(IOrdersService ordersService)
@@ -37,7 +40,7 @@ namespace DemoShop.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> OrderProduct(string productId)
+        public async Task<IActionResult> OrderProduct(string productId, string paymentMethod)
         {
             if (productId == null)
             {
@@ -56,6 +59,16 @@ namespace DemoShop.Web.Controllers
             if (orderId == null)
             {
                 return this.RedirectToAction("Index", "Home");
+            }
+
+            if (paymentMethod == DirectPaymentMethodName)
+            {
+                return this.RedirectToAction("Pay", "DirectPayments", new {id = orderId});
+            }
+
+            if (paymentMethod == CardPaymentMethodName)
+            {
+                return this.RedirectToAction("Pay", "CardPayments", new {id = orderId});
             }
 
             return this.RedirectToAction("My");
