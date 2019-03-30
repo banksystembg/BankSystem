@@ -1,14 +1,11 @@
 ﻿namespace BankSystem.Services.Tests.Tests
 {
     using BankSystem.Models;
-    using Common.Configuration;
     using Data;
     using FluentAssertions;
     using Implementations;
     using Interfaces;
-    using Microsoft.Extensions.Options;
     using Models.BankAccount;
-    using Moq;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -20,9 +17,6 @@
         private const string SampleBankAccountUserId = "adfsdvxc-123ewsf";
         private const string SampleBankAccountId = "1";
         private const string SampleBankAccountUniqueId = "UniqueId";
-        private const string SampleBankName = "Bank system";
-        private const string SampleUniqueIdentifier = "ABC";
-        private const string SampleFirst3CardDigits = "123";
 
         private readonly BankSystemDbContext dbContext;
         private readonly IBankAccountService bankAccountService;
@@ -31,15 +25,8 @@
         {
 
             this.dbContext = base.DatabaseInstance;
-            var bankConfiguration = new BankConfiguration
-            {
-                BankName = SampleBankName,
-                UniqueIdentifier = SampleUniqueIdentifier,
-                First3CardDigits = SampleFirst3CardDigits,
-            };
-            var options = new Mock<IOptions<BankConfiguration>>();
-            options.Setup(x => x.Value).Returns(bankConfiguration);
-            this.bankAccountService = new BankAccountService(this.dbContext, new BankAccountUniqueIdHelper(new BankConfigurationHelper(options.Object)));
+            this.bankAccountService = new BankAccountService(this.dbContext, new BankAccountUniqueIdHelper(
+                new BankConfigurationHelper(base.MockedBankConfiguration.Object)));
         }
 
         [Fact]
