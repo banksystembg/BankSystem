@@ -506,8 +506,7 @@
             string destinationBankUniqueId = SampleDestination,
             string source = SampleBankAccountId,
             string senderName = SampleSenderName,
-            string recipientName = SampleRecipientName,
-            DateTime madeOn = default)
+            string recipientName = SampleRecipientName)
         {
             var model = new MoneyTransferCreateServiceModel
             {
@@ -518,7 +517,6 @@
                 Source = source,
                 SenderName = senderName,
                 RecipientName = recipientName,
-                MadeOn = madeOn,
             };
 
             return model;
