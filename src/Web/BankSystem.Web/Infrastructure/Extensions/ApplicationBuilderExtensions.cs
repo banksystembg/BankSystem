@@ -1,8 +1,10 @@
 ﻿namespace BankSystem.Web.Infrastructure.Extensions
 {
     using System.Threading.Tasks;
+    using Common;
     using Data;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Middleware;
@@ -24,6 +26,13 @@
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<BankSystemDbContext>();
 
                 await dbContext.Database.MigrateAsync();
+
+                var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+
+                if (!await roleManager.RoleExistsAsync(GlobalConstants.AdministratorRoleName))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(GlobalConstants.AdministratorRoleName));
+                }
             }
         }
 
