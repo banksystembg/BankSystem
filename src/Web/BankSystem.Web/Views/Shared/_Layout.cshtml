@@ -54,6 +54,21 @@
                                     </a>
                                 </div>
                             </li>
+
+                            @if (User.IsInRole(GlobalConstants.AdministratorRoleName))
+                            {
+                                <li class="nav-item dropdown auto-dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button">
+                                        Administration
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a asp-area="Administration" asp-controller="Accounts" asp-action="Index"
+                                           class="dropdown-item">
+                                            Accounts
+                                        </a>
+                                    </div>
+                                </li>
+                            }
                         </ul>
 
                         <ul class="navbar-nav">

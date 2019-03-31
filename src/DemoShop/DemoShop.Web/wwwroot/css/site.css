@@ -1,0 +1,14 @@
+﻿.bg-darker {
+    background-color: #232426;
+}
+
+.product-thumbnail-img {
+    height: 30vh;
+    object-fit: cover;
+}
+
+.product-listing-img {
+    max-height: 20vh;
+    max-width: 100%;
+    object-fit: cover;
+}
