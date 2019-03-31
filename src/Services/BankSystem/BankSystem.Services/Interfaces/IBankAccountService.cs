@@ -18,5 +18,8 @@
             where T : BankAccountBaseServiceModel;
 
         Task<bool> ChangeAccountNameAsync(string accountId, string newName);
+
+        Task<IEnumerable<T>> GetAllAccountsAsync<T>()
+            where T : BankAccountBaseServiceModel;
     }
 }
