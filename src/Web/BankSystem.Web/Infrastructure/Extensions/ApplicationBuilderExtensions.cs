@@ -1,9 +1,5 @@
 ﻿namespace BankSystem.Web.Infrastructure.Extensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using BankSystem.Models;
     using Common;
     using Data;
@@ -12,6 +8,10 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Middleware;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public static class ApplicationBuilderExtensions
     {
@@ -21,7 +21,7 @@
 
             return app;
         }
-      
+
         private static async Task InitializeDatabaseAsync(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -39,7 +39,7 @@
                 }
             }
         }
-      
+
         private static async Task SeedUser(UserManager<BankUser> userManager, BankSystemDbContext dbContext)
         {
             if (!dbContext.Users.Any())
@@ -62,10 +62,10 @@
                     }
                 };
 
-                await userManager.CreateAsync(user, "test123");
+                await userManager.CreateAsync(user, "Test123$");
             }
         }
-      
+
         public static IApplicationBuilder AddDefaultSecurityHeaders(this IApplicationBuilder app,
             SecurityHeadersBuilder builder)
             => app.UseMiddleware<SecurityHeadersMiddleware>(builder.Policy());

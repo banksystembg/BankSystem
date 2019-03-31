@@ -1,30 +1,35 @@
 ﻿namespace BankSystem.Web.Pages.Account
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.Text.Encodings.Web;
+    using System.Threading.Tasks;
     using BankSystem.Models;
+    using Common;
+    using Common.EmailSender.Interface;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Models;
-    using System.ComponentModel.DataAnnotations;
-    using System.Threading.Tasks;
-    using Common;
 
     [AllowAnonymous]
     public class RegisterModel : BasePageModel
     {
+        private const string EmailSubject = "Confirm your email";
+        private const string EmailMessage = "Please confirm your email by <a href=\"{0}\">clicking here</a>.";
+        private const string EmailConfirmationPage = "/Account/ConfirmEmail";
+
+        private readonly IEmailSender emailSender;
         private readonly ILogger<RegisterModel> logger;
-        private readonly SignInManager<BankUser> signInManager;
         private readonly UserManager<BankUser> userManager;
 
         public RegisterModel(
             UserManager<BankUser> userManager,
-            SignInManager<BankUser> signInManager,
-            ILogger<RegisterModel> logger)
+            ILogger<RegisterModel> logger, IEmailSender emailSender)
         {
             this.userManager = userManager;
-            this.signInManager = signInManager;
             this.logger = logger;
+            this.emailSender = emailSender;
         }
 
         [BindProperty]
@@ -83,8 +88,18 @@
 
             this.logger.LogInformation("User created a new account with password.");
 
-            await this.signInManager.SignInAsync(user, false);
-            return this.LocalRedirect(returnUrl);
+            var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = this.Url.Page(
+                EmailConfirmationPage,
+                null,
+                new { userId = user.Id, code },
+                this.Request.Scheme);
+            await this.emailSender.SendEmailAsync(GlobalConstants.BankSystemEmail, this.Input.Email,
+                EmailSubject,
+                string.Format(EmailMessage, HtmlEncoder.Default.Encode(callbackUrl)));
+
+            this.ShowSuccessMessage(NotificationMessages.SuccessfulRegistration);
+            return this.RedirectToHome();
         }
 
         public class InputModel
@@ -100,7 +115,8 @@
             public string FullName { get; set; }
 
             [Required]
-            [StringLength(ModelConstants.User.PasswordMaxLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+            [StringLength(ModelConstants.User.PasswordMaxLength,
+                ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
                 MinimumLength = ModelConstants.User.PasswordMinLength)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]

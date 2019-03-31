@@ -9,7 +9,6 @@
 
     public class EmailSender : IEmailSender
     {
-        private const string AppEmail = "banksystem01@gmail.com";
         private readonly SendGridConfiguration options;
 
         public EmailSender(IOptions<SendGridConfiguration> options)
@@ -18,7 +17,7 @@
         }
 
         public async Task<bool> SendEmailAsync(string receiver, string subject, string htmlMessage)
-            => await this.SendEmailAsync(AppEmail, receiver, subject, htmlMessage);
+            => await this.SendEmailAsync(GlobalConstants.BankSystemEmail, receiver, subject, htmlMessage);
 
         public async Task<bool> SendEmailAsync(string sender, string receiver, string subject, string htmlMessage)
         {
