@@ -34,7 +34,7 @@ Example:
 ```
 
 ### Change project urls
-#### P.S Modify only protocol, domain name and port because the rest of the url is the same
+> Note: Modify only protocol, domain name and port because the rest of the url is the same
 Example:
 ```
 "https://localhost:56013/api/ReceiveMoneyTransfers", - this is the url which is used by my machine when running the project, If it's different on your machine please change it as it follows:
