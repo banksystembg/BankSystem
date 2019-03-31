@@ -3,7 +3,7 @@
 ## Automatically generated user (with 10,000 euro)
 | Username        	| Password 
 |-----------------	|----------
-| test@test.com 	  | test123
+| test@test.com 	  | Test123$
 
 # Getting started
 ### Set up recaptcha functionality
