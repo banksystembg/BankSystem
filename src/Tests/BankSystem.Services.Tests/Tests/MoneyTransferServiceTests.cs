@@ -1,6 +1,7 @@
 ﻿namespace BankSystem.Services.Tests.Tests
 {
     using BankSystem.Models;
+    using Common;
     using Common.EmailSender.Interface;
     using Data;
     using FluentAssertions;
@@ -25,9 +26,11 @@
         private const string SampleDestination = "dgsfcx-arq12wasdasdzxxcv";
 
         private const string SampleBankAccountName = "Test bank account name";
-        private const string SampleBankAccountUserId = "adfsdvxc-123ewsf";
         private const string SampleBankAccountId = "1";
         private const string SampleBankAccountUniqueId = "UniqueId";
+
+        private const string SampleUserFullname = "user user";
+        private const string SampleUserId = "adfsdvxc-123ewsf";
 
         private readonly BankSystemDbContext dbContext;
         private readonly IMoneyTransferService moneyTransferService;
@@ -94,7 +97,7 @@
             await this.dbContext.SaveChangesAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleBankAccountUserId);
+                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleUserId);
 
             // Assert
             result
@@ -119,7 +122,7 @@
             await this.dbContext.SaveChangesAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleBankAccountUserId);
+                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleUserId);
 
             // Assert
             result
@@ -272,7 +275,7 @@
             await this.dbContext.SaveChangesAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(SampleBankAccountUserId);
+                await this.moneyTransferService.GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(SampleUserId);
 
             // Assert
             result
@@ -298,7 +301,7 @@
             await this.dbContext.SaveChangesAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(SampleBankAccountUserId);
+                await this.moneyTransferService.GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(SampleUserId);
 
             // Assert
             result
@@ -306,7 +309,220 @@
                 .HaveCount(expectedCount);
         }
 
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithEmptyModel_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
+        {
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(new MoneyTransferCreateServiceModel());
+
+            // Assert
+            result
+                .Should()
+                .BeFalse();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .BeEmpty();
+        }
+
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithInvalidDescription_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
+        {
+            // Arrange
+            var invalidDescription = new string('m', ModelConstants.MoneyTransfer.DescriptionMaxLength + 1);
+            var model = PrepareCreateModel(description: invalidDescription);
+
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
+
+            // Assert
+            result
+                .Should()
+                .BeFalse();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .BeEmpty();
+        }
+
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithInvalidSenderName_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
+        {
+            // Arrange
+            var invalidSenderName = new string('m', ModelConstants.User.FullNameMaxLength + 1);
+            var model = PrepareCreateModel(senderName: invalidSenderName);
+
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
+
+            // Assert
+            result
+                .Should()
+                .BeFalse();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .BeEmpty();
+        }
+
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithInvalidRecipientName_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
+        {
+            // Arrange
+            var invalidRecipientName = new string('m', ModelConstants.User.FullNameMaxLength + 1);
+            var model = PrepareCreateModel(recipientName: invalidRecipientName);
+
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
+
+            // Assert
+            result
+                .Should()
+                .BeFalse();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .BeEmpty();
+        }
+
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithInvalidSource_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
+        {
+            // Arrange
+            var invalidSource = new string('m', ModelConstants.BankAccount.UniqueIdMaxLength + 1);
+            var model = PrepareCreateModel(source: invalidSource);
+
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
+
+            // Assert
+            result
+                .Should()
+                .BeFalse();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .BeEmpty();
+        }
+
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithInvalidDestinationBankAccountUniqueId_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
+        {
+            // Arrange
+            var invalidDestinationBankAccountUniqueId = new string('m', ModelConstants.BankAccount.UniqueIdMaxLength + 1);
+            var model = PrepareCreateModel(destinationBankUniqueId: invalidDestinationBankAccountUniqueId);
+
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
+
+            // Assert
+            result
+                .Should()
+                .BeFalse();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .BeEmpty();
+        }
+
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithDifferentId_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
+        {
+            // Arrange
+            await this.SeedBankAccountAsync();
+            var model = PrepareCreateModel(accountId: "another id");
+
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
+
+            // Assert
+            result
+                .Should()
+                .BeFalse();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .BeEmpty();
+        }
+
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithValidModel_ShouldReturnTrue_And_InsertTransferInDatabase()
+        {
+            // Arrange
+            var dbCount = this.dbContext.Transfers.Count();
+            await this.SeedBankAccountAsync();
+            var model = PrepareCreateModel();
+
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
+
+            // Assert
+            result
+                .Should()
+                .BeTrue();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .HaveCount(dbCount + 1);
+        }
+
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithValidModel_AndNegativeAmount_ShouldReturnTrue_And_InsertTransferInDatabase()
+        {
+            // Arrange
+            var dbCount = this.dbContext.Transfers.Count();
+            await this.SeedBankAccountAsync();
+            // Setting amount to negative means we're sending money.
+            var model = PrepareCreateModel(amount: -10);
+
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
+
+            // Assert
+            result
+                .Should()
+                .BeTrue();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .HaveCount(dbCount + 1);
+        }
+
         #region privateMethods
+
+        private static MoneyTransferCreateServiceModel PrepareCreateModel(
+            string description = SampleDescription,
+            decimal amount = SampleAmount,
+            string accountId = SampleBankAccountId,
+            string destinationBankUniqueId = SampleDestination,
+            string source = SampleBankAccountId,
+            string senderName = SampleSenderName,
+            string recipientName = SampleRecipientName,
+            DateTime madeOn = default)
+        {
+            var model = new MoneyTransferCreateServiceModel
+            {
+                Description = description,
+                Amount = amount,
+                AccountId = accountId,
+                DestinationBankAccountUniqueId = destinationBankUniqueId,
+                Source = source,
+                SenderName = senderName,
+                RecipientName = recipientName,
+                MadeOn = madeOn,
+            };
+
+            return model;
+        }
 
         private async Task<MoneyTransfer> SeedMoneyTransfersAsync()
         {
@@ -332,12 +548,13 @@
 
         private async Task<BankAccount> SeedBankAccountAsync()
         {
+            await this.SeedUserAsync();
             var model = new BankAccount
             {
                 Id = SampleBankAccountId,
                 Name = SampleBankAccountName,
                 UniqueId = SampleBankAccountUniqueId,
-                UserId = SampleBankAccountUserId,
+                User = await this.dbContext.Users.FirstOrDefaultAsync(),
 
             };
             await this.dbContext.Accounts.AddAsync(model);
@@ -346,6 +563,11 @@
             return model;
         }
 
+        private async Task SeedUserAsync()
+        {
+            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleUserId, FullName = SampleUserFullname, });
+            await this.dbContext.SaveChangesAsync();
+        }
         #endregion
     }
 }
