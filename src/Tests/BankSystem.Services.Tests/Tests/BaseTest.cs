@@ -13,6 +13,10 @@
         private const string SampleBankName = "Bank system";
         private const string SampleUniqueIdentifier = "ABC";
         private const string SampleFirst3CardDigits = "123";
+        private const string SampleCentralApiAddress = "https://localhost:5001/";
+        private const string SampleCentralApiPublicKey = "sdgijsd09gusd0jsdpfasjiofasd";
+        private const string SampleBankCountry = "Bulgaria";
+        private const string SampleBankKey = "sdf90234rewfsd0ij9oigsdf";
 
         protected BaseTest()
         {
@@ -41,6 +45,10 @@
                     BankName = SampleBankName,
                     UniqueIdentifier = SampleUniqueIdentifier,
                     First3CardDigits = SampleFirst3CardDigits,
+                    CentralApiAddress = SampleCentralApiAddress,
+                    CentralApiPublicKey = SampleCentralApiPublicKey,
+                    Country = SampleBankCountry,
+                    Key = SampleBankKey
                 };
 
                 var options = new Mock<IOptions<BankConfiguration>>();
