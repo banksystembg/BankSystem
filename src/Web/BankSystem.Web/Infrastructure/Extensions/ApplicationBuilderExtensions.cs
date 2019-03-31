@@ -1,5 +1,6 @@
 ﻿namespace BankSystem.Web.Infrastructure.Extensions
 {
+    using System.Threading.Tasks;
     using Data;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.EntityFrameworkCore;
@@ -8,12 +9,21 @@
 
     public static class ApplicationBuilderExtensions
     {
-        public static void InitializeDatabase(this IApplicationBuilder app)
+        public static IApplicationBuilder InitializeDatabase(this IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            InitializeDatabaseAsync(app).GetAwaiter().GetResult();
+
+            return app;
+        }
+
+        // Migrate database and create administrator role
+        private static async Task InitializeDatabaseAsync(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                var dbContext = serviceScope.ServiceProvider.GetService<BankSystemDbContext>();
-                dbContext.Database.Migrate();
+                var dbContext = serviceScope.ServiceProvider.GetRequiredService<BankSystemDbContext>();
+
+                await dbContext.Database.MigrateAsync();
             }
         }
 
