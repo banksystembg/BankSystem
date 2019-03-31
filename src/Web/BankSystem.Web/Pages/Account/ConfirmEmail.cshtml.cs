@@ -1,6 +1,5 @@
 ﻿namespace BankSystem.Web.Pages.Account
 {
-    using System;
     using System.Threading.Tasks;
     using BankSystem.Models;
     using Common;
@@ -36,10 +35,11 @@
             var result = await this.userManager.ConfirmEmailAsync(user, code);
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
+                this.ShowErrorMessage(NotificationMessages.EmailVerificationFailed);
+                return this.RedirectToHome();
             }
 
-            this.ShowSuccessMessage("You've successfully activated your account. You can now log in.");
+            this.ShowSuccessMessage(NotificationMessages.SuccessfulEmailVerification);
             return this.RedirectToHome();
         }
     }

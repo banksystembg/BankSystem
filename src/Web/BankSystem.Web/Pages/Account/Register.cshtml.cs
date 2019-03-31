@@ -15,11 +15,10 @@
     [AllowAnonymous]
     public class RegisterModel : BasePageModel
     {
-        private const string SuccessfulRegistration =
-            "Thank you for registering. Please confirm your email by clicking the link which we have just send you to the email address in order to proceed forward.";
+        private const string EmailSubject = "Confirm your email";
+        private const string EmailMessage = "Please confirm your email by <a href=\"{0}\">clicking here</a>.";
 
         private readonly IEmailSender emailSender;
-
         private readonly ILogger<RegisterModel> logger;
         private readonly UserManager<BankUser> userManager;
 
@@ -95,10 +94,10 @@
                 new {userId = user.Id, code},
                 this.Request.Scheme);
             await this.emailSender.SendEmailAsync(GlobalConstants.BankSystemEmail, this.Input.Email,
-                "Confirm your email",
-                $"Please confirm your email by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                EmailSubject,
+                string.Format(EmailMessage, HtmlEncoder.Default.Encode(callbackUrl)));
 
-            this.ShowSuccessMessage(SuccessfulRegistration);
+            this.ShowSuccessMessage(NotificationMessages.SuccessfulRegistration);
             return this.RedirectToHome();
         }
 
