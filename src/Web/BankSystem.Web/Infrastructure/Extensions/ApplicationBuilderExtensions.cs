@@ -36,7 +36,8 @@
             }
         }
 
-        public static IApplicationBuilder AddDefaultSecurityHeaders(this IApplicationBuilder app, SecurityHeadersBuilder builder)
+        public static IApplicationBuilder AddDefaultSecurityHeaders(this IApplicationBuilder app,
+            SecurityHeadersBuilder builder)
             => app.UseMiddleware<SecurityHeadersMiddleware>(builder.Policy());
     }
 }

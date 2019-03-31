@@ -1,5 +1,10 @@
 namespace BankSystem.Web.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Common.Utils;
@@ -12,11 +17,6 @@ namespace BankSystem.Web.Controllers
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.GlobalTransfer;
-    using System;
-    using System.Linq;
-    using System.Security.Cryptography;
-    using System.Text;
-    using System.Threading.Tasks;
 
     [Authorize]
     public class PaymentsController : BaseController
@@ -175,7 +175,8 @@ namespace BankSystem.Web.Controllers
 
                 if (result != GlobalTransferResult.Succeeded)
                 {
-                    return this.PaymentFailed(result == GlobalTransferResult.InsufficientFunds ? NotificationMessages.InsufficientFunds
+                    return this.PaymentFailed(result == GlobalTransferResult.InsufficientFunds
+                        ? NotificationMessages.InsufficientFunds
                         : NotificationMessages.TryAgainLaterError);
                 }
 
@@ -207,7 +208,7 @@ namespace BankSystem.Web.Controllers
                 deserializedJson.PaymentProofSignature
             };
 
-            string paymentConfirmationJson = JsonConvert.SerializeObject(paymentConfirmation);
+            var paymentConfirmationJson = JsonConvert.SerializeObject(paymentConfirmation);
 
             // sign the PaymentConfirmation
             string paymentConfirmationSignature;

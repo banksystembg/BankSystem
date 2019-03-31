@@ -38,7 +38,8 @@
             var account =
                 await this.bankAccountService.GetByUniqueIdAsync<BankAccountConciseServiceModel>(
                     model.DestinationBankAccountUniqueId);
-            if (account == null || !string.Equals(account.UserFullName, model.RecipientName, StringComparison.InvariantCulture))
+            if (account == null || !string.Equals(account.UserFullName, model.RecipientName,
+                    StringComparison.InvariantCulture))
             {
                 return this.NoContent();
             }

@@ -1,5 +1,8 @@
 ﻿namespace BankSystem.Web.Infrastructure.Filters
 {
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
     using Common;
     using Common.Configuration;
     using Common.Utils;
@@ -8,9 +11,6 @@
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
 
     public class EnsureRequestIsSigned : ActionFilterAttribute
     {
@@ -20,7 +20,8 @@
         {
             var request = context.HttpContext.Request;
             // check the scheme and auth header
-            if (!request.Headers.ContainsKey(GlobalConstants.AuthorizationHeader) && !request.Headers[GlobalConstants.AuthorizationHeader][0]
+            if (!request.Headers.ContainsKey(GlobalConstants.AuthorizationHeader) &&
+                !request.Headers[GlobalConstants.AuthorizationHeader][0]
                     .Contains(GlobalConstants.AuthenticationScheme, StringComparison.Ordinal))
             {
                 context.Result = new ForbidResult();
@@ -45,7 +46,8 @@
             base.OnActionExecuting(context);
         }
 
-        private bool IsValidRequest(ActionExecutingContext context, string encryptedKey, string encryptedIV, string incomingBase64Signature)
+        private bool IsValidRequest(ActionExecutingContext context, string encryptedKey, string encryptedIV,
+            string incomingBase64Signature)
         {
             var request = context.HttpContext.Request;
 
@@ -74,7 +76,8 @@
                     var decryptedKey = rsa.Decrypt(Convert.FromBase64String(encryptedKey), RSAEncryptionPadding.Pkcs1);
                     var decryptedIV = rsa.Decrypt(Convert.FromBase64String(encryptedIV), RSAEncryptionPadding.Pkcs1);
 
-                    decrypted = CryptographyExtensions.Decrypt(Convert.FromBase64String(incomingBase64Signature), decryptedKey, decryptedIV);
+                    decrypted = CryptographyExtensions.Decrypt(Convert.FromBase64String(incomingBase64Signature),
+                        decryptedKey, decryptedIV);
                 }
 
                 // Verify signature with central api key
@@ -82,7 +85,8 @@
                 {
                     RsaExtensions.FromXmlString(rsa, this.configuration?.CentralApiPublicKey);
                     var isVerified = rsa
-                        .VerifyData(signature, Convert.FromBase64String(decrypted), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                        .VerifyData(signature, Convert.FromBase64String(decrypted), HashAlgorithmName.SHA256,
+                            RSASignaturePadding.Pkcs1);
                     return isVerified;
                 }
             }

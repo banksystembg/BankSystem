@@ -1,8 +1,8 @@
 namespace BankSystem.Web.Models
 {
-    using BankAccount;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using BankAccount;
 
     public class PaymentConfirmBindingModel
     {
