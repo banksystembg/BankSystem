@@ -6,16 +6,20 @@
     using FluentAssertions;
     using Implementations;
     using Interfaces;
+    using Microsoft.EntityFrameworkCore;
     using Models.Card;
     using System.Threading.Tasks;
     using Xunit;
 
     public class CardServiceTests : BaseTest
     {
-        private const string SampleName = "test name";
+        private const string SampleCardId = "de88436d-5761-4512-998b-40d8264aba37";
         private const string SampleUserId = "sdgsfcx-arq12wsdxcvc";
         private const string SampleAccountId = "ABC125trABSD1";
+        private const string SampleNumber = "1017840221397613";
+        private const string SampleSecurityCode = "685";
         private const string SampleExpiryDate = "08/22";
+        private const string SampleName = "melik";
 
         private readonly BankSystemDbContext dbContext;
         private readonly ICardService cardService;
@@ -106,10 +110,100 @@
                 .BeTrue();
         }
 
+        [Fact]
+        public async Task GetAsync_WithValidParameters_ShouldReturnCorrectEntity()
+        {
+            // Arrange
+            var model = await this.SeedCard();
+
+            // Act
+            var result = await this.cardService.GetAsync<CardDetailsServiceModel>(model.Number, model.ExpiryDate,
+                model.SecurityCode, model.User.FullName);
+
+            // Assert
+            result
+                .Should()
+                .NotBeNull()
+                .And
+                .Match(x => x.As<CardDetailsServiceModel>().Id == model.Id);
+        }
+
+        [Fact]
+        public async Task GetAsync_WithInvalidParameters_ShouldReturnNull()
+        {
+            // Arrange
+            var model = await this.SeedCard();
+
+            // Act
+            var result = await this.cardService.GetAsync<CardDetailsServiceModel>("wrong number", model.ExpiryDate,
+                model.SecurityCode, model.User.FullName);
+
+            // Assert
+            result
+                .Should()
+                .BeNull();
+        }
+
+        [Fact]
+        public async Task GetAsync_WithValidId_ShouldReturnCorrectEntity()
+        {
+            // Arrange
+            var model = await this.SeedCard();
+            var expectedId = model.Id;
+
+            // Act
+            var result = await this.cardService.GetAsync<CardDetailsServiceModel>(expectedId);
+
+            // Assert
+            result
+                .Should()
+                .NotBeNull()
+                .And
+                .Match(x => x.As<CardDetailsServiceModel>().Id == expectedId);
+        }
+
+        [Fact]
+        public async Task GetAsync_WithInvalidId_ShouldReturnCorrectNull()
+        {
+            // Arrange
+            var model = await this.SeedCard();
+
+            // Act
+            var result = await this.cardService.GetAsync<CardDetailsServiceModel>(null);
+
+            // Assert
+            result
+                .Should()
+                .BeNull();
+        }
+
+        #region privateMethods
+        private async Task<Card> SeedCard()
+        {
+            await this.SeedUser();
+            var model = new Card
+            {
+                Id = SampleCardId,
+                Name = SampleName,
+                Account = new BankAccount(),
+                ExpiryDate = SampleExpiryDate,
+                Number = SampleNumber,
+                SecurityCode = SampleSecurityCode,
+                User = await this.dbContext.Users.FirstOrDefaultAsync(),
+            };
+
+            await this.dbContext.Cards.AddAsync(model);
+            await this.dbContext.SaveChangesAsync();
+
+            return model;
+        }
+
         private async Task SeedUser()
         {
-            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleUserId });
+            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleUserId, FullName = SampleName, });
             await this.dbContext.SaveChangesAsync();
         }
+
+        #endregion
     }
 }
