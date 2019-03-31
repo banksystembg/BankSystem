@@ -12,6 +12,7 @@
     {
         private const string SampleUserId = "dsgsdg-dsg364tr-egdfb-jfd";
         private const string SampleUsername = "melik";
+        private const string SampleUserFullName = "Melik Pehlivanov";
 
         private readonly BankSystemDbContext dbContext;
         private readonly IUserService userService;
@@ -41,7 +42,7 @@
         }
 
         [Fact]
-        public async Task GetUserIdByUsernameAsync_WithValidUsername_ShouldReturnNonEmptyString()
+        public async Task GetUserIdByUsernameAsync_WithValidUsername_ShouldReturnCorrectId()
         {
             // Arrange
             await this.SeedUserAsync();
@@ -53,12 +54,46 @@
                 .Should()
                 .NotBeNull()
                 .And
-                .BeAssignableTo<string>();
+                .Be(SampleUserId);
+        }
+
+        [Theory]
+        [InlineData("  !")]
+        [InlineData("asd  1 ")]
+        [InlineData("1246  10   ")]
+        [InlineData("sdg-sdgfgscx-124r-dhf-")]
+        public async Task GetAccountOwnerFullnameAsync_WithInvalidUsername_ShouldReturnNull(string id)
+        {
+            // Arrange
+            await this.SeedUserAsync();
+            // Act
+            var result = await this.userService.GetAccountOwnerFullnameAsync(id);
+
+            // Assert
+            result
+                .Should()
+                .BeNull();
+        }
+
+        [Fact]
+        public async Task GetAccountOwnerFullnameAsync_WithValidUsername_ShouldReturnCorrectName()
+        {
+            // Arrange
+            await this.SeedUserAsync();
+            // Act
+            var result = await this.userService.GetAccountOwnerFullnameAsync(SampleUserId);
+
+            // Assert
+            result
+                .Should()
+                .NotBeNull()
+                .And
+                .Be(SampleUserFullName);
         }
 
         private async Task SeedUserAsync()
         {
-            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleUserId, UserName = SampleUsername, });
+            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleUserId, UserName = SampleUsername, FullName = SampleUserFullName });
             await this.dbContext.SaveChangesAsync();
         }
     }
