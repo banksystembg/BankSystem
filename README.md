@@ -20,7 +20,7 @@ Example:
   },
 ```
 
-### Set up email functionality (optional)
+### Set up email functionality
 1. Register a [SendGrid](https://sendgrid.com/) account.
 2. [Create an API key](https://sendgrid.com/docs/ui/account-and-settings/api-keys/#creating-an-api-key).
 3. Insert the API key in the following file:
