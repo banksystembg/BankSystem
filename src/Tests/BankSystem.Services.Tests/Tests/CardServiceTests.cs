@@ -33,7 +33,7 @@
         }
 
         [Fact]
-        public async Task CreateAsync_WithInvalidModel_ShouldReturnFalse()
+        public async Task CreateAsync_WithInvalidModel_ShouldReturnFalse_And_NotInsertInDatabase()
         {
             // Act
             var result = await this.cardService.CreateAsync(new CardCreateServiceModel());
@@ -42,10 +42,15 @@
             result
                 .Should()
                 .BeFalse();
+
+            this.dbContext
+                .Cards
+                .Should()
+                .BeEmpty();
         }
 
         [Fact]
-        public async Task CreateAsync_WithInvalidName_ShouldReturnFalse()
+        public async Task CreateAsync_WithInvalidName_ShouldReturnFalse_And_NotInsertInDatabase()
         {
             // Set invalid name
             var model = new CardCreateServiceModel
@@ -63,6 +68,11 @@
             result
                 .Should()
                 .BeFalse();
+
+            this.dbContext
+                .Cards
+                .Should()
+                .BeEmpty();
         }
 
         [Theory]
@@ -70,7 +80,7 @@
         [InlineData("030124135")]
         [InlineData("01")]
         [InlineData("-10")]
-        public async Task CreateAsync_WithInvalidExpiryDate_ShouldReturnFalse(string expiryDate)
+        public async Task CreateAsync_WithInvalidExpiryDate_ShouldReturnFalse_And_NotInsertInDatabase(string expiryDate)
         {
             // Set invalid expiryDate
             var model = new CardCreateServiceModel
@@ -88,13 +98,20 @@
             result
                 .Should()
                 .BeFalse();
+
+            this.dbContext
+                .Cards
+                .Should()
+                .BeEmpty();
         }
 
         [Fact]
-        public async Task CreateAsync_WithValidModel_ShouldReturnTrue()
+        public async Task CreateAsync_WithValidModel_ShouldReturnTrue_And_InsertInDatabase()
         {
-            await this.SeedUserAsync();
             // Arrange
+            var dbCount = this.dbContext.Accounts.Count();
+
+            await this.SeedUserAsync();
             var model = new CardCreateServiceModel
             {
                 Name = SampleName,
@@ -110,6 +127,11 @@
             result
                 .Should()
                 .BeTrue();
+
+            this.dbContext
+                .Cards
+                .Should()
+                .HaveCount(dbCount + 1);
         }
 
         [Fact]

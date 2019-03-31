@@ -8,6 +8,7 @@
     using Models.BankAccount;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -30,7 +31,7 @@
         }
 
         [Fact]
-        public async Task CreateAsync_WithInvalidUserId_ShouldReturnNull()
+        public async Task CreateAsync_WithInvalidUserId_ShouldReturnNull_And_NotInsertInDatabase()
         {
             // Arrange
             await this.SeedUserAsync();
@@ -43,10 +44,15 @@
             result
                 .Should()
                 .BeNull();
+
+            this.dbContext
+                .Accounts
+                .Should()
+                .BeEmpty();
         }
 
         [Fact]
-        public async Task CreateAsync_WithInvalidNameLength_ShouldReturnNull()
+        public async Task CreateAsync_WithInvalidNameLength_ShouldReturnNull_And_NotInsertInDatabase()
         {
             // Arrange
             await this.SeedUserAsync();
@@ -60,12 +66,18 @@
             result
                 .Should()
                 .BeNull();
+
+            this.dbContext
+                .Accounts
+                .Should()
+                .BeEmpty();
         }
 
         [Fact]
-        public async Task CreateAsync_WithValidModel_AndEmptyName_ShouldSetRandomString_And_ShouldReturnNonEmptyString()
+        public async Task CreateAsync_WithValidModel_AndEmptyName_ShouldSetRandomString_And_ShouldReturnNonEmptyString_And_InsertInDatabase()
         {
             // Arrange
+            var count = this.dbContext.Accounts.Count();
             await this.SeedUserAsync();
             var model = new BankAccountCreateServiceModel { UserId = SampleBankAccountUserId };
 
@@ -78,6 +90,11 @@
                 .NotBeNullOrEmpty()
                 .And
                 .BeAssignableTo<string>();
+
+            this.dbContext
+                .Accounts
+                .Should()
+                .HaveCount(count + 1);
         }
 
         [Fact]
