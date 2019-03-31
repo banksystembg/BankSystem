@@ -33,7 +33,7 @@
         public async Task CreateAsync_WithInvalidUserId_ShouldReturnNull()
         {
             // Arrange
-            await this.SeedUser();
+            await this.SeedUserAsync();
             var model = new BankAccountCreateServiceModel { Name = SampleBankAccountName, UserId = null };
 
             // Act
@@ -49,7 +49,7 @@
         public async Task CreateAsync_WithInvalidNameLength_ShouldReturnNull()
         {
             // Arrange
-            await this.SeedUser();
+            await this.SeedUserAsync();
             // Name is invalid when it's longer than 35 characters
             var model = new BankAccountCreateServiceModel { Name = new string('c', 36), UserId = SampleBankAccountUserId };
 
@@ -66,7 +66,7 @@
         public async Task CreateAsync_WithValidModel_AndEmptyName_ShouldSetRandomString_And_ShouldReturnNonEmptyString()
         {
             // Arrange
-            await this.SeedUser();
+            await this.SeedUserAsync();
             var model = new BankAccountCreateServiceModel { UserId = SampleBankAccountUserId };
 
             // Act
@@ -84,7 +84,7 @@
         public async Task CreateAsync_WithValidModel_ShouldReturnNonEmptyString()
         {
             // Arrange
-            await this.SeedUser();
+            await this.SeedUserAsync();
             // CreatedOn is not required since it has default value which is set from the class - Datetime.UtcNow
             var model = new BankAccountCreateServiceModel { Name = SampleBankAccountName, UserId = SampleBankAccountUserId, CreatedOn = DateTime.UtcNow };
 
@@ -103,7 +103,7 @@
         public async Task GetByUniqueIdAsync_WithInvalidUniqueId_ShouldReturnNull()
         {
             // Arrange
-            await this.SeedBankAccount();
+            await this.SeedBankAccountAsync();
 
             // Act
             var result = await this.bankAccountService.GetByUniqueIdAsync<BankAccountIndexServiceModel>(null);
@@ -118,7 +118,7 @@
         public async Task GetByUniqueIdAsync_WithValidUniqueId_ShouldReturnCorrectEntity()
         {
             // Arrange
-            var model = await this.SeedBankAccount();
+            var model = await this.SeedBankAccountAsync();
             var expectedUniqueId = model.UniqueId;
 
             // Act
@@ -136,7 +136,7 @@
         public async Task GetByIdAsync_WithInvalidBankAccountId_ShouldReturnNull()
         {
             // Arrange
-            await this.SeedBankAccount();
+            await this.SeedBankAccountAsync();
 
             // Act
             var result = await this.bankAccountService.GetByIdAsync<BankAccountConciseServiceModel>(null);
@@ -151,7 +151,7 @@
         public async Task GetByIdAsync_WithValidBankAccountId_ShouldReturnCorrectEntity()
         {
             // Arrange
-            var model = await this.SeedBankAccount();
+            var model = await this.SeedBankAccountAsync();
             var expectedId = model.Id;
             var expectedUniqueId = model.UniqueId;
 
@@ -172,7 +172,7 @@
         public async Task GetAllAccountsByUserIdAsync_WithInvalidId_ShouldReturnEmptyModel()
         {
             // Arrange
-            await this.SeedBankAccount();
+            await this.SeedBankAccountAsync();
             // Act
             var result =
                 await this.bankAccountService.GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(null);
@@ -187,7 +187,7 @@
         public async Task GetAllAccountsByUserIdAsync_WithValidId_ShouldReturnCorrectModel()
         {
             // Arrange
-            var model = await this.SeedBankAccount();
+            var model = await this.SeedBankAccountAsync();
             // Act
             var result =
                 await this.bankAccountService.GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(model.UserId);
@@ -202,7 +202,7 @@
         public async Task GetAllAccountsAsync_ShouldReturnCollectionWithCorrectModels()
         {
             // Arrange
-            await this.SeedBankAccount();
+            await this.SeedBankAccountAsync();
 
             // Act
             var result = await this.bankAccountService.GetAllAccountsAsync<BankAccountDetailsServiceModel>();
@@ -221,7 +221,7 @@
         public async Task ChangeAccountNameAsync_WithInvalidId_ShouldReturnFalse(string id)
         {
             // Arrange
-            await this.SeedBankAccount();
+            await this.SeedBankAccountAsync();
 
             // Act
             var result = await this.bankAccountService.ChangeAccountNameAsync(id, SampleBankAccountName);
@@ -236,7 +236,7 @@
         public async Task ChangeAccountNameAsync_WithValidId_ShouldReturnTrue_And_ChangeNameSuccessfully()
         {
             // Arrange
-            var model = await this.SeedBankAccount();
+            var model = await this.SeedBankAccountAsync();
             var newName = "changed!";
 
             // Act
@@ -259,13 +259,13 @@
 
         #region privateMethods
 
-        private async Task SeedUser()
+        private async Task SeedUserAsync()
         {
             await this.dbContext.Users.AddAsync(new BankUser { Id = SampleBankAccountUserId, FullName = SampleBankAccountUniqueId });
             await this.dbContext.SaveChangesAsync();
         }
 
-        private async Task<BankAccount> SeedBankAccount()
+        private async Task<BankAccount> SeedBankAccountAsync()
         {
             var model = new BankAccount
             {

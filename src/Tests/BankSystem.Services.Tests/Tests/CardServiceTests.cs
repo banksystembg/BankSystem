@@ -93,7 +93,7 @@
         [Fact]
         public async Task CreateAsync_WithValidModel_ShouldReturnTrue()
         {
-            await this.SeedUser();
+            await this.SeedUserAsync();
             // Arrange
             var model = new CardCreateServiceModel
             {
@@ -116,7 +116,7 @@
         public async Task GetAsync_WithValidParameters_ShouldReturnCorrectEntity()
         {
             // Arrange
-            var model = await this.SeedCard();
+            var model = await this.SeedCardAsync();
 
             // Act
             var result = await this.cardService.GetAsync<CardDetailsServiceModel>(model.Number, model.ExpiryDate,
@@ -134,7 +134,7 @@
         public async Task GetAsync_WithInvalidParameters_ShouldReturnNull()
         {
             // Arrange
-            var model = await this.SeedCard();
+            var model = await this.SeedCardAsync();
 
             // Act
             var result = await this.cardService.GetAsync<CardDetailsServiceModel>("wrong number", model.ExpiryDate,
@@ -150,7 +150,7 @@
         public async Task GetAsync_WithValidId_ShouldReturnCorrectEntity()
         {
             // Arrange
-            var model = await this.SeedCard();
+            var model = await this.SeedCardAsync();
             var expectedId = model.Id;
 
             // Act
@@ -168,7 +168,7 @@
         public async Task GetAsync_WithInvalidId_ShouldReturnNull()
         {
             // Arrange
-            await this.SeedCard();
+            await this.SeedCardAsync();
 
             // Act
             var result = await this.cardService.GetAsync<CardDetailsServiceModel>(null);
@@ -187,7 +187,7 @@
         public async Task GetAllCardsAsync_WithInvalidUserId_ShouldReturnEmptyCollection(string userId)
         {
             // Arrange
-            await this.SeedCard();
+            await this.SeedCardAsync();
 
             // Act
             var result = await this.cardService.GetAllCardsAsync<CardDetailsServiceModel>(userId);
@@ -202,7 +202,7 @@
         public async Task GetAllCardsAsync_WithValidUserId_ShouldReturnCorrectEntities()
         {
             // Arrange
-            var model = await this.SeedCard();
+            var model = await this.SeedCardAsync();
 
             // Act
             var result = await this.cardService.GetAllCardsAsync<CardDetailsServiceModel>(model.UserId);
@@ -220,7 +220,7 @@
         public async Task GetAllCardsAsync_WithValidUserId_ShouldReturnCorrectCount()
         {
             // Arrange
-            var model = await this.SeedCard();
+            var model = await this.SeedCardAsync();
 
             // Act
             var result = await this.cardService.GetAllCardsAsync<CardDetailsServiceModel>(model.UserId);
@@ -240,7 +240,7 @@
         public async Task DeleteAsync_WithInvalidId_ShouldReturnFalse_And_NotDeleteCardFromDatabase(string id)
         {
             // Arrange
-            await this.SeedCard();
+            await this.SeedCardAsync();
 
             // Act
             var result = await this.cardService.DeleteAsync(id);
@@ -261,7 +261,7 @@
         public async Task DeleteAsync_WithValidId_ShouldReturnTrue_And_DeleteCardFromDatabase()
         {
             // Arrange
-            var model = await this.SeedCard();
+            var model = await this.SeedCardAsync();
 
             // Act
             var result = await this.cardService.DeleteAsync(model.Id);
@@ -278,9 +278,9 @@
         }
 
         #region privateMethods
-        private async Task<Card> SeedCard()
+        private async Task<Card> SeedCardAsync()
         {
-            await this.SeedUser();
+            await this.SeedUserAsync();
             var model = new Card
             {
                 Id = SampleCardId,
@@ -298,7 +298,7 @@
             return model;
         }
 
-        private async Task SeedUser()
+        private async Task SeedUserAsync()
         {
             await this.dbContext.Users.AddAsync(new BankUser { Id = SampleUserId, FullName = SampleName, });
             await this.dbContext.SaveChangesAsync();
