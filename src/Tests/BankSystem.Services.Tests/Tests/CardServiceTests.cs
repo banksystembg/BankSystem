@@ -8,6 +8,8 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Card;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -175,6 +177,59 @@
             result
                 .Should()
                 .BeNull();
+        }
+
+        [Theory]
+        [InlineData(" ")]
+        [InlineData(null)]
+        [InlineData("!")]
+        [InlineData(" sdgsfcx-arq12wsdxcvc")]
+        public async Task GetAllCardsAsync_WithInvalidUserId_ShouldReturnEmptyCollection(string userId)
+        {
+            // Arrange
+            await this.SeedCard();
+
+            // Act
+            var result = await this.cardService.GetAllCardsAsync<CardDetailsServiceModel>(userId);
+
+            // Assert
+            result
+                .Should()
+                .BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task GetAllCardsAsync_WithValidUserId_ShouldReturnCorrectEntities()
+        {
+            // Arrange
+            var model = await this.SeedCard();
+
+            // Act
+            var result = await this.cardService.GetAllCardsAsync<CardDetailsServiceModel>(model.UserId);
+
+            // Assert
+            result
+                .Should()
+                .AllBeAssignableTo<CardDetailsServiceModel>()
+                .And
+                .Match<IEnumerable<CardDetailsServiceModel>>(x => x.All(c => c.UserId == model.UserId));
+
+        }
+
+        [Fact]
+        public async Task GetAllCardsAsync_WithValidUserId_ShouldReturnCorrectCount()
+        {
+            // Arrange
+            var model = await this.SeedCard();
+
+            // Act
+            var result = await this.cardService.GetAllCardsAsync<CardDetailsServiceModel>(model.UserId);
+
+            // Assert
+            result
+                .Should()
+                .HaveCount(1);
+
         }
 
         #region privateMethods
