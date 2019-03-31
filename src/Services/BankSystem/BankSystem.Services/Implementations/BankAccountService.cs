@@ -90,5 +90,12 @@
                 .Where(a => a.UserId == userId)
                 .ProjectTo<T>()
                 .ToArrayAsync();
+
+        public async Task<IEnumerable<T>> GetAllAccountsAsync<T>()
+            where T : BankAccountBaseServiceModel
+            => await this.Context
+                .Accounts
+                .ProjectTo<T>()
+                .ToArrayAsync();
     }
 }
