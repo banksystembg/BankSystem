@@ -1,0 +1,89 @@
+﻿@using DemoShop.Web.Controllers
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1 class="text-center">Products</h1>
+<div class="row my-3">
+    @foreach (var product in Model.Products)
+    {
+        <div class="col-12 col-md-4 p-2 mx-auto">
+            <div class="card shadow">
+                <img class="card-img-top product-thumbnail-img" src="@product.ImageUrl" alt="@product.Name">
+                <div class="card-body">
+                    <h4 class="card-title">@product.Name</h4>
+                    <p class="card-text">€@product.Price</p>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#orderModal"
+                                data-id="@product.Id" data-name="@product.Name" data-price="@product.Price">
+                            Buy now
+                        </button>
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Buy now</a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="text-center">
+    <a class="btn btn-outline-primary" asp-controller="Products" asp-action="Create">
+        <i class="fas fa-plus"></i> Create product
+    </a>
+</div>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="modal fade" id="orderModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Cancel</button>
+
+                    <form asp-action="OrderProduct" asp-controller="Orders" method="post">
+                        <input type="hidden" name="productId">
+                        <button type="submit" class="btn btn-info" name="paymentMethod"
+                                value="@OrdersController.CardPaymentMethodName">
+                            Pay by card
+                        </button>
+                        <button type="submit" class="btn btn-primary" name="paymentMethod"
+                                value="@OrdersController.DirectPaymentMethodName">
+                            Direct payment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script>
+            $('#orderModal').on('show.bs.modal',
+                function(event) {
+                    var button = $(event.relatedTarget);
+                    var id = button.data('id');
+                    var name = button.data('name');
+                    var price = button.data('price');
+                    var modal = $(this);
+                    modal.find('.modal-title').text('Order ' + name);
+                    modal.find('.modal-body').text('Price: €' + price);
+                    modal.find('.modal-footer input[name=productId]').val(id);
+                });
+        </script>
+    }
+}

@@ -1,0 +1,50 @@
+@using System.Globalization
+@using DemoShop.Models
+@model IEnumerable<OrderDetailsViewModel>
+
+@{
+    ViewData["Title"] = "My orders";
+    const string dateFormat = "dddd, dd/MM/yyyy";
+}
+
+<div class="w-75 mx-auto">
+    <h1 class="text-center my-3">My orders</h1>
+    <hr/>
+    @foreach (var order in Model)
+    {
+        <div class="row">
+            <div class="col-12 col-lg-3 text-center">
+                <img src="@order.ProductImageUrl" class="product-listing-img" alt="@order.ProductName"/>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="mx-3">
+                    <h4 class="mt-2">@order.ProductName</h4>
+                    <p class="text-secondary">€@order.ProductPrice</p>
+                    <p class="text-secondary">
+                        Ordered on
+                        @order.CreatedOn.ToString(dateFormat, CultureInfo.InvariantCulture),
+                        @order.PaymentStatus
+                    </p>
+                </div>
+            </div>
+            <div class="col-12 col-lg-3 text-right d-flex flex-column justify-content-around">
+                @if (order.PaymentStatus == PaymentStatus.Pending)
+                {
+                    <a class="btn btn-primary" asp-controller="DirectPayments", asp-action="Pay" asp-route-id="@order.Id">
+                        Direct payment
+                    </a>
+                    <a class="btn btn-info" asp-controller="CardPayments", asp-action="Pay" asp-route-id="@order.Id">
+                        Card payment
+                    </a>
+                }
+                else
+                {
+                    <button class="btn btn-success" disabled="disabled">
+                        Completed
+                    </button>
+                }
+            </div>
+        </div>
+        <hr/>
+    }
+</div>
