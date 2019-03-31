@@ -163,10 +163,10 @@
         }
 
         [Fact]
-        public async Task GetAsync_WithInvalidId_ShouldReturnCorrectNull()
+        public async Task GetAsync_WithInvalidId_ShouldReturnNull()
         {
             // Arrange
-            var model = await this.SeedCard();
+            await this.SeedCard();
 
             // Act
             var result = await this.cardService.GetAsync<CardDetailsServiceModel>(null);
