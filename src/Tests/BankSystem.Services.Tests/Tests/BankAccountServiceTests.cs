@@ -198,6 +198,21 @@
                 .BeAssignableTo<IEnumerable<BankAccountIndexServiceModel>>();
         }
 
+        [Fact]
+        public async Task GetAllAccountsAsync_ShouldReturnCollectionWithCorrectModels()
+        {
+            // Arrange
+            await this.SeedBankAccount();
+
+            // Act
+            var result = await this.bankAccountService.GetAllAccountsAsync<BankAccountDetailsServiceModel>();
+
+            // Assert
+            result
+                .Should()
+                .AllBeAssignableTo<IEnumerable<BankAccountDetailsServiceModel>>();
+        }
+
         [Theory]
         [InlineData("-1")]
         [InlineData("   ")]
