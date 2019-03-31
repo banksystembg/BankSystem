@@ -23,7 +23,6 @@
         private const string SampleRecipientName = "test";
         private const string SampleSenderName = "melik";
         private const string SampleDestination = "dgsfcx-arq12wasdasdzxxcv";
-        private const string SampleSource = "124rsd-vdst4-dxfbxc";
 
         private const string SampleBankAccountName = "Test bank account name";
         private const string SampleBankAccountUserId = "adfsdvxc-123ewsf";
@@ -128,6 +127,97 @@
                 .HaveCount(count);
         }
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData(" dassdgdf")]
+        [InlineData(" ")]
+        [InlineData("!  ")]
+        [InlineData("     10   ")]
+        [InlineData("  sdgsfcx-arq12wasdasdzxxcvc   ")]
+        public async Task GetAllMoneyTransfersForAccountAsync_WithInvalidUserId_ShouldReturnEmptyCollection(string accountId)
+        {
+            // Arrange
+            await this.SeedMoneyTransfersAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(accountId);
+
+            // Assert
+            result
+                .Should()
+                .BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task GetAllMoneyTransfersForAccountAsync_WithValidUserId_ShouldReturnCollectionOfCorrectEntities()
+        {
+            // Arrange
+            var model = await this.SeedMoneyTransfersAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(model.Account.Id);
+
+            // Assert
+            result
+                .Should()
+                .AllBeAssignableTo<MoneyTransferListingServiceModel>()
+                .And
+                .Match<IEnumerable<MoneyTransferListingServiceModel>>(x => x.All(c => c.Source == model.Source));
+        }
+
+        [Fact]
+        public async Task GetAllMoneyTransfersForAccountAsync_ShouldReturnOrderedByMadeOnCollection()
+        {
+            // Arrange
+            await this.SeedBankAccountAsync();
+            for (int i = 0; i < 10; i++)
+            {
+                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
+                {
+                    Id = $"{SampleId}_{i}",
+                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
+                    MadeOn = DateTime.UtcNow.AddMinutes(i)
+                });
+            }
+
+            await this.dbContext.SaveChangesAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(SampleBankAccountId);
+
+            // Assert
+            result
+                .Should()
+                .BeInDescendingOrder(x => x.MadeOn);
+        }
+
+        [Fact]
+        public async Task GetAllMoneyTransfersForAccountAsync_ShouldReturnCorrectCount()
+        {
+            // Arrange
+            const int count = 10;
+            await this.SeedBankAccountAsync();
+            for (int i = 1; i <= count; i++)
+            {
+                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
+                {
+                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
+                });
+            }
+
+            await this.dbContext.SaveChangesAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(SampleBankAccountId);
+
+            // Assert
+            result
+                .Should()
+                .HaveCount(count);
+        }
+
+        #region privateMethods
+
         private async Task<MoneyTransfer> SeedMoneyTransfersAsync()
         {
             await this.SeedBankAccountAsync();
@@ -138,7 +228,7 @@
                 Amount = SampleAmount,
                 Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
                 Destination = SampleDestination,
-                Source = SampleSource,
+                Source = SampleBankAccountId,
                 SenderName = SampleSenderName,
                 RecipientName = SampleRecipientName,
                 MadeOn = DateTime.UtcNow,
@@ -165,5 +255,7 @@
 
             return model;
         }
+
+        #endregion
     }
 }
