@@ -17,6 +17,7 @@
     {
         private const string EmailSubject = "Confirm your email";
         private const string EmailMessage = "Please confirm your email by <a href=\"{0}\">clicking here</a>.";
+        private const string EmailConfirmationPage = "/Account/ConfirmEmail";
 
         private readonly IEmailSender emailSender;
         private readonly ILogger<RegisterModel> logger;
@@ -89,9 +90,9 @@
 
             var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = this.Url.Page(
-                "/Account/ConfirmEmail",
+                EmailConfirmationPage,
                 null,
-                new {userId = user.Id, code},
+                new { userId = user.Id, code },
                 this.Request.Scheme);
             await this.emailSender.SendEmailAsync(GlobalConstants.BankSystemEmail, this.Input.Email,
                 EmailSubject,
