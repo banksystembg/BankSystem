@@ -1,10 +1,10 @@
 ﻿namespace BankSystem.Web.Areas.MoneyTransfers.Models.Global.Create
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using Common;
     using Common.AutoMapping.Interfaces;
     using Services.Models.GlobalTransfer;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using Web.Models.BankAccount;
 
     public class GlobalMoneyTransferCreateBindingModel : IMapWith<GlobalTransferServiceModel>
@@ -17,7 +17,8 @@
         public string Description { get; set; }
 
         [Required]
-        [Range(typeof(decimal), ModelConstants.MoneyTransfer.MinStartingPrice, ModelConstants.MoneyTransfer.MaxStartingPrice,
+        [Range(typeof(decimal), ModelConstants.MoneyTransfer.MinStartingPrice,
+            ModelConstants.MoneyTransfer.MaxStartingPrice,
             ErrorMessage = "The Amount field cannot be lower than 0.01")]
         public decimal Amount { get; set; }
 

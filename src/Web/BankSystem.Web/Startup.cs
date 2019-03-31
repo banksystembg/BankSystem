@@ -1,5 +1,6 @@
 ﻿namespace BankSystem.Web
 {
+    using System;
     using AutoMapper;
     using BankSystem.Models;
     using Common.AutoMapping.Profiles;
@@ -18,7 +19,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Net.Http.Headers;
-    using System;
     using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
     public class Startup
@@ -86,7 +86,7 @@
 
             services
                 .Configure<BankConfiguration>(
-                this.Configuration.GetSection(nameof(BankConfiguration)))
+                    this.Configuration.GetSection(nameof(BankConfiguration)))
                 .Configure<SendGridConfiguration>(
                     this.Configuration.GetSection(nameof(SendGridConfiguration)));
 

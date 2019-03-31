@@ -78,7 +78,6 @@
             serviceModel.RecipientName = model.DestinationBank.Account.UserFullName;
 
             var result = await this.globalTransferHelper.TransferMoneyAsync(serviceModel);
-
             if (result != GlobalTransferResult.Succeeded)
             {
                 if (result == GlobalTransferResult.InsufficientFunds)

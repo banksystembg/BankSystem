@@ -6,5 +6,6 @@
     [Area("Cards")]
     [Route("[area]/[action]/{id?}")]
     public abstract class BaseCardsController : BaseController
-    {}
+    {
+    }
 }

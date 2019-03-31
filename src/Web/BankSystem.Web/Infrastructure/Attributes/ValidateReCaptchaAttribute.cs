@@ -11,7 +11,7 @@
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var errorResult = new ValidationResult("reCAPTCHA validation failed. Please try again.",
-                new[] { validationContext.MemberName });
+                new[] {validationContext.MemberName});
 
             if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
             {
@@ -20,7 +20,7 @@
 
             var response = value.ToString();
 
-            var configuration = (IConfiguration)validationContext.GetService(typeof(IConfiguration));
+            var configuration = (IConfiguration) validationContext.GetService(typeof(IConfiguration));
             var secret = configuration?["ReCaptcha:SiteSecret"];
 
             var httpClient = new HttpClient();

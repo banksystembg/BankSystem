@@ -24,7 +24,7 @@
         private readonly IUserService userService;
 
         public CardsController(
-            IUserService userService, 
+            IUserService userService,
             IBankAccountService bankAccountService,
             ICardService cardService)
         {
@@ -71,7 +71,7 @@
                 model.BankAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
-            
+
             var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
             if (account == null ||
                 account.UserUserName != this.User.Identity.Name)
@@ -85,7 +85,7 @@
             serviceModel.ExpiryDate = DateTime.UtcNow.AddYears(GlobalConstants.CardValidityInYears)
                 .ToString(GlobalConstants.CardExpirationDateFormat, CultureInfo.InvariantCulture);
 
-            var isCreated = await this.cardService.CreateAsync(serviceModel);
+            bool isCreated = await this.cardService.CreateAsync(serviceModel);
             if (!isCreated)
             {
                 this.ShowErrorMessage(NotificationMessages.CardCreateError);

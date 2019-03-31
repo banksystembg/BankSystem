@@ -1,7 +1,5 @@
 namespace BankSystem.Web.Controllers
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using Areas.MoneyTransfers.Models;
     using AutoMapper;
     using Common;
@@ -11,19 +9,21 @@ namespace BankSystem.Web.Controllers
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class BankAccountsController : BaseController
     {
         private const int ItemsPerPage = 10;
 
         private readonly IBankAccountService bankAccountService;
+        private readonly IBankConfigurationHelper bankConfigurationHelper;
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IUserService userService;
-        private readonly IBankConfigurationHelper bankConfigurationHelper;
 
         public BankAccountsController(
-            IBankAccountService bankAccountService, 
-            IUserService userService, 
+            IBankAccountService bankAccountService,
+            IUserService userService,
             IMoneyTransferService moneyTransferService, IBankConfigurationHelper bankConfigurationHelper)
         {
             this.bankAccountService = bankAccountService;
@@ -46,11 +46,9 @@ namespace BankSystem.Web.Controllers
             }
 
             var serviceModel = Mapper.Map<BankAccountCreateServiceModel>(model);
-
             serviceModel.UserId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
 
             var accountId = await this.bankAccountService.CreateAsync(serviceModel);
-
             if (accountId == null)
             {
                 this.ShowErrorMessage(NotificationMessages.BankAccountCreateError);
@@ -77,9 +75,7 @@ namespace BankSystem.Web.Controllers
                 .ToPaginatedList(pageIndex, ItemsPerPage);
 
             var viewModel = Mapper.Map<BankAccountDetailsViewModel>(account);
-
             viewModel.MoneyTransfers = transfers;
-
             viewModel.BankName = this.bankConfigurationHelper.BankName;
             viewModel.BankCode = this.bankConfigurationHelper.UniqueIdentifier;
 

@@ -1,12 +1,12 @@
 namespace BankSystem.Web.Areas.MoneyTransfers.Models.Internal
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using Common;
     using Common.AutoMapping.Interfaces;
     using Microsoft.Extensions.DependencyInjection;
     using Services.Interfaces;
     using Services.Models.MoneyTransfer;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using Web.Models.BankAccount;
 
     public class InternalMoneyTransferCreateBindingModel : IMapWith<MoneyTransferCreateServiceModel>, IValidatableObject
@@ -18,8 +18,9 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Models.Internal
         public string Description { get; set; }
 
         [Required]
-        [Range(typeof(decimal), ModelConstants.MoneyTransfer.MinStartingPrice, ModelConstants.MoneyTransfer.MaxStartingPrice, ErrorMessage =
-            "The amount cannot be lower than 0.01")]
+        [Range(typeof(decimal), ModelConstants.MoneyTransfer.MinStartingPrice,
+            ModelConstants.MoneyTransfer.MaxStartingPrice, ErrorMessage =
+                "The amount cannot be lower than 0.01")]
         public decimal Amount { get; set; }
 
         [Required]
@@ -39,7 +40,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Models.Internal
             if (!uniqueIdHelper.IsUniqueIdValid(this.DestinationBankAccountUniqueId))
             {
                 yield return new ValidationResult(DestinationAccountIncorrectError,
-                    new[] { nameof(this.DestinationBankAccountUniqueId) });
+                    new[] {nameof(this.DestinationBankAccountUniqueId)});
             }
         }
     }

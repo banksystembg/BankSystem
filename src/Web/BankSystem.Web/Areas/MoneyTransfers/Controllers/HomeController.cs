@@ -17,8 +17,8 @@
         private readonly IUserService userService;
 
         public HomeController(
-            IBankAccountService bankAccountService, 
-            IMoneyTransferService moneyTransferService, 
+            IBankAccountService bankAccountService,
+            IMoneyTransferService moneyTransferService,
             IUserService userService)
             : base(bankAccountService)
         {
@@ -30,7 +30,8 @@
         public async Task<IActionResult> All(int pageIndex = 1)
         {
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
-            var allMoneyTransfers = (await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(userId))
+            var allMoneyTransfers =
+                (await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(userId))
                 .Select(Mapper.Map<MoneyTransferListingDto>)
                 .ToPaginatedList(pageIndex, PaymentsCountPerPage);
 

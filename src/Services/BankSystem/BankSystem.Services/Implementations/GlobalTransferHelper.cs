@@ -76,12 +76,7 @@ namespace BankSystem.Services.Implementations
             };
 
             bool success = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);
-            if (!success)
-            {
-                return GlobalTransferResult.GeneralFailure;
-            }
-
-            return GlobalTransferResult.Succeeded;
+            return !success ? GlobalTransferResult.GeneralFailure : GlobalTransferResult.Succeeded;
         }
 
         private async Task<bool> ContactCentralApiAsync(CentralApiSubmitTransferDto model)

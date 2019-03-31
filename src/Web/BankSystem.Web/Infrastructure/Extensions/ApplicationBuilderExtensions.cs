@@ -21,8 +21,7 @@
 
             return app;
         }
-
-        // Migrate database and create administrator role
+      
         private static async Task InitializeDatabaseAsync(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -40,7 +39,7 @@
                 }
             }
         }
-
+      
         private static async Task SeedUser(UserManager<BankUser> userManager, BankSystemDbContext dbContext)
         {
             if (!dbContext.Users.Any())
@@ -66,7 +65,7 @@
                 await userManager.CreateAsync(user, "test123");
             }
         }
-
+      
         public static IApplicationBuilder AddDefaultSecurityHeaders(this IApplicationBuilder app,
             SecurityHeadersBuilder builder)
             => app.UseMiddleware<SecurityHeadersMiddleware>(builder.Policy());

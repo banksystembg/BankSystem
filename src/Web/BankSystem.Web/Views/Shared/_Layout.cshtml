@@ -1,200 +1,200 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - BankSystem</title>
 
-    <link rel="stylesheet" href="~/bundle/vendor.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/bundle/vendor.min.css" asp-append-version="true"/>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="~/bundle/main.min.css" asp-append-version="true" />
-    
+    <link rel="stylesheet" href="~/bundle/main.min.css" asp-append-version="true"/>
+
     @RenderSection("CustomCss", false)
 
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BankSystem</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse">
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <ul class="navbar-nav mx-auto text-uppercase">
-                            <li class="nav-item dropdown auto-dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button">
-                                    Cards
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" asp-area="Cards" asp-controller="Cards" asp-action="Index">
-                                        Bank Cards
-                                    </a>
-                                    <a class="dropdown-item" asp-area="Cards" asp-action="Create" asp-controller="Cards">
-                                        Create new card
-                                    </a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown auto-dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button">
-                                    Payment Orders
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a asp-page="/MoneyTransfers" class="dropdown-item">
-                                        New Payment
-                                    </a>
-                                    <a asp-area="MoneyTransfers" asp-controller="Home" asp-action="All" class="dropdown-item">
-                                        Archives
-                                    </a>
-                                </div>
-                            </li>
-
-                            @if (User.IsInRole(GlobalConstants.AdministratorRoleName))
-                            {
-                                <li class="nav-item dropdown auto-dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button">
-                                        Administration
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a asp-area="Administration" asp-controller="Accounts" asp-action="Index"
-                                           class="dropdown-item">
-                                            Accounts
-                                        </a>
-                                    </div>
-                                </li>
-                            }
-                        </ul>
-
-                        <ul class="navbar-nav">
-                            <li class="nav-item dropdown auto-dropdown">
-                                <a class="nav-link dropdown-toggle" href="#"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-user-circle"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <h5 class="dropdown-header">
-                                        @User.Identity.Name
-                                    </h5>
-                                    <a class="dropdown-item" asp-page="/Account/Settings/Index">Settings</a>
-                                    <form class="form-inline" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
-                                        <button type="submit" class="btn btn-link text-danger dropdown-item ">Logout</button>
-                                    </form>
-                                </div>
-                            </li>
-                        </ul>
-                    }
-                    else
-                    {
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-page="/Account/Register">Register</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-page="/Account/Login">Login</a>
-                            </li>
-                        </ul>
-                    }
-                </div>
-            </div>
-        </nav>
-
-        <partial name="_CookieConsentPartial" />
-
-        @if (TempData.ContainsKey(GlobalConstants.TempDataSuccessMessageKey))
-        {
-            <div class="alert alert-primary fade show mb-0" role="alert">
-                <div class="container d-flex flex-row">
-                    <i class="fas fa-check fa-2x align-self-center"></i>
-                    <p class="pl-3 my-2" style="font-size: large;">@TempData[GlobalConstants.TempDataSuccessMessageKey]</p>
-                    <div class="ml-auto">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        }
-
-        @if (TempData.ContainsKey(GlobalConstants.TempDataErrorMessageKey))
-        {
-            <div class="alert alert-danger fade show mb-0" role="alert">
-                <div class="container d-flex flex-row">
-                    <i class="fas fa-exclamation-circle fa-2x align-self-center"></i>
-                    <p class="pl-3 my-2" style="font-size: large;">@TempData[GlobalConstants.TempDataErrorMessageKey]</p>
-                    <div class="ml-auto">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        }
-
-        @if (TempData[GlobalConstants.TempDataNoTwoFactorKey] as bool? == true)
-        {
-            <div class="modal fade" id="noTwoFactorModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-dialog-centered show" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Two-factor authentication is disabled</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            Enabling two-factor authentication enhances the security of your account
-                            and protects it better from hackers, and is highly recommended.
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-link mr-auto text-muted" data-dismiss="modal"
-                                    onclick="noTwoFactorModalDoNotShow()">
-                                Do not show for 30 days
-                            </button>
-
-                            <button type="button" class="btn btn-outline-primary d-none d-md-inline-block"
-                                    data-dismiss="modal">
-                                Close
-                            </button>
-
-                            <a asp-page="/Account/Settings/Enable2fa" class="btn btn-primary">
-                                Enable now
-                                <i class="fas fa-chevron-right"></i>
+<header>
+    <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BankSystem</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <ul class="navbar-nav mx-auto text-uppercase">
+                        <li class="nav-item dropdown auto-dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button">
+                                Cards
                             </a>
-                        </div>
-                    </div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Cards" asp-controller="Cards" asp-action="Index">
+                                    Bank Cards
+                                </a>
+                                <a class="dropdown-item" asp-area="Cards" asp-action="Create" asp-controller="Cards">
+                                    Create new card
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown auto-dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button">
+                                Payment Orders
+                            </a>
+                            <div class="dropdown-menu">
+                                <a asp-page="/MoneyTransfers" class="dropdown-item">
+                                    New Payment
+                                </a>
+                                <a asp-area="MoneyTransfers" asp-controller="Home" asp-action="All" class="dropdown-item">
+                                    Archives
+                                </a>
+                            </div>
+                        </li>
+
+                        @if (User.IsInRole(GlobalConstants.AdministratorRoleName))
+                        {
+                            <li class="nav-item dropdown auto-dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button">
+                                    Administration
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a asp-area="Administration" asp-controller="Accounts" asp-action="Index"
+                                       class="dropdown-item">
+                                        Accounts
+                                    </a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown auto-dropdown">
+                            <a class="nav-link dropdown-toggle" href="#"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user-circle"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <h5 class="dropdown-header">
+                                    @User.Identity.Name
+                                </h5>
+                                <a class="dropdown-item" asp-page="/Account/Settings/Index">Settings</a>
+                                <form class="form-inline" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
+                                    <button type="submit" class="btn btn-link text-danger dropdown-item ">Logout</button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                }
+                else
+                {
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-page="/Account/Register">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-page="/Account/Login">Login</a>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <partial name="_CookieConsentPartial"/>
+
+    @if (TempData.ContainsKey(GlobalConstants.TempDataSuccessMessageKey))
+    {
+        <div class="alert alert-primary fade show mb-0" role="alert">
+            <div class="container d-flex flex-row">
+                <i class="fas fa-check fa-2x align-self-center"></i>
+                <p class="pl-3 my-2" style="font-size: large;">@TempData[GlobalConstants.TempDataSuccessMessageKey]</p>
+                <div class="ml-auto">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
             </div>
-        }
-    </header>
+        </div>
+    }
 
-    @RenderSection("UnderNavbar", false)
-
-    <div class="container">
-        <main role="main" class="py-4">
-            @RenderBody()
-        </main>
-    </div>
-
-    <script src="~/bundle/vendor.min.js" asp-append-version="true"></script>
-    <script src="~/bundle/main.min.js" asp-append-version="true"></script>
+    @if (TempData.ContainsKey(GlobalConstants.TempDataErrorMessageKey))
+    {
+        <div class="alert alert-danger fade show mb-0" role="alert">
+            <div class="container d-flex flex-row">
+                <i class="fas fa-exclamation-circle fa-2x align-self-center"></i>
+                <p class="pl-3 my-2" style="font-size: large;">@TempData[GlobalConstants.TempDataErrorMessageKey]</p>
+                <div class="ml-auto">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
 
     @if (TempData[GlobalConstants.TempDataNoTwoFactorKey] as bool? == true)
     {
-        <script>
-            $('#noTwoFactorModal').modal('show');
+        <div class="modal fade" id="noTwoFactorModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered show" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Two-factor authentication is disabled</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Enabling two-factor authentication enhances the security of your account
+                        and protects it better from hackers, and is highly recommended.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link mr-auto text-muted" data-dismiss="modal"
+                                onclick="noTwoFactorModalDoNotShow()">
+                            Do not show for 30 days
+                        </button>
 
-            function noTwoFactorModalDoNotShow() {
-                document.cookie = '@GlobalConstants.IgnoreTwoFactorWarningCookie=yes; Max-Age=2592000; Secure';
-            }
-        </script>
+                        <button type="button" class="btn btn-outline-primary d-none d-md-inline-block"
+                                data-dismiss="modal">
+                            Close
+                        </button>
+
+                        <a asp-page="/Account/Settings/Enable2fa" class="btn btn-primary">
+                            Enable now
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
+</header>
 
-    @RenderSection("Scripts", false)
+@RenderSection("UnderNavbar", false)
+
+<div class="container">
+    <main role="main" class="py-4">
+        @RenderBody()
+    </main>
+</div>
+
+<script src="~/bundle/vendor.min.js" asp-append-version="true"></script>
+<script src="~/bundle/main.min.js" asp-append-version="true"></script>
+
+@if (TempData[GlobalConstants.TempDataNoTwoFactorKey] as bool? == true)
+{
+    <script>
+        $('#noTwoFactorModal').modal('show');
+
+        function noTwoFactorModalDoNotShow() {
+            document.cookie = '@GlobalConstants.IgnoreTwoFactorWarningCookie=yes; Max-Age=2592000; Secure';
+        }
+    </script>
+}
+
+@RenderSection("Scripts", false)
 </body>
 </html>

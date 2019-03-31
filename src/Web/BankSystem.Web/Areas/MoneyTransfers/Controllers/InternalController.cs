@@ -1,5 +1,8 @@
 namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Microsoft.AspNetCore.Mvc;
@@ -7,9 +10,6 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class InternalController : BaseMoneyTransferController
     {
@@ -63,13 +63,15 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             {
                 return this.Forbid();
             }
-            
-            if (string.Equals(account.UniqueId, model.DestinationBankAccountUniqueId, StringComparison.InvariantCulture))
+
+            if (string.Equals(account.UniqueId, model.DestinationBankAccountUniqueId,
+                StringComparison.InvariantCulture))
             {
                 this.ShowErrorMessage(NotificationMessages.SameAccountsError);
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
                 return this.View(model);
             }
+
             if (account.Balance < model.Amount)
             {
                 this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
