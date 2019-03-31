@@ -32,9 +32,11 @@
             this.emailSender = emailSender;
         }
 
-        [BindProperty] public InputModel Input { get; set; }
+        [BindProperty]
+        public InputModel Input { get; set; }
 
-        [BindProperty] public ReCaptchaModel Recaptcha { get; set; }
+        [BindProperty]
+        public ReCaptchaModel Recaptcha { get; set; }
 
         public string ReturnUrl { get; set; }
 
