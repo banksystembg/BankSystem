@@ -19,6 +19,7 @@ namespace CentralApi.Controllers
     {
         private const int CookieValidityInMinutes = 5;
         private const string PaymentDataCookie = "PaymentData";
+        private const string PaymentDataFormKey = "data";
 
         private readonly IBanksService banksService;
         private readonly CentralApiConfiguration configuration;
@@ -102,7 +103,8 @@ namespace CentralApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Process([FromForm] string bankId)
+        [Route("/pay/continue")]
+        public async Task<IActionResult> Continue([FromForm] string bankId)
         {
             bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out string data);
 
@@ -171,9 +173,17 @@ namespace CentralApi.Controllers
 
                 string toSendJson = JsonConvert.SerializeObject(toSend);
 
-                string dataToSend = Base64Util.Encode(toSendJson);
+                string dataToSend = Convert.ToBase64String(Encoding.UTF8.GetBytes(toSendJson));
 
-                return this.Redirect(string.Format(bank.PaymentUrl, dataToSend));
+                // redirect the user to their bank for payment completion
+                var paymentPostRedirectModel = new PaymentPostRedirectModel
+                {
+                    Url = bank.PaymentUrl,
+                    PaymentDataFormKey = PaymentDataFormKey,
+                    PaymentData = dataToSend
+                };
+
+                return this.View("PaymentPostRedirect", paymentPostRedirectModel);
             }
             catch
             {
