@@ -13,7 +13,7 @@ namespace DemoShop.Web.Controllers
     [Authorize]
     public class DirectPaymentsController : Controller
     {
-        private const string ReturnPath = "DirectPayments/ReceiveConfirmation?data={0}";
+        private const string ReturnPath = "DirectPayments/ReceiveConfirmation";
         private const string PaymentDataFormKey = "data";
         private readonly IOrdersService ordersService;
 
@@ -82,6 +82,7 @@ namespace DemoShop.Web.Controllers
             }
         }
 
+        [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> ReceiveConfirmation(string data)
         {

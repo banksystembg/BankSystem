@@ -50,8 +50,7 @@ namespace DemoShop.Web.PaymentHelpers
         {
             try
             {
-                string decodedJson = Base64UrlUtil.Decode(data);
-
+                string decodedJson = Encoding.UTF8.GetString(Convert.FromBase64String(data));
 
                 // deserialize json
                 dynamic deserializedJson = JsonConvert.DeserializeObject(decodedJson);
