@@ -30,15 +30,15 @@ namespace CentralApi.Controllers
         }
 
 
-        [HttpGet]
-        [Route("/pay/{data}")]
+        [HttpPost]
+        [Route("/pay")]
         public IActionResult SetCookie(string data)
         {
             string decodedData;
 
             try
             {
-                decodedData = Base64UrlUtil.Decode(data);
+                decodedData = Encoding.UTF8.GetString(Convert.FromBase64String(data));
             }
             catch
             {
@@ -102,7 +102,6 @@ namespace CentralApi.Controllers
         }
 
         [HttpPost]
-        [Route("/pay")]
         public async Task<IActionResult> Process([FromForm] string bankId)
         {
             bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out string data);
@@ -172,7 +171,7 @@ namespace CentralApi.Controllers
 
                 string toSendJson = JsonConvert.SerializeObject(toSend);
 
-                string dataToSend = Base64UrlUtil.Encode(toSendJson);
+                string dataToSend = Base64Util.Encode(toSendJson);
 
                 return this.Redirect(string.Format(bank.PaymentUrl, dataToSend));
             }
