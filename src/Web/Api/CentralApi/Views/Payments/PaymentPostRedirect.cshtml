@@ -1,0 +1,26 @@
+@model PaymentPostRedirectModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecting</title>
+</head>
+<body>
+
+<h4>Redirecting...</h4>
+<form id="redirectForm" method="post" action="@Model.Url" asp-antiforgery="false">
+    <input type="hidden" name="@Model.PaymentDataFormKey" value="@Model.PaymentData"/>
+</form>
+
+<script>
+    window.onload = function() {
+        document.getElementById("redirectForm").submit();
+    }
+</script>
+
+</body>
+</html>

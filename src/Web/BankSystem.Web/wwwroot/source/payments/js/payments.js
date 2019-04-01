@@ -35,7 +35,7 @@ $('#payBtn').click(function () {
     btn.html('<i class="fas fa-circle-notch fa-spin"></i> Processing');
 
     $.ajax({
-        url: '/pay',
+        url: '/payments/payasync',
         type: 'post',
         data: $('#paymentForm').serialize()
 
@@ -56,7 +56,11 @@ $('#payBtn').click(function () {
                 btn.html('<i class="fas fa-check"></i> Success');
 
                 setTimeout(function () {
-                        window.location.href = response.returnUrl;
+                        let form = $('<form action="' + response.returnUrl + '" method="post">' +
+                            '<input type="hidden" name="data" value="' + response.data + '" />' +
+                            '</form>');
+                        $('body').append(form);
+                        form.submit();
                     },
                     1000);
             } else {
