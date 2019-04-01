@@ -86,7 +86,14 @@ else
                     <p>@moneyTransfer.RecipientName</p>
                     <p>@moneyTransfer.Destination</p>
                 </td>
-                <td class="text-green">@Math.Abs(moneyTransfer.Amount) EUR</td>
+                @if (moneyTransfer.Amount < 0)
+                {
+                    <td class="text-red">@moneyTransfer.Amount EUR</td>
+                }
+                else
+                {
+                    <td class="text-green">+@moneyTransfer.Amount EUR</td>
+                }
                 <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
             </tr>
         }
