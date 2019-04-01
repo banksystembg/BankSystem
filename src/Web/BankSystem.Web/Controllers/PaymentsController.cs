@@ -41,16 +41,17 @@ namespace BankSystem.Web.Controllers
             this.globalTransferHelper = globalTransferHelper;
         }
 
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
-        [Route("/pay/{data}")]
+        [IgnoreAntiforgeryToken]
+        [Route("/pay")]
         public IActionResult SetCookie(string data)
         {
             string decodedData;
 
             try
             {
-                decodedData = Base64UrlUtil.Decode(data);
+                decodedData = Encoding.UTF8.GetString(Convert.FromBase64String(data));
             }
             catch
             {
@@ -120,7 +121,6 @@ namespace BankSystem.Web.Controllers
         }
 
         [HttpPost]
-        [Route("/pay")]
         public async Task<IActionResult> PayAsync(PaymentConfirmBindingModel model)
         {
             bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out var data);
