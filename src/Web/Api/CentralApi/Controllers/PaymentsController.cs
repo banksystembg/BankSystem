@@ -1,10 +1,5 @@
 namespace CentralApi.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Security.Cryptography;
-    using System.Text;
-    using System.Threading.Tasks;
     using AutoMapper;
     using BankSystem.Common.Utils;
     using Microsoft.AspNetCore.Http;
@@ -14,6 +9,11 @@ namespace CentralApi.Controllers
     using Newtonsoft.Json;
     using Services.Interfaces;
     using Services.Models.Banks;
+    using System;
+    using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading.Tasks;
 
     public class PaymentsController : Controller
     {
@@ -49,7 +49,7 @@ namespace CentralApi.Controllers
             this.Response.Cookies.Append(PaymentDataCookie, decodedData,
                 new CookieOptions
                 {
-                    SameSite = SameSiteMode.Strict,
+                    SameSite = SameSiteMode.Lax,
                     HttpOnly = true,
                     IsEssential = true,
                     MaxAge = TimeSpan.FromMinutes(CookieValidityInMinutes)

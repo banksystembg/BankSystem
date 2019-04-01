@@ -61,7 +61,7 @@ namespace BankSystem.Web.Controllers
             this.Response.Cookies.Append(PaymentDataCookie, decodedData,
                 new CookieOptions
                 {
-                    SameSite = SameSiteMode.Strict,
+                    SameSite = SameSiteMode.Lax,
                     HttpOnly = false,
                     IsEssential = true,
                     MaxAge = TimeSpan.FromMinutes(CookieValidityInMinutes)
