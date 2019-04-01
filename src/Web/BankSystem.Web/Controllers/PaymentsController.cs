@@ -5,6 +5,7 @@ namespace BankSystem.Web.Controllers
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Web;
     using AutoMapper;
     using Common;
     using Common.Utils;
@@ -185,12 +186,13 @@ namespace BankSystem.Web.Controllers
 
                 // return signed success response
                 var responseJson = this.GenerateSuccessResponseJson(deserializedJson);
-                var encodedResponse = Base64UrlUtil.Encode(responseJson);
+                var encodedResponse = Convert.ToBase64String(Encoding.UTF8.GetBytes(responseJson));
 
                 return this.Ok(new
                 {
                     success = true,
-                    returnUrl = string.Format(returnUrl, encodedResponse)
+                    returnUrl = HttpUtility.HtmlEncode(returnUrl),
+                    data = encodedResponse
                 });
             }
             catch
