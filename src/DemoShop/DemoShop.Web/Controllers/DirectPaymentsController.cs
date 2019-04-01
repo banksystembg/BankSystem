@@ -6,6 +6,7 @@ namespace DemoShop.Web.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
+    using Models;
     using PaymentHelpers;
     using Services.Interfaces;
 
@@ -13,6 +14,7 @@ namespace DemoShop.Web.Controllers
     public class DirectPaymentsController : Controller
     {
         private const string ReturnPath = "DirectPayments/ReceiveConfirmation?data={0}";
+        private const string PaymentDataFormKey = "data";
         private readonly IOrdersService ordersService;
 
         private readonly DirectPaymentsConfiguration directPaymentsConfiguration;
@@ -64,12 +66,15 @@ namespace DemoShop.Web.Controllers
                 var paymentRequest = DirectPaymentsHelper.GeneratePaymentRequest(
                     paymentInfo, this.directPaymentsConfiguration.SiteKey, returnUrl);
 
-                var centralApiRedirectUrl = string.Format(
-                    this.directPaymentsConfiguration.CentralApiPaymentUrl,
-                    paymentRequest);
-
                 // redirect the user to the CentralApi for payment processing
-                return this.Redirect(centralApiRedirectUrl);
+                var paymentPostRedirectModel = new PaymentPostRedirectModel
+                {
+                    Url = this.directPaymentsConfiguration.CentralApiPaymentUrl,
+                    PaymentDataFormKey = PaymentDataFormKey,
+                    PaymentData = paymentRequest
+                };
+
+                return this.View("PaymentPostRedirect", paymentPostRedirectModel);
             }
             catch
             {
