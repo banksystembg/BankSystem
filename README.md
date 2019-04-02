@@ -24,7 +24,7 @@ DemoShop is an example web application implementing direct and card payments.
 
 ***
 
-**Technologies used:**
+**Used technologies:**
 * C#
 * ASP.NET Core
 * ASP.NET Core MVC
