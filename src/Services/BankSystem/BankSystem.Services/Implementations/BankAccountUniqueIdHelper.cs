@@ -40,10 +40,11 @@ namespace BankSystem.Services.Implementations
 
             for (int i = 0; i < 8; i++)
             {
-                generated[i + 4] = (char)('0' + this.random.Next(10));
+                generated[i + 4] = (char) ('0' + this.random.Next(10));
             }
 
             generated[3] = GenerateCheckCharacter(generated);
+
             return string.Join("", generated);
         }
 
@@ -75,7 +76,7 @@ namespace BankSystem.Services.Implementations
                 sum += (i + 1) * uniqueId[i];
             }
 
-            return (char)('A' + sum % 26);
+            return (char) ('A' + sum % 26);
         }
     }
 }

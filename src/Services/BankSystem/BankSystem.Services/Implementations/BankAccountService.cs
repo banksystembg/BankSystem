@@ -1,5 +1,8 @@
 ﻿namespace BankSystem.Services.Implementations
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
@@ -7,9 +10,6 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.BankAccount;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class BankAccountService : BaseService, IBankAccountService
     {

@@ -30,7 +30,6 @@
         /// <returns></returns>
         public bool CheckLuhn(string creditCardNumber)
         {
-
             var checkSum = creditCardNumber
                 .ToCharArray()
                 .Where(c => !char.IsWhiteSpace(c))

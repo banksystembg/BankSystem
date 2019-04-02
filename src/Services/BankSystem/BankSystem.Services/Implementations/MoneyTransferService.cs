@@ -1,5 +1,9 @@
 ﻿namespace BankSystem.Services.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
@@ -8,10 +12,6 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.MoneyTransfer;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class MoneyTransferService : BaseService, IMoneyTransferService
     {
@@ -69,7 +69,7 @@
             var dbModel = Mapper.Map<MoneyTransfer>(model);
             var userAccount = await this.Context
                 .Accounts
-                .Include(u=> u.User)
+                .Include(u => u.User)
                 .Where(u => u.Id == dbModel.AccountId)
                 .SingleOrDefaultAsync();
             if (userAccount == null)
