@@ -1,87 +1,38 @@
-# BankSystem
+# BankSystem 
+**BankSystem** is an open-source web project where users can create bank accounts, transfer money, create payment cards, pay with them or directly through their account, etc.
+It supports connecting multiple banks together through the _CentralApi_. This allows money to be securely transferred between **separate instances of BankSystem** running on different machines.
 
-## Automatically generated user (with 10,000 euro)
-| Username        	| Password 
-|-----------------	|----------
-| test@test.com 	  | Test123$
+### [Getting started](https://github.com/melikpehlivanov/BankSystem/wiki/Getting-started)
+>**This page contains important information on how to properly configure BankSystem and CentralApi**
 
-# Getting started
-### Set up recaptcha functionality
-1. Register a [SendGrid](https://sendgrid.com/) account.
-2. [Create a Key and a Secret](https://developers.google.com/recaptcha/intro).
-3. Insert the Key and the secret in the following file:
-    * *src\Web\BankSystem.Web\appsettings.json*
+BankSystem consists of two base components - the bank web application and the _CentralApi_, which securely connects banks running on separate machines together to process [transfers between different banks](https://github.com/melikpehlivanov/BankSystem/wiki/Money-transfers#Global--worldwide-transfers), [card payments](https://github.com/melikpehlivanov/BankSystem/wiki/Cards#Purchases) and [direct payments](https://github.com/melikpehlivanov/BankSystem/wiki/Direct-payments).
 
-Example:
-```
-"ReCaptcha": {
-    "SiteKey": "6L************************************FG",
-    "SiteSecret": "6L************************************D1"
-  },
-```
+### [Bank accounts](https://github.com/melikpehlivanov/BankSystem/wiki/Bank-accounts)
+Bank accounts hold information about their owner, balance, transactions, date of creation, etc.
 
-### Set up email functionality
-1. Register a [SendGrid](https://sendgrid.com/) account.
-2. [Create an API key](https://sendgrid.com/docs/ui/account-and-settings/api-keys/#creating-an-api-key).
-3. Insert the API key in the following file:
-    * *src\Web\BankSystem.Web\appsettings.json*
+### [Money transfers](https://github.com/melikpehlivanov/BankSystem/wiki/Money-transfers)
+BankSystem supports two types of money transfers - internal and global / worldwide
 
-Example:
-```
-"SendGrid": {
-  "ApiKey": "SA.10*****************************************************DO-zfxp"
-}
-```
+### [Cards](https://github.com/melikpehlivanov/BankSystem/wiki/Cards)
+Cards are used for making purchases on other websites using the _CentralApi_.
 
-### Change project urls
-> Note: Modify only protocol, domain name and port because the rest of the url is the same
-Example:
-```
-"https://localhost:56013/api/ReceiveMoneyTransfers", - this is the url which is used by my machine when running the project, If it's different on your machine please change it as it follows:
-"https://localhost:7815/api/ReceiveMoneyTransfers",
+### [Direct payments](https://github.com/melikpehlivanov/BankSystem/wiki/Direct-payments)
+Direct payments are a way to securely pay on websites directly through a bank account without the need to provide card details.
 
-https://localhost:56013 - this is the part which you must change 
-if the projects are not hosted on the same urls on your machine because the rest of the url is the same as mentioned above
-```
-1. Change CentralApiAddress in src\Web\BankSystem.Web\appsettings.json with the url which your central api is running on.
+### [DemoShop](https://github.com/melikpehlivanov/BankSystem/wiki/DemoShop)
+DemoShop is an example web application implementing direct and card payments.
 
-Example:
-```
-"BankConfiguration": {
-    "CentralApiAddress": "https://localhost:5001/",
-  },
-```
-2. Change Central Api ApplicationBuilderExtensions.cs in src\Web\Api\CentralApi\Infrastructure\ApplicationBuilderExtensions.cs seed method with the url which your bank is running on.
-```
-P.S Please modify only the properties down below
-dbContext.AddRange(
-                    new Bank
-                    {
-                        ApiAddress = "https://localhost:56013/api/ReceiveMoneyTransfers",
-                        PaymentUrl = "https://localhost:56013/pay/{0}",
-                        CardPaymentUrl = "https://localhost:56013/api/cardPayments",
-                    }
+***
 
-```
-3. Modify appsettings.json in src\DemoShop\DemoShop.Web\appsettings.json with the urls which your projects are running on. And for the DestinationBankAccountConfiguration - Set the properties with the appropriate bank in which you'd like your money to be send when somebody purchases an item.
-
-Example:
-```
-"DestinationBankAccountConfiguration": {
-    "DestinationBankName": "Bank system",
-    "DestinationBankCountry": "Bulgaria",
-    "DestinationBankSwiftCode": "ABC",
-    "DestinationBankAccountUniqueId": "INSERT_DESTINATION_ACCOUNT_HERE",
-    "RecipientName": "INSERT_RECIPIENT_NAME_HERE"
-  },
-  
-  "DirectPaymentsConfiguration": {
-    "SiteUrl": "https://localhost:7001/",
-    "CentralApiPaymentUrl": "https://localhost:5001/pay/{0}"
-  },
-  "CardPaymentsConfiguration": {
-    "CentralApiCardPaymentsUrl": "https://localhost:5001/api/CardPayments"
-  },
-```
-
-# For more documentation - [click here](https://github.com/melikpehlivanov/BankSystem/wiki)
+**Technologies used:**
+* C#
+* ASP.NET Core
+* ASP.NET Core MVC
+* ASP.NET Core Web API
+* Entity Framework Core
+* asymmetric encryption
+* jQuery
+* AJAX
+* HTML
+* CSS
+* Bootstrap
