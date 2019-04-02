@@ -48,7 +48,9 @@ namespace BankSystem.Common
             "Payment details are invalid or have expired. Please try again later.";
 
         public const string SuccessfulRegistration =
-            "Thank you for registering. Please confirm your email by clicking the link which we have just send you to the email address in order to proceed forward.";
+            "Thank you for registering. Please confirm your email by clicking the link which we have just send you to the email address in order to proceed forward. "
+            + "If you don't receive email in the next 5 minutes please just go to the log in page and log in with the credentials you've just registered"
+            + " and then follow the instructions to verify your email.";
 
         public const string EmailVerificationLinkSendSuccessfully =
             "We have just send you an email with verification link. Please click the link to activate your account.";

@@ -17,7 +17,7 @@
         private const string EmailNotVerified =
             "Your email is not verified. Please verify your email by clicking <a href=\"{0}\">here</a>";
 
-        private const string ResendEmailPage = "/Account/ReSendEmailVerification";
+        private const string SendEmailPage = "/Account/SendEmailVerification";
 
         private readonly ILogger<LoginModel> logger;
         private readonly SignInManager<BankUser> signInManager;
@@ -91,7 +91,7 @@
 
                 if (result.IsNotAllowed)
                 {
-                    var url = this.Url.Page(ResendEmailPage);
+                    var url = this.Url.Page(SendEmailPage);
 
                     this.TempData[GlobalConstants.TempDataEmailVerificationMessageKey] =
                         string.Format(EmailNotVerified, HtmlEncoder.Default.Encode(url));
