@@ -12,13 +12,13 @@
     using System.Threading.Tasks;
 
     [AllowAnonymous]
-    public class ReSendEmailVerification : BasePageModel
+    public class SendEmailVerificationModel : BasePageModel
     {
         private readonly UserManager<BankUser> userManager;
         private readonly SignInManager<BankUser> signInManager;
         private readonly IEmailSender emailSender;
 
-        public ReSendEmailVerification(
+        public SendEmailVerificationModel(
             UserManager<BankUser> userManager,
             SignInManager<BankUser> signInManager,
             IEmailSender emailSender)
@@ -32,7 +32,12 @@
         public InputModel Input { get; set; }
 
         [BindProperty]
-        public RegisterModel.ReCaptchaModel Recaptcha { get; set; }
+        public ReCaptchaModel Recaptcha { get; set; }
+
+        public IActionResult OnGet()
+        {
+            return this.Page();
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {
