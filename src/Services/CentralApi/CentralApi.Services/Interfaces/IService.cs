@@ -2,5 +2,6 @@
 {
     // Marker interface
     public interface IService
-    {}
+    {
+    }
 }
