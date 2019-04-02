@@ -27,37 +27,44 @@
         </div>
         <div class="col-12 col-lg-8">
             <h3>Last 10 transactions</h3>
-            <table class="table table-hover table-bordered">
-                <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Details</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var moneyTransfer in Model.MoneyTransfers)
-                {
-                    <tr>
-                        <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
-                        <td class="word-break-all">@moneyTransfer.Description</td>
-                        <td>@moneyTransfer.Source</td>
-                        <td>@moneyTransfer.Destination</td>
-                        @if (moneyTransfer.Amount < 0)
+            @if (Model.MoneyTransfers.Any())
+            {
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Details</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var moneyTransfer in Model.MoneyTransfers)
                         {
-                            <td class="text-red">@moneyTransfer.Amount EUR</td>
+                            <tr>
+                                <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
+                                <td class="word-break-all">@moneyTransfer.Description</td>
+                                <td>@moneyTransfer.Source</td>
+                                <td>@moneyTransfer.Destination</td>
+                                @if (moneyTransfer.Amount < 0)
+                                {
+                                    <td class="text-red">@moneyTransfer.Amount EUR</td>
+                                }
+                                else
+                                {
+                                    <td class="text-green">+@moneyTransfer.Amount EUR</td>
+                                }
+                            </tr>
                         }
-                        else
-                        {
-                            <td class="text-green">+@moneyTransfer.Amount EUR</td>
-                        }
-                    </tr>
-                }
-                </tbody>
-            </table>
-            <a asp-area="MoneyTransfers" asp-controller="Home" asp-action="All" class="btn btn-outline-primary">View all transactions</a>
+                    </tbody>
+                </table>
+                <a asp-area="MoneyTransfers" asp-controller="Home" asp-action="All" class="btn btn-outline-primary">View all transactions</a>
+            }
+            else
+            {
+                <h5 class="text-muted">No transactions have been made yet.</h5>
+            }
         </div>
     </div>
 
