@@ -8,6 +8,7 @@ namespace BankSystem.Common
 
         public const string TempDataErrorMessageKey = "ErrorMessage";
         public const string TempDataSuccessMessageKey = "SuccessMessage";
+        public const string TempDataEmailVerificationMessageKey = "EmailMessage";
 
         public const string TempDataNoTwoFactorKey = "2FANotEnabled";
         public const string IgnoreTwoFactorWarningCookie = "IgnoreTwoFactorWarning";
