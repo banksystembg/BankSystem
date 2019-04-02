@@ -50,10 +50,13 @@ namespace BankSystem.Common
         public const string SuccessfulRegistration =
             "Thank you for registering. Please confirm your email by clicking the link which we have just send you to the email address in order to proceed forward.";
 
-        public const string EmailVerificationFailed =
-            "An error occured while verifying your email. Please try again later and if this error continues to occur contact our support center";
+        public const string EmailVerificationLinkSendSuccessfully =
+            "We have just send you an email with verification link. Please click the link to activate your account.";
 
         public const string SuccessfulEmailVerification =
             "You've successfully activated your account. You can now log in.";
+
+        public const string EmailVerificationFailed =
+            "An error occured while verifying your email. Please try again later and if this error continues to occur contact our support center";
     }
 }
