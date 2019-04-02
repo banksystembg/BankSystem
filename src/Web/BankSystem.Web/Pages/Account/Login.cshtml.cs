@@ -93,7 +93,7 @@
                 {
                     var url = this.Url.Page(SendEmailPage);
 
-                    this.TempData[GlobalConstants.TempDataEmailVerificationMessageKey] =
+                    this.TempData[GlobalConstants.TempDataRawHtmlKey] =
                         string.Format(EmailNotVerified, HtmlEncoder.Default.Encode(url));
                     return this.Page();
                 }

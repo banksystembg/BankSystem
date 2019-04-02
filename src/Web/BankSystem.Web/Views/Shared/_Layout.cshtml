@@ -136,12 +136,12 @@
             </div>
         }
 
-        @if (TempData.ContainsKey(GlobalConstants.TempDataEmailVerificationMessageKey))
+        @if (TempData.ContainsKey(GlobalConstants.TempDataRawHtmlKey))
         {
             <div class="alert alert-danger fade show mb-0" role="alert">
                 <div class="container d-flex flex-row">
                     <i class="fas fa-exclamation-circle fa-2x align-self-center"></i>
-                    <p class="pl-3 my-2" style="font-size: large;">@Html.Raw(TempData[GlobalConstants.TempDataEmailVerificationMessageKey])</p>
+                    <p class="pl-3 my-2" style="font-size: large;">@Html.Raw(TempData[GlobalConstants.TempDataRawHtmlKey])</p>
                     <div class="ml-auto">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
