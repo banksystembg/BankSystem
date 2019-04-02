@@ -1,9 +1,9 @@
 ﻿namespace BankSystem.Models
 {
-    using Microsoft.AspNetCore.Identity;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Common;
+    using Microsoft.AspNetCore.Identity;
 
     public class BankUser : IdentityUser
     {
