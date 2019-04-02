@@ -73,10 +73,7 @@
                 .AddCommonProjectServices()
                 .AddAuthentication();
 
-            services.Configure<SecurityStampValidatorOptions>(options =>
-            {
-                options.ValidationInterval = TimeSpan.Zero;
-            });
+            services.Configure<SecurityStampValidatorOptions>(options => { options.ValidationInterval = TimeSpan.Zero; });
 
             services
                 .Configure<RouteOptions>(options => options.LowercaseUrls = true);

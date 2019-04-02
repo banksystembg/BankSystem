@@ -7,6 +7,7 @@
     public class HomeViewModel
     {
         public IEnumerable<BankAccountIndexViewModel> UserBankAccounts { get; set; }
+
         public IEnumerable<MoneyTransferListingDto> MoneyTransfers { get; set; }
     }
 }

@@ -21,16 +21,16 @@
             => this.AddCustomHeader(MiddlewareConstants.FrameOptions.Header, MiddlewareConstants.FrameOptions.SameOrigin);
 
         public void AddFeature()
-           => this.AddCustomHeader(MiddlewareConstants.FeaturePolicy.Header, MiddlewareConstants.FeaturePolicy.Ignore);
+            => this.AddCustomHeader(MiddlewareConstants.FeaturePolicy.Header, MiddlewareConstants.FeaturePolicy.Ignore);
 
         public void AddReferrer()
-           => this.AddCustomHeader(MiddlewareConstants.ReferrerPolicy.Header, MiddlewareConstants.ReferrerPolicy.NoReferrer);
+            => this.AddCustomHeader(MiddlewareConstants.ReferrerPolicy.Header, MiddlewareConstants.ReferrerPolicy.NoReferrer);
 
         public void AddXssProtection()
-           => this.AddCustomHeader(MiddlewareConstants.XssProtection.Header, MiddlewareConstants.XssProtection.Block);
+            => this.AddCustomHeader(MiddlewareConstants.XssProtection.Header, MiddlewareConstants.XssProtection.Block);
 
         public void AddContentTypeOptionsNoSniff()
-          => this.AddCustomHeader(MiddlewareConstants.ContentTypeOptions.Header, MiddlewareConstants.ContentTypeOptions.NoSniff);
+            => this.AddCustomHeader(MiddlewareConstants.ContentTypeOptions.Header, MiddlewareConstants.ContentTypeOptions.NoSniff);
 
         public SecurityHeadersBuilder AddCustomHeader(string header, string value)
         {
@@ -40,6 +40,7 @@
             }
 
             this.policy.HeadersToSet[header] = value;
+
             return this;
         }
 
@@ -51,6 +52,7 @@
             }
 
             this.policy.HeadersToRemove.Add(header);
+
             return this;
         }
 

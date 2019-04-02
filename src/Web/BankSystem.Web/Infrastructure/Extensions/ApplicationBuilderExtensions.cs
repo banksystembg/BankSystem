@@ -1,5 +1,9 @@
 ﻿namespace BankSystem.Web.Infrastructure.Extensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using BankSystem.Models;
     using Common;
     using Data;
@@ -8,10 +12,6 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Middleware;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public static class ApplicationBuilderExtensions
     {
@@ -66,7 +66,8 @@
             }
         }
 
-        public static IApplicationBuilder AddDefaultSecurityHeaders(this IApplicationBuilder app,
+        public static IApplicationBuilder AddDefaultSecurityHeaders(
+            this IApplicationBuilder app,
             SecurityHeadersBuilder builder)
             => app.UseMiddleware<SecurityHeadersMiddleware>(builder.Policy());
     }

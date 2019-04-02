@@ -69,6 +69,7 @@
             if (!this.ModelState.IsValid)
             {
                 model.BankAccounts = await this.GetAllAccountsAsync(userId);
+
                 return this.View(model);
             }
 
@@ -89,10 +90,12 @@
             if (!isCreated)
             {
                 this.ShowErrorMessage(NotificationMessages.CardCreateError);
+
                 return this.RedirectToHome();
             }
 
             this.ShowSuccessMessage(NotificationMessages.CardCreatedSuccessfully);
+
             return this.RedirectToAction(nameof(this.Index));
         }
 
@@ -102,6 +105,7 @@
             if (id == null)
             {
                 this.ShowErrorMessage(NotificationMessages.CardDoesNotExist);
+
                 return this.RedirectToAction(nameof(this.Index));
             }
 
@@ -112,6 +116,7 @@
             if (card == null || card.UserId != userId)
             {
                 this.ShowErrorMessage(NotificationMessages.CardDoesNotExist);
+
                 return this.RedirectToAction(nameof(this.Index));
             }
 

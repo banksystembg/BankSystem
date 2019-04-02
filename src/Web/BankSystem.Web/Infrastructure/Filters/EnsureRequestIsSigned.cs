@@ -25,6 +25,7 @@
                     .Contains(GlobalConstants.AuthenticationScheme, StringComparison.Ordinal))
             {
                 context.Result = new ForbidResult();
+
                 return;
             }
 
@@ -39,6 +40,7 @@
                 if (!isValid)
                 {
                     context.Result = new ForbidResult();
+
                     return;
                 }
             }
@@ -46,7 +48,10 @@
             base.OnActionExecuting(context);
         }
 
-        private bool IsValidRequest(ActionExecutingContext context, string encryptedKey, string encryptedIV,
+        private bool IsValidRequest(
+            ActionExecutingContext context,
+            string encryptedKey,
+            string encryptedIV,
             string incomingBase64Signature)
         {
             var request = context.HttpContext.Request;
@@ -87,6 +92,7 @@
                     var isVerified = rsa
                         .VerifyData(signature, Convert.FromBase64String(decrypted), HashAlgorithmName.SHA256,
                             RSASignaturePadding.Pkcs1);
+
                     return isVerified;
                 }
             }

@@ -1,5 +1,8 @@
 ﻿namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Common;
     using Microsoft.AspNetCore.Mvc;
@@ -7,9 +10,6 @@
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.GlobalTransfer;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class GlobalController : BaseMoneyTransferController
     {
@@ -35,6 +35,7 @@
             if (!userAccounts.Any())
             {
                 this.ShowErrorMessage(NotificationMessages.NoAccountsError);
+
                 return this.RedirectToHome();
             }
 
@@ -55,6 +56,7 @@
             if (!this.TryValidateModel(model))
             {
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+
                 return this.View(model);
             }
 
@@ -70,6 +72,7 @@
             {
                 this.ShowErrorMessage(NotificationMessages.SameAccountsError);
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+
                 return this.View(model);
             }
 
@@ -84,14 +87,17 @@
                 {
                     this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
                     model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+
                     return this.View(model);
                 }
 
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
+
                 return this.RedirectToHome();
             }
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulMoneyTransfer);
+
             return this.RedirectToHome();
         }
     }

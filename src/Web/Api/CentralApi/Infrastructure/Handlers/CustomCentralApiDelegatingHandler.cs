@@ -1,13 +1,13 @@
 ﻿namespace CentralApi.Infrastructure.Handlers
 {
-    using BankSystem.Common;
-    using BankSystem.Common.Utils;
     using System;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Security.Cryptography;
     using System.Threading;
     using System.Threading.Tasks;
+    using BankSystem.Common;
+    using BankSystem.Common.Utils;
 
     public class CustomCentralApiDelegatingHandler : DelegatingHandler
     {
@@ -48,6 +48,7 @@
                     $"{encryptedKey},{encryptedIV},{Convert.ToBase64String(requestSignedData)}");
 
                 var response = await base.SendAsync(request, cancellationToken);
+
                 return response;
             }
         }
