@@ -91,13 +91,10 @@
 
                 if (result.IsNotAllowed)
                 {
-                    var callbackUrl = this.Url.Page(
-                        ResendEmailPage,
-                        null,
-                        this.Request.Scheme);
+                    var url = this.Url.Page(ResendEmailPage);
 
                     this.TempData[GlobalConstants.TempDataEmailVerificationMessageKey] =
-                        string.Format(EmailNotVerified, HtmlEncoder.Default.Encode(callbackUrl));
+                        string.Format(EmailNotVerified, HtmlEncoder.Default.Encode(url));
                     return this.Page();
                 }
 
