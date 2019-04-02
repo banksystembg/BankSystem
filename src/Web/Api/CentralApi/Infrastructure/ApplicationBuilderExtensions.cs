@@ -38,7 +38,6 @@
                         PaymentUrl = "https://localhost:56013/pay",
                         CardPaymentUrl = "https://localhost:56013/api/cardPayments",
                         BankIdentificationCardNumbers = "101"
-
                     }
                 );
                 dbContext.SaveChanges();

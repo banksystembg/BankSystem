@@ -13,7 +13,9 @@
         }
 
         public DbSet<BankAccount> Accounts { get; set; }
+
         public DbSet<MoneyTransfer> Transfers { get; set; }
+
         public DbSet<Card> Cards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

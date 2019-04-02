@@ -15,7 +15,7 @@
         public string AccountId { get; set; }
 
         public string AccountName { get; set; }
-        
+
         public string UserId { get; set; }
     }
 }

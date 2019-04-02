@@ -11,9 +11,6 @@ namespace BankSystem.Common
         public const string CardDeletedSuccessfully = "Card deleted successfully";
         public const string CardDeleteError = "An error occured while deleting card";
 
-        public const string AccountEditedSuccessfully = "Account name edited successfully";
-        public const string AccountEditError = "An error occured while editing account";
-
         public const string TryAgainLaterError =
             "Oops! Something went wrong! Please try again later. If this error continues to occur, please contact our support center";
 
@@ -50,12 +47,12 @@ namespace BankSystem.Common
         public const string PaymentStateInvalid =
             "Payment details are invalid or have expired. Please try again later.";
 
-        public const string PaymentFailed = "Payment failed. Please try again later.";
-
         public const string SuccessfulRegistration =
             "Thank you for registering. Please confirm your email by clicking the link which we have just send you to the email address in order to proceed forward.";
+
         public const string EmailVerificationFailed =
             "An error occured while verifying your email. Please try again later and if this error continues to occur contact our support center";
+
         public const string SuccessfulEmailVerification =
             "You've successfully activated your account. You can now log in.";
     }

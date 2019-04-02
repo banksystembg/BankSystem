@@ -19,10 +19,7 @@
                     ApiKey = table.Column<string>(nullable: false),
                     ApiAddress = table.Column<string>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Banks", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Banks", x => x.Id); });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -10,7 +10,7 @@
             where T : MoneyTransferBaseServiceModel;
 
         Task<IEnumerable<T>> GetAllMoneyTransfersForAccountAsync<T>(string accountId)
-             where T : MoneyTransferBaseServiceModel;
+            where T : MoneyTransferBaseServiceModel;
 
         Task<IEnumerable<T>> GetLast10MoneyTransfersForUserAsync<T>(string userId)
             where T : MoneyTransferBaseServiceModel;

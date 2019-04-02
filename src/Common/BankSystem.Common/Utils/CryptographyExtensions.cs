@@ -13,9 +13,8 @@
                 aes.GenerateKey();
                 aes.GenerateIV();
 
-                return new[] { Convert.ToBase64String(aes.Key), Convert.ToBase64String(aes.IV) };
+                return new[] {Convert.ToBase64String(aes.Key), Convert.ToBase64String(aes.IV)};
             }
-
         }
 
         public static byte[] Encrypt(string plainText, byte[] Key, byte[] IV)
@@ -41,6 +40,7 @@
                     }
                 }
             }
+
             // Return encrypted data    
             return encrypted;
         }
@@ -65,6 +65,7 @@
                     }
                 }
             }
+
             return plaintext;
         }
     }

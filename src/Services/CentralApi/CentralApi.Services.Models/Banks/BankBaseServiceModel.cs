@@ -4,5 +4,6 @@
     using CentralApi.Models;
 
     public class BankBaseServiceModel : IMapWith<Bank>
-    {}
+    {
+    }
 }

@@ -11,7 +11,7 @@
     else
     {
         <h3>All payments from all accounts</h3>
-        <table class="table table-hover table-bordered">
+        <table class="table table-bordered table-hover">
             <thead>
             <tr>
                 <th>Details</th>
@@ -52,5 +52,5 @@
 
 @if (Model.MoneyTransfers.Any())
 {
-    <partial name="_PaginationPartial" model="@Model.MoneyTransfers"/>
+    <partial name="_PaginationPartial" model="@Model.MoneyTransfers" />
 }

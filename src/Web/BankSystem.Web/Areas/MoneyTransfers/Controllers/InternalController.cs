@@ -36,6 +36,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             if (!userAccounts.Any())
             {
                 this.ShowErrorMessage(NotificationMessages.NoAccountsError);
+
                 return this.RedirectToHome();
             }
 
@@ -55,6 +56,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             if (!this.ModelState.IsValid)
             {
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+
                 return this.View(model);
             }
 
@@ -69,6 +71,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             {
                 this.ShowErrorMessage(NotificationMessages.SameAccountsError);
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+
                 return this.View(model);
             }
 
@@ -76,6 +79,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             {
                 this.ShowErrorMessage(NotificationMessages.InsufficientFunds);
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+
                 return this.View(model);
             }
 
@@ -86,6 +90,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             {
                 this.ShowErrorMessage(NotificationMessages.DestinationBankAccountDoesNotExist);
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+
                 return this.View(model);
             }
 
@@ -99,6 +104,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             {
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+
                 return this.View(model);
             }
 
@@ -112,10 +118,12 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             {
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
                 model.OwnAccounts = await this.GetAllAccountsAsync(userId);
+
                 return this.View(model);
             }
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulMoneyTransfer);
+
             return this.RedirectToHome();
         }
     }

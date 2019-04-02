@@ -1,79 +1,79 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace BankSystem.Data.Migrations
+﻿namespace BankSystem.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class AddModelValidation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Source",
-                table: "Transfers",
+                "Source",
+                "Transfers",
                 maxLength: 34,
                 nullable: false,
                 oldClrType: typeof(string));
 
             migrationBuilder.AlterColumn<string>(
-                name: "SenderName",
-                table: "Transfers",
+                "SenderName",
+                "Transfers",
                 maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string));
 
             migrationBuilder.AlterColumn<string>(
-                name: "RecipientName",
-                table: "Transfers",
+                "RecipientName",
+                "Transfers",
                 maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string));
 
             migrationBuilder.AlterColumn<string>(
-                name: "Destination",
-                table: "Transfers",
+                "Destination",
+                "Transfers",
                 maxLength: 34,
                 nullable: false,
                 oldClrType: typeof(string));
 
             migrationBuilder.AlterColumn<string>(
-                name: "Description",
-                table: "Transfers",
+                "Description",
+                "Transfers",
                 maxLength: 150,
                 nullable: true,
                 oldClrType: typeof(string),
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
-                name: "SecurityCode",
-                table: "Cards",
+                "SecurityCode",
+                "Cards",
                 maxLength: 3,
                 nullable: false,
                 oldClrType: typeof(int));
 
             migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Cards",
+                "Name",
+                "Cards",
                 maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string));
 
             migrationBuilder.AlterColumn<string>(
-                name: "FullName",
-                table: "AspNetUsers",
+                "FullName",
+                "AspNetUsers",
                 maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string),
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
-                name: "UniqueId",
-                table: "Accounts",
+                "UniqueId",
+                "Accounts",
                 maxLength: 34,
                 nullable: false,
                 oldClrType: typeof(string));
 
             migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Accounts",
+                "Name",
+                "Accounts",
                 maxLength: 35,
                 nullable: false,
                 oldClrType: typeof(string));
@@ -82,72 +82,72 @@ namespace BankSystem.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Source",
-                table: "Transfers",
+                "Source",
+                "Transfers",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 34);
 
             migrationBuilder.AlterColumn<string>(
-                name: "SenderName",
-                table: "Transfers",
+                "SenderName",
+                "Transfers",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 50);
 
             migrationBuilder.AlterColumn<string>(
-                name: "RecipientName",
-                table: "Transfers",
+                "RecipientName",
+                "Transfers",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 50);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Destination",
-                table: "Transfers",
+                "Destination",
+                "Transfers",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 34);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Description",
-                table: "Transfers",
+                "Description",
+                "Transfers",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 150,
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<int>(
-                name: "SecurityCode",
-                table: "Cards",
+                "SecurityCode",
+                "Cards",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 3);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Cards",
+                "Name",
+                "Cards",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 50);
 
             migrationBuilder.AlterColumn<string>(
-                name: "FullName",
-                table: "AspNetUsers",
+                "FullName",
+                "AspNetUsers",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 50);
 
             migrationBuilder.AlterColumn<string>(
-                name: "UniqueId",
-                table: "Accounts",
+                "UniqueId",
+                "Accounts",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 34);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Accounts",
+                "Name",
+                "Accounts",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 35);

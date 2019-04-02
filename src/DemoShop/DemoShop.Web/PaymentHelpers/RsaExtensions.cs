@@ -22,27 +22,35 @@ namespace DemoShop.Web.PaymentHelpers
                     {
                         case "Modulus":
                             parameters.Modulus = Convert.FromBase64String(node.InnerText);
+
                             break;
                         case "Exponent":
                             parameters.Exponent = Convert.FromBase64String(node.InnerText);
+
                             break;
                         case "P":
                             parameters.P = Convert.FromBase64String(node.InnerText);
+
                             break;
                         case "Q":
                             parameters.Q = Convert.FromBase64String(node.InnerText);
+
                             break;
                         case "DP":
                             parameters.DP = Convert.FromBase64String(node.InnerText);
+
                             break;
                         case "DQ":
                             parameters.DQ = Convert.FromBase64String(node.InnerText);
+
                             break;
                         case "InverseQ":
                             parameters.InverseQ = Convert.FromBase64String(node.InnerText);
+
                             break;
                         case "D":
                             parameters.D = Convert.FromBase64String(node.InnerText);
+
                             break;
                     }
                 }
@@ -75,6 +83,7 @@ namespace DemoShop.Web.PaymentHelpers
             }
 
             sb.Append("</RSAKeyValue>");
+
             return sb.ToString();
         }
     }

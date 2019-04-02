@@ -50,8 +50,8 @@
 
             // Create custom mapping for all types implementing the IHaveCustomMapping interface
             var customMappings = allTypes.Where(t => t.IsClass
-                                                        && !t.IsAbstract
-                                                        && typeof(IHaveCustomMapping).IsAssignableFrom(t))
+                                                     && !t.IsAbstract
+                                                     && typeof(IHaveCustomMapping).IsAssignableFrom(t))
                 .Select(Activator.CreateInstance)
                 .Cast<IHaveCustomMapping>()
                 .ToArray();

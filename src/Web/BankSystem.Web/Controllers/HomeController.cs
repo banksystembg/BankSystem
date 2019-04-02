@@ -52,6 +52,7 @@
                 UserBankAccounts = bankAccounts,
                 MoneyTransfers = moneyTransfers
             };
+
             return this.View(viewModel);
         }
     }

@@ -1,5 +1,7 @@
 namespace BankSystem.Web.Controllers
 {
+    using System.Linq;
+    using System.Threading.Tasks;
     using Areas.MoneyTransfers.Models;
     using AutoMapper;
     using Common;
@@ -9,8 +11,6 @@ namespace BankSystem.Web.Controllers
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class BankAccountsController : BaseController
     {
@@ -24,7 +24,8 @@ namespace BankSystem.Web.Controllers
         public BankAccountsController(
             IBankAccountService bankAccountService,
             IUserService userService,
-            IMoneyTransferService moneyTransferService, IBankConfigurationHelper bankConfigurationHelper)
+            IMoneyTransferService moneyTransferService,
+            IBankConfigurationHelper bankConfigurationHelper)
         {
             this.bankAccountService = bankAccountService;
             this.userService = userService;
@@ -57,6 +58,7 @@ namespace BankSystem.Web.Controllers
             }
 
             this.ShowSuccessMessage(NotificationMessages.BankAccountCreated);
+
             return this.RedirectToAction("Index", "Home");
         }
 

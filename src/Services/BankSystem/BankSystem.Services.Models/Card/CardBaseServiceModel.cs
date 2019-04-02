@@ -4,5 +4,6 @@
     using Common.AutoMapping.Interfaces;
 
     public abstract class CardBaseServiceModel : IMapWith<Card>
-    {}
+    {
+    }
 }

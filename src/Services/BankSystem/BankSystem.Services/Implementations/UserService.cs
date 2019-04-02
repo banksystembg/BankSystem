@@ -7,7 +7,7 @@
 
     public class UserService : BaseService, IUserService
     {
-        public UserService(BankSystemDbContext context) 
+        public UserService(BankSystemDbContext context)
             : base(context)
         {
         }

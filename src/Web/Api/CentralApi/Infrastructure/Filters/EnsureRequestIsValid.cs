@@ -1,5 +1,9 @@
 ﻿namespace CentralApi.Infrastructure.Filters
 {
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading.Tasks;
     using BankSystem.Common;
     using BankSystem.Common.Utils;
     using Microsoft.AspNetCore.Http;
@@ -10,10 +14,6 @@
     using Services.Implementations;
     using Services.Interfaces;
     using Services.Models.Banks;
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class EnsureRequestIsValid : ActionFilterAttribute
     {
@@ -27,6 +27,7 @@
                     .Contains(GlobalConstants.AuthenticationScheme, StringComparison.Ordinal))
             {
                 context.Result = new ForbidResult();
+
                 return;
             }
 
@@ -47,6 +48,7 @@
                 if (!isValid)
                 {
                     context.Result = new ForbidResult();
+
                     return;
                 }
             }
@@ -105,6 +107,7 @@
                     RsaExtensions.FromXmlString(rsa, bank.ApiKey);
                     var decrypt = Convert.FromBase64String(decrypted);
                     var isVerified = rsa.VerifyData(signature, decrypt, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
                     return isVerified;
                 }
             }
