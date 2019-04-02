@@ -31,6 +31,10 @@
                     <p>Date of creation</p>
                     <p class="ml-3 auto-format-date">@Model.CreatedOn.ToString("O")</p>
                 </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <p>Total transfers</p>
+                    <p class="ml-3">@Model.MoneyTransfersCount</p>
+                </div>
             </div>
             <div class="col-12 col-md-6 offset-lg-2 col-lg-5">
                 <h5 class="text-center">Transfer information</h5>
@@ -45,6 +49,10 @@
                 <div class="d-flex flex-row justify-content-between">
                     <p>Bank name</p>
                     <p class="ml-3">@Model.BankName</p>
+                </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <p>Bank country</p>
+                    <p class="ml-3">@Model.BankCountry</p>
                 </div>
                 <div class="d-flex flex-row justify-content-between">
                     <p>Bank code</p>

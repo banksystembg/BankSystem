@@ -71,15 +71,19 @@ namespace BankSystem.Web.Controllers
                 return this.Forbid();
             }
 
-            var transfers = (await this.moneyTransferService
-                    .GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id))
+            var allTransfers = (await this.moneyTransferService
+                .GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id))
+                .ToArray();
+            var transfers = allTransfers
                 .Select(Mapper.Map<MoneyTransferListingDto>)
                 .ToPaginatedList(pageIndex, ItemsPerPage);
 
             var viewModel = Mapper.Map<BankAccountDetailsViewModel>(account);
             viewModel.MoneyTransfers = transfers;
+            viewModel.MoneyTransfersCount = allTransfers.Length;
             viewModel.BankName = this.bankConfigurationHelper.BankName;
             viewModel.BankCode = this.bankConfigurationHelper.UniqueIdentifier;
+            viewModel.BankCountry = this.bankConfigurationHelper.BankCountry;
 
             return this.View(viewModel);
         }

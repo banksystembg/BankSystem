@@ -1,10 +1,10 @@
 ﻿namespace BankSystem.Web.Models.BankAccount
 {
-    using System;
     using Areas.MoneyTransfers.Models;
     using Common.AutoMapping.Interfaces;
     using Infrastructure.Collections;
     using Services.Models.BankAccount;
+    using System;
 
     public class BankAccountDetailsViewModel : IMapWith<BankAccountDetailsServiceModel>
     {
@@ -22,8 +22,12 @@
 
         public PaginatedList<MoneyTransferListingDto> MoneyTransfers { get; set; }
 
+        public int MoneyTransfersCount { get; set; }
+
         public string BankName { get; set; }
 
         public string BankCode { get; set; }
+
+        public string BankCountry { get; set; }
     }
 }
