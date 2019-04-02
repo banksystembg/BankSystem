@@ -3,6 +3,5 @@
     // Marker interface
     public interface IMapWith<TModel>
     {
-
     }
 }

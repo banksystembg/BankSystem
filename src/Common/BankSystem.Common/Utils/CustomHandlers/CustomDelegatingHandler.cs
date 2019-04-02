@@ -10,10 +10,10 @@
     public class CustomDelegatingHandler : DelegatingHandler
     {
         private readonly string apiSigningKey;
+        private readonly string bankCountry;
         private readonly string bankKey;
         private readonly string bankName;
         private readonly string bankSwiftCode;
-        private readonly string bankCountry;
 
         public CustomDelegatingHandler(string apiSigningKey, string bankKey, string bankName, string bankSwiftCode, string bankCountry)
         {
@@ -51,6 +51,7 @@
                     $"{this.bankName},{this.bankSwiftCode},{this.bankCountry},{encryptedKey},{encryptedIV},{Convert.ToBase64String(requestSignedData)}");
 
                 var response = await base.SendAsync(request, cancellationToken);
+
                 return response;
             }
         }

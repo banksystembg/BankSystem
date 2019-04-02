@@ -29,6 +29,7 @@
             try
             {
                 var isSuccessful = await client.SendEmailAsync(msg);
+
                 return isSuccessful.StatusCode == HttpStatusCode.Accepted;
             }
             catch
