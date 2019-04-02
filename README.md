@@ -29,7 +29,7 @@ BankSystem consists of two base components - the bank web application and the _C
 Bank accounts hold information about their owner, balance, transactions, date of creation, etc.
 
 ### [Money transfers](https://github.com/banksystembg/BankSystem/wiki/Money-transfers)
-BankSystem supports two types of money transfers - internal and global / worldwide
+BankSystem supports two types of money transfers - internal and global / worldwide.
 
 ### [Cards](https://github.com/banksystembg/BankSystem/wiki/Cards)
 Cards are used for making purchases on other websites using the _CentralApi_.
