@@ -2,6 +2,24 @@
 **BankSystem** is an open-source web project where users can create bank accounts, transfer money, create payment cards, pay with them or directly through their account, etc.
 It supports connecting multiple banks together through the _CentralApi_. This allows money to be securely transferred between **separate instances of BankSystem** running on different machines.
 
+## Project links
+
+We have set up a network of two BankSystem instances and one [DemoShop](https://github.com/banksystembg/BankSystem/wiki/DemoShop), connected through _CentralApi_.
+
+|Project |Address
+|-|-
+|**DemoShop** |https://banksystem-demoshop.azurewebsites.net/
+|**Bank system 1** (first instance) <br><br> **Transfer details:** <br> * Bank name - _Bank system_ <br> * Bank country - _Bulgaria_ <br> * Bank code - _ABC_ |https://banksystem1.azurewebsites.net/
+|**Bank system 2** (second instance) <br><br> **Transfer details:** <br> * Bank name - _Bank system 2_ <br> * Bank country - _Germany_ <br> * Bank code - _CBA_ |https://banksystem2.azurewebsites.net/
+
+All of these projects have a demo account already registered:
+
+| Email                 | Password 
+|-----------------	|----------
+| test@test.com         | Test123$
+
+## Documentation
+
 ### [Getting started](https://github.com/banksystembg/BankSystem/wiki/Getting-started)
 >**This page contains important information on how to properly configure BankSystem and CentralApi**
 
