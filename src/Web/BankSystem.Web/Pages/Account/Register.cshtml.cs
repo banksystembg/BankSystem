@@ -1,8 +1,5 @@
 ﻿namespace BankSystem.Web.Pages.Account
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.Text.Encodings.Web;
-    using System.Threading.Tasks;
     using BankSystem.Models;
     using Common;
     using Common.EmailSender.Interface;
@@ -11,14 +8,13 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Models;
+    using System.ComponentModel.DataAnnotations;
+    using System.Text.Encodings.Web;
+    using System.Threading.Tasks;
 
     [AllowAnonymous]
     public class RegisterModel : BasePageModel
     {
-        private const string EmailSubject = "Confirm your email";
-        private const string EmailMessage = "Please confirm your email by <a href=\"{0}\">clicking here</a>.";
-        private const string EmailConfirmationPage = "/Account/ConfirmEmail";
-
         private readonly IEmailSender emailSender;
         private readonly ILogger<RegisterModel> logger;
         private readonly UserManager<BankUser> userManager;

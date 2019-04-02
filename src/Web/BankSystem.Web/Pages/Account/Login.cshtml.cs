@@ -1,7 +1,5 @@
 ﻿namespace BankSystem.Web.Pages.Account
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.Threading.Tasks;
     using BankSystem.Models;
     using Common;
     using Microsoft.AspNetCore.Authentication;
@@ -9,14 +7,24 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using System.ComponentModel.DataAnnotations;
+    using System.Text.Encodings.Web;
+    using System.Threading.Tasks;
 
     [AllowAnonymous]
     public class LoginModel : BasePageModel
     {
+        private const string EmailNotVerified =
+            "Your email is not verified. Please verify your email by clicking <a href=\"{0}\">here</a>";
+
+        private const string ResendEmailPage = "/Account/ReSendEmailVerification";
+
         private readonly ILogger<LoginModel> logger;
         private readonly SignInManager<BankUser> signInManager;
 
-        public LoginModel(SignInManager<BankUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(
+            SignInManager<BankUser> signInManager,
+            ILogger<LoginModel> logger)
         {
             this.signInManager = signInManager;
             this.logger = logger;
@@ -80,8 +88,20 @@
                     return this.Page();
                 }
 
-                this.ShowErrorMessage(NotificationMessages.InvalidCredentials);
 
+                if (result.IsNotAllowed)
+                {
+                    var callbackUrl = this.Url.Page(
+                        ResendEmailPage,
+                        null,
+                        this.Request.Scheme);
+
+                    this.TempData[GlobalConstants.TempDataEmailVerificationMessageKey] =
+                        string.Format(EmailNotVerified, HtmlEncoder.Default.Encode(callbackUrl));
+                    return this.Page();
+                }
+
+                this.ShowErrorMessage(NotificationMessages.InvalidCredentials);
                 return this.Page();
             }
 
