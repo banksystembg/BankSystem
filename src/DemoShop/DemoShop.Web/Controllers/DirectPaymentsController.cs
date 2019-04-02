@@ -15,12 +15,13 @@ namespace DemoShop.Web.Controllers
     {
         private const string ReturnPath = "DirectPayments/ReceiveConfirmation";
         private const string PaymentDataFormKey = "data";
-        private readonly IOrdersService ordersService;
-
-        private readonly DirectPaymentsConfiguration directPaymentsConfiguration;
         private readonly DestinationBankAccountConfiguration destinationBankAccountConfiguration;
 
-        public DirectPaymentsController(IOrdersService ordersService,
+        private readonly DirectPaymentsConfiguration directPaymentsConfiguration;
+        private readonly IOrdersService ordersService;
+
+        public DirectPaymentsController(
+            IOrdersService ordersService,
             IOptions<DirectPaymentsConfiguration> directPaymentsConfigurationOptions,
             IOptions<DestinationBankAccountConfiguration> destinationBankAccountConfigurationOptions)
         {

@@ -12,12 +12,13 @@ namespace DemoShop.Web.Controllers
     public class CardPaymentsController : Controller
     {
         private const string PaymentUnsuccessfulError = "Payment failed. Please check your card details and try again.";
-
-        private readonly IOrdersService ordersService;
         private readonly CardPaymentsConfiguration cardPaymentsConfiguration;
         private readonly DestinationBankAccountConfiguration destinationBankAccountConfiguration;
 
-        public CardPaymentsController(IOrdersService ordersService,
+        private readonly IOrdersService ordersService;
+
+        public CardPaymentsController(
+            IOrdersService ordersService,
             IOptions<CardPaymentsConfiguration> cardPaymentsConfigurationOptions,
             IOptions<DestinationBankAccountConfiguration> destinationBankAccountConfigurationOptions)
         {
@@ -80,7 +81,7 @@ namespace DemoShop.Web.Controllers
                 DestinationBankSwiftCode = this.destinationBankAccountConfiguration.DestinationBankSwiftCode,
                 DestinationBankAccountUniqueId =
                     this.destinationBankAccountConfiguration.DestinationBankAccountUniqueId,
-                RecipientName = this.destinationBankAccountConfiguration.RecipientName,
+                RecipientName = this.destinationBankAccountConfiguration.RecipientName
             };
 
             // process card

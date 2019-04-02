@@ -4,6 +4,6 @@ namespace DemoShop.Web.Models
 
     public class HomeViewModel
     {
-        public IEnumerable<ProductDetailsViewModel> Products { get; set; }   
+        public IEnumerable<ProductDetailsViewModel> Products { get; set; }
     }
 }
