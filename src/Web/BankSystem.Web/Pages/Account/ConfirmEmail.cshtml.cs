@@ -28,7 +28,7 @@
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
+                this.ShowErrorMessage(NotificationMessages.AccountDoesNotExist);
                 return this.RedirectToHome();
             }
 

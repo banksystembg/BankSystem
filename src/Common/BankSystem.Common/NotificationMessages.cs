@@ -25,6 +25,8 @@ namespace BankSystem.Common
         public const string SameAccountsError =
             "The account from which you are sending money and the destination account must be different!";
 
+        public const string AccountDoesNotExist = "Account does not exist";
+
         public const string DestinationBankAccountDoesNotExist = "Destination bank account does not exist";
 
         public const string InvalidCredentials = "Invalid email or password";
@@ -60,5 +62,8 @@ namespace BankSystem.Common
             "An error occured while verifying your email. Please try again later and if this error continues to occur, contact our support center";
 
         public const string EmailAlreadyVerified = "Email is already verified.";
+
+        public const string EmailVerificationRequired =
+            "Your account is not activated. If you have not received the activation email, you can request a new one on this page.";
     }
 }
