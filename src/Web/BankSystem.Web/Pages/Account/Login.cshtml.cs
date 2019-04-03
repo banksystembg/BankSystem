@@ -8,7 +8,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using System.ComponentModel.DataAnnotations;
-    using System.Text.Encodings.Web;
     using System.Threading.Tasks;
 
     [AllowAnonymous]
@@ -85,9 +84,9 @@
                     return this.Page();
                 }
 
-
                 if (result.IsNotAllowed)
                 {
+                    this.ShowErrorMessage(NotificationMessages.EmailVerificationRequired);
                     return this.RedirectToPage(SendEmailPage);
                 }
 
