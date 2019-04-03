@@ -1,4 +1,4 @@
-namespace BankSystem.Web.Pages.Account.Settings
+﻿namespace BankSystem.Web.Pages.Account.Settings
 {
     using System.ComponentModel.DataAnnotations;
     using System.Text;
@@ -111,6 +111,8 @@ namespace BankSystem.Web.Pages.Account.Settings
             {
                 await this.userManager.ResetAuthenticatorKeyAsync(user);
                 unformattedKey = await this.userManager.GetAuthenticatorKeyAsync(user);
+
+                await this.signInManager.RefreshSignInAsync(user);
             }
 
             this.SharedKey = this.FormatKey(unformattedKey);
