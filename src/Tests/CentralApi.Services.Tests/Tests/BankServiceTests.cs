@@ -145,6 +145,54 @@
                 .BeInAscendingOrder(b => b.Name);
         }
 
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("    !")]
+        [InlineData("totally invalid id")]
+        public async Task GetBankByIdAsync_WithInvalidId_ShouldReturnNull(string id)
+        {
+            // Arrange
+            await this.SeedBanks(10);
+
+            // Act
+            var result = await this.banksService.GetBankByIdAsync<BankServiceModel>(id);
+
+            // Assert
+            result
+                .Should()
+                .BeNull();
+        }
+
+        [Fact]
+        public async Task GetBankByIdAsync_WitValidId_ShouldReturnCorrectEntity()
+        {
+            // Arrange
+            await this.SeedBanks(10);
+            var bank = await this.dbContext.Banks.FirstOrDefaultAsync();
+            // Act
+            var result = await this.banksService.GetBankByIdAsync<BankListingServiceModel>(bank.Id);
+
+            // Assert
+            result
+                .Should()
+                .Match(x => x.As<BankListingServiceModel>().Id == bank.Id);
+        }
+
+        [Fact]
+        public async Task GetBankByIdAsync_WitValidId_ShouldReturnCorrectModel()
+        {
+            // Arrange
+            await this.SeedBanks(10);
+            var bank = await this.dbContext.Banks.FirstOrDefaultAsync();
+            // Act
+            var result = await this.banksService.GetBankByIdAsync<BankListingServiceModel>(bank.Id);
+
+            // Assert
+            result
+                .Should()
+                .BeAssignableTo<BankListingServiceModel>();
+        }
+
         private async Task SeedBanks(int count)
         {
             var banks = new List<Bank>();
