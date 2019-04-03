@@ -95,7 +95,7 @@
                 string.Format(EmailMessage, HtmlEncoder.Default.Encode(callbackUrl)));
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulRegistration);
-            return this.RedirectToHome();
+            return this.RedirectToPage(LoginPage);
         }
 
         public class InputModel

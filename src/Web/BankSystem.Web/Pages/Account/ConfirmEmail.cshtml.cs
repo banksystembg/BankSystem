@@ -10,8 +10,6 @@
     [AllowAnonymous]
     public class ConfirmEmail : BasePageModel
     {
-        private const string LoginPage = "/Account/Login";
-
         private readonly UserManager<BankUser> userManager;
 
         public ConfirmEmail(UserManager<BankUser> userManager)
