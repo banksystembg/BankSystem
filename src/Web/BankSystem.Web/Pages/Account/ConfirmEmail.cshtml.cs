@@ -1,11 +1,11 @@
 ﻿namespace BankSystem.Web.Pages.Account
 {
-    using System.Threading.Tasks;
     using BankSystem.Models;
     using Common;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System.Threading.Tasks;
 
     [AllowAnonymous]
     public class ConfirmEmail : BasePageModel
@@ -28,7 +28,7 @@
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
+                this.ShowErrorMessage(NotificationMessages.AccountDoesNotExist);
                 return this.RedirectToHome();
             }
 
@@ -40,7 +40,7 @@
             }
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulEmailVerification);
-            return this.RedirectToHome();
+            return this.RedirectToLoginPage();
         }
     }
 }

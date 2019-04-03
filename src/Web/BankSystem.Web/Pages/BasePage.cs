@@ -8,6 +8,9 @@ namespace BankSystem.Web.Pages
     {
         public IActionResult RedirectToHome() => this.RedirectToAction("Index", "Home");
 
+        public IActionResult RedirectToLoginPage()
+            => this.RedirectToPage("/Account/Login");
+
         protected void ShowErrorMessage(string message)
         {
             this.TempData[GlobalConstants.TempDataErrorMessageKey] = message;

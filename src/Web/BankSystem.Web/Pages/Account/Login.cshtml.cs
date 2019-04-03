@@ -1,7 +1,5 @@
 ﻿namespace BankSystem.Web.Pages.Account
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.Threading.Tasks;
     using BankSystem.Models;
     using Common;
     using Microsoft.AspNetCore.Authentication;
@@ -9,14 +7,20 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
 
     [AllowAnonymous]
     public class LoginModel : BasePageModel
     {
+        private const string SendEmailPage = "/Account/SendEmailVerification";
+
         private readonly ILogger<LoginModel> logger;
         private readonly SignInManager<BankUser> signInManager;
 
-        public LoginModel(SignInManager<BankUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(
+            SignInManager<BankUser> signInManager,
+            ILogger<LoginModel> logger)
         {
             this.signInManager = signInManager;
             this.logger = logger;
@@ -80,8 +84,13 @@
                     return this.Page();
                 }
 
-                this.ShowErrorMessage(NotificationMessages.InvalidCredentials);
+                if (result.IsNotAllowed)
+                {
+                    this.ShowErrorMessage(NotificationMessages.EmailVerificationRequired);
+                    return this.RedirectToPage(SendEmailPage);
+                }
 
+                this.ShowErrorMessage(NotificationMessages.InvalidCredentials);
                 return this.Page();
             }
 

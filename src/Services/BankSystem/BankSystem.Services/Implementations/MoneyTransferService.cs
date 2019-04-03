@@ -1,27 +1,21 @@
 ﻿namespace BankSystem.Services.Implementations
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
+    using Common;
     using Common.EmailSender.Interface;
     using Data;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.MoneyTransfer;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class MoneyTransferService : BaseService, IMoneyTransferService
     {
-        private const string EmailReceiveMoneySubject = "You've received money";
-        private const string EmailReceiveMoneyMessage = "€{0} have been transferred to your account. Please log in your account for additional information.";
-        private const string EmailSendMoneySubject = "You've sent money";
-
-        private const string EmailSendMoneyMessage =
-            "€{0} have been transferred from your account. If it was not you, please contact our support center as fast as possible!";
-
         private readonly IEmailSender emailSender;
 
         public MoneyTransferService(BankSystemDbContext context, IEmailSender emailSender)
@@ -85,13 +79,13 @@
 
             if (dbModel.Amount > 0)
             {
-                await this.emailSender.SendEmailAsync(dbModel.Account.User.Email, EmailReceiveMoneySubject,
-                    string.Format(EmailReceiveMoneyMessage, dbModel.Amount));
+                await this.emailSender.SendEmailAsync(dbModel.Account.User.Email, EmailMessages.ReceiveMoneySubject,
+                    string.Format(EmailMessages.ReceiveMoneyMessage, dbModel.Amount));
             }
             else
             {
-                await this.emailSender.SendEmailAsync(dbModel.Account.User.Email, EmailSendMoneySubject,
-                    string.Format(EmailSendMoneyMessage, Math.Abs(dbModel.Amount)));
+                await this.emailSender.SendEmailAsync(dbModel.Account.User.Email, EmailMessages.SendMoneySubject,
+                    string.Format(EmailMessages.SendMoneyMessage, Math.Abs(dbModel.Amount)));
             }
 
             return true;

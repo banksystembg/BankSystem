@@ -25,6 +25,8 @@ namespace BankSystem.Common
         public const string SameAccountsError =
             "The account from which you are sending money and the destination account must be different!";
 
+        public const string AccountDoesNotExist = "Account does not exist";
+
         public const string DestinationBankAccountDoesNotExist = "Destination bank account does not exist";
 
         public const string InvalidCredentials = "Invalid email or password";
@@ -48,12 +50,20 @@ namespace BankSystem.Common
             "Payment details are invalid or have expired. Please try again later.";
 
         public const string SuccessfulRegistration =
-            "Thank you for registering. Please confirm your email by clicking the link which we have just send you to the email address in order to proceed forward.";
+                   "Thank you for registering. To activate your account, please follow the link we have sent you by email";
 
-        public const string EmailVerificationFailed =
-            "An error occured while verifying your email. Please try again later and if this error continues to occur contact our support center";
+        public const string EmailVerificationLinkResentSuccessfully =
+            "Account activation link sent successfully";
 
         public const string SuccessfulEmailVerification =
-            "You've successfully activated your account. You can now log in.";
+            "Account activated. You can now log in.";
+
+        public const string EmailVerificationFailed =
+            "An error occured while verifying your email. Please try again later and if this error continues to occur, contact our support center";
+
+        public const string EmailAlreadyVerified = "Email is already verified.";
+
+        public const string EmailVerificationRequired =
+            "Your account is not activated. If you have not received the activation email, you can request a new one on this page.";
     }
 }
