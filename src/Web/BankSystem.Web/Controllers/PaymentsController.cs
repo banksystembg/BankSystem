@@ -8,13 +8,12 @@ namespace BankSystem.Web.Controllers
     using System.Web;
     using AutoMapper;
     using Common;
-    using Common.Utils;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Models.BankAccount;
-    using Newtonsoft.Json;
+    using PaymentHelpers;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.GlobalTransfer;
@@ -52,7 +51,7 @@ namespace BankSystem.Web.Controllers
 
             try
             {
-                decodedData = Encoding.UTF8.GetString(Convert.FromBase64String(data));
+                decodedData = DirectPaymentsHelper.DecodePaymentRequest(data);
             }
             catch
             {
@@ -85,19 +84,14 @@ namespace BankSystem.Web.Controllers
 
             try
             {
-                dynamic deserializedJson = JsonConvert.DeserializeObject(data);
-                string paymentInfoJson = deserializedJson.PaymentInfo;
-
-                if (!ValidateSignatures(deserializedJson))
+                dynamic paymentRequest =
+                    DirectPaymentsHelper.ParsePaymentRequest(data, this.bankConfigurationHelper.CentralApiPublicKey);
+                if (paymentRequest == null)
                 {
                     return this.BadRequest();
                 }
 
-                dynamic paymentInfo = JsonConvert.DeserializeObject(paymentInfoJson);
-                if (paymentInfo.Amount <= 0)
-                {
-                    return this.BadRequest();
-                }
+                dynamic paymentInfo = DirectPaymentsHelper.GetPaymentInfo(paymentRequest);
 
                 var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
 
@@ -110,7 +104,7 @@ namespace BankSystem.Web.Controllers
                     DestinationBankAccountUniqueId = paymentInfo.DestinationBankAccountUniqueId,
                     RecipientName = paymentInfo.RecipientName,
                     OwnAccounts = await this.GetAllAccountsAsync(userId),
-                    DataHash = Sha256Hash(data)
+                    DataHash = DirectPaymentsHelper.Sha256Hash(data)
                 };
 
                 return this.View(model);
@@ -128,7 +122,7 @@ namespace BankSystem.Web.Controllers
 
             if (!this.ModelState.IsValid ||
                 !cookieExists ||
-                model.DataHash != Sha256Hash(data))
+                model.DataHash != DirectPaymentsHelper.Sha256Hash(data))
             {
                 return this.PaymentFailed(NotificationMessages.PaymentStateInvalid);
             }
@@ -143,21 +137,17 @@ namespace BankSystem.Web.Controllers
             try
             {
                 // read and validate payment data
-                dynamic deserializedJson = JsonConvert.DeserializeObject(data);
+                dynamic paymentRequest =
+                    DirectPaymentsHelper.ParsePaymentRequest(data, this.bankConfigurationHelper.CentralApiPublicKey);
 
-                string paymentInfoJson = deserializedJson.PaymentInfo;
-                string returnUrl = deserializedJson.ReturnUrl;
-
-                if (!ValidateSignatures(deserializedJson))
+                if (paymentRequest == null)
                 {
                     return this.PaymentFailed(NotificationMessages.PaymentStateInvalid);
                 }
 
-                dynamic paymentInfo = JsonConvert.DeserializeObject(paymentInfoJson);
-                if (paymentInfo.Amount <= 0)
-                {
-                    return this.PaymentFailed(NotificationMessages.PaymentStateInvalid);
-                }
+                dynamic paymentInfo = DirectPaymentsHelper.GetPaymentInfo(paymentRequest);
+
+                string returnUrl = paymentRequest.ReturnUrl;
 
                 // transfer money to destination account
                 var serviceModel = new GlobalTransferServiceModel
@@ -185,58 +175,20 @@ namespace BankSystem.Web.Controllers
                 this.Response.Cookies.Delete(PaymentDataCookie);
 
                 // return signed success response
-                var responseJson = this.GenerateSuccessResponseJson(deserializedJson);
-                var encodedResponse = Convert.ToBase64String(Encoding.UTF8.GetBytes(responseJson));
+                var response = DirectPaymentsHelper.GenerateSuccessResponse(paymentRequest,
+                    this.bankConfigurationHelper.Key);
 
                 return this.Ok(new
                 {
                     success = true,
                     returnUrl = HttpUtility.HtmlEncode(returnUrl),
-                    data = encodedResponse
+                    data = response
                 });
             }
             catch
             {
                 return this.PaymentFailed(NotificationMessages.PaymentStateInvalid);
             }
-        }
-
-        private string GenerateSuccessResponseJson(dynamic deserializedJson)
-        {
-            // generate PaymentConfirmation
-            var paymentConfirmation = new
-            {
-                Success = true,
-                deserializedJson.PaymentProofSignature
-            };
-
-            var paymentConfirmationJson = JsonConvert.SerializeObject(paymentConfirmation);
-
-            // sign the PaymentConfirmation
-            string paymentConfirmationSignature;
-
-            using (var bankRsa = RSA.Create())
-            {
-                RsaExtensions.FromXmlString(bankRsa, this.bankConfigurationHelper.Key);
-
-                paymentConfirmationSignature = Convert.ToBase64String(
-                    bankRsa.SignData(
-                        Encoding.UTF8.GetBytes(paymentConfirmationJson),
-                        HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
-            }
-
-            // generate response
-            var response = new
-            {
-                deserializedJson.PaymentInfo,
-                deserializedJson.PaymentProof,
-                PaymentConfirmation = paymentConfirmationJson,
-                PaymentConfirmationSignature = paymentConfirmationSignature
-            };
-
-            var responseJson = JsonConvert.SerializeObject(response);
-
-            return responseJson;
         }
 
         private IActionResult PaymentFailed(string message)
@@ -248,54 +200,12 @@ namespace BankSystem.Web.Controllers
             });
         }
 
-        private bool ValidateSignatures(dynamic data)
-        {
-            string paymentInfoJson = data.PaymentInfo;
-            string centralApiPaymentInfoSignature = data.PaymentInfoSignature;
-            string paymentProofJson = data.PaymentProof;
-            string paymentProofSignature = data.PaymentProofSignature;
-
-            // validate signatures of PaymentInfo and PaymentProof
-            using (var centralApiRsa = RSA.Create())
-            {
-                RsaExtensions.FromXmlString(centralApiRsa, this.bankConfigurationHelper.CentralApiPublicKey);
-
-                bool isPaymentInfoSignatureValid = centralApiRsa.VerifyData(
-                    Encoding.UTF8.GetBytes(paymentInfoJson),
-                    Convert.FromBase64String(centralApiPaymentInfoSignature),
-                    HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-
-                bool isPaymentProofSignatureValid = centralApiRsa.VerifyData(
-                    Encoding.UTF8.GetBytes(paymentProofJson),
-                    Convert.FromBase64String(paymentProofSignature),
-                    HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-
-                return isPaymentInfoSignatureValid && isPaymentProofSignatureValid;
-            }
-        }
-
         private async Task<OwnBankAccountListingViewModel[]> GetAllAccountsAsync(string userId)
         {
             return (await this.bankAccountService
                     .GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(userId))
                 .Select(Mapper.Map<OwnBankAccountListingViewModel>)
                 .ToArray();
-        }
-
-        private static string Sha256Hash(string data)
-        {
-            using (var sha256Hash = SHA256.Create())
-            {
-                var bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(data));
-
-                var builder = new StringBuilder();
-                foreach (var bt in bytes)
-                {
-                    builder.Append(bt.ToString("x2"));
-                }
-
-                return builder.ToString();
-            }
         }
     }
 }
