@@ -49,7 +49,7 @@
                 return this.RedirectToPage("./Index");
             }
 
-            await this.LoadSharedKeyAndQrCodeUriAsync(user);
+            await this.LoadSharedKeyAndQrCodeUriAsync(user, true);
 
             return this.Page();
         }
@@ -72,7 +72,7 @@
                 await this.LoadSharedKeyAndQrCodeUriAsync(user);
                 return this.Page();
             }
-            
+
             var isPasswordCorrect = await this.userManager.CheckPasswordAsync(user, this.Input.Password);
             if (!isPasswordCorrect)
             {
@@ -103,13 +103,16 @@
             return this.RedirectToPage("./Index");
         }
 
-        private async Task LoadSharedKeyAndQrCodeUriAsync(BankUser user)
+        private async Task LoadSharedKeyAndQrCodeUriAsync(BankUser user, bool resetKey = false)
         {
-            string unformattedKey = await this.userManager.GetAuthenticatorKeyAsync(user);
-            if (string.IsNullOrEmpty(unformattedKey))
+            string unformattedKey;
+            if (resetKey ||
+                string.IsNullOrEmpty(unformattedKey = await this.userManager.GetAuthenticatorKeyAsync(user)))
             {
                 await this.userManager.ResetAuthenticatorKeyAsync(user);
                 unformattedKey = await this.userManager.GetAuthenticatorKeyAsync(user);
+
+                await this.signInManager.RefreshSignInAsync(user);
             }
 
             this.SharedKey = this.FormatKey(unformattedKey);
