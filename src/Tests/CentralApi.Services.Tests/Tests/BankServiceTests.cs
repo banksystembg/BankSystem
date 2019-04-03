@@ -193,6 +193,41 @@
                 .BeAssignableTo<BankListingServiceModel>();
         }
 
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("    !")]
+        [InlineData("totally invalid id")]
+        public async Task GetBankByBankIdentificationCardNumbersAsync_WithInvalidIdentificationNumber_ShouldReturnNull(string identificationNumbers)
+        {
+            // Arrange
+            await this.SeedBanks(10);
+
+            // Act
+            var result = await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankServiceModel>(identificationNumbers);
+
+            // Assert
+            result
+                .Should()
+                .BeNull();
+        }
+
+        [Fact]
+        public async Task GetBankByBankIdentificationCardNumbersAsync_WitValidIdentificationNumber_ShouldReturnCorrectEntity()
+        {
+            // Arrange
+            const string expectedId = "1";
+            await this.dbContext.Banks.AddAsync(new Bank { Id = expectedId, BankIdentificationCardNumbers = SampleIdentificationNumbers });
+            await this.dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankListingServiceModel>(SampleIdentificationNumbers);
+
+            // Assert
+            result
+                .Should()
+                .Match(x => x.As<BankListingServiceModel>().Id == expectedId);
+        }
+
         private async Task SeedBanks(int count)
         {
             var banks = new List<Bank>();
