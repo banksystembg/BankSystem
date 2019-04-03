@@ -93,6 +93,58 @@
                 .Match(b => b.As<BankListingServiceModel>().Id == expectedBank.Id);
         }
 
+        [Fact]
+        public async Task GetAllBanksSupportingPaymentsAsync_ShouldReturnOnlyBanks_With_NonNullablePaymentUrls()
+        {
+            // Arrange
+            const int count = 10;
+            await this.SeedBanks(count);
+
+            // Seed one more bank which doesn't support payments
+            await this.dbContext.Banks.AddAsync(new Bank());
+            await this.dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await this.banksService.GetAllBanksSupportingPaymentsAsync<BankListingServiceModel>();
+
+            // Assert
+            result
+                .Should()
+                .HaveCount(count);
+        }
+
+        [Fact]
+        public async Task GetAllBanksSupportingPaymentsAsync_ShouldReturnCorrectModel()
+        {
+            // Arrange
+            await this.SeedBanks(3);
+
+            // Act
+            var result = await this.banksService.GetAllBanksSupportingPaymentsAsync<BankListingServiceModel>();
+
+            // Assert
+            result
+                .Should()
+                .AllBeAssignableTo<BankListingServiceModel>();
+        }
+
+        [Fact]
+        public async Task GetAllBanksSupportingPaymentsAsync_ShouldOrderByLocationAndThenByName()
+        {
+            // Arrange
+            await this.SeedBanks(10);
+
+            // Act
+            var result = await this.banksService.GetAllBanksSupportingPaymentsAsync<BankListingServiceModel>();
+
+            // Assert
+            result
+                .Should()
+                .BeInAscendingOrder(b => b.Location)
+                .And
+                .BeInAscendingOrder(b => b.Name);
+        }
+
         private async Task SeedBanks(int count)
         {
             var banks = new List<Bank>();
