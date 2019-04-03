@@ -48,18 +48,15 @@ namespace BankSystem.Common
             "Payment details are invalid or have expired. Please try again later.";
 
         public const string SuccessfulRegistration =
-            "Thank you for registering. Please confirm your email by clicking the link which "
-            + "we have just send you to the email address in order to proceed forward. "
-            + "If you don't receive email within 5 minutes simply go to the login page and login with the credentials you've just used to register, "
-            + "then follow the instructions to verify your email";
+                   "Thank you for registering. To activate your account, please follow the link we have sent you by email";
 
-        public const string EmailVerificationLinkSendSuccessfully =
-            "We have just send you an email with verification link. Please click the link to activate your account.";
+        public const string EmailVerificationLinkResentSuccessfully =
+            "Account activation link sent successfully";
 
         public const string SuccessfulEmailVerification =
-            "You've successfully activated your account. You can now log in.";
+            "Account activated. You can now log in.";
 
         public const string EmailVerificationFailed =
-            "An error occured while verifying your email. Please try again later and if this error continues to occur contact our support center";
+            "An error occured while verifying your email. Please try again later and if this error continues to occur, contact our support center";
     }
 }
