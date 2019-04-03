@@ -40,7 +40,7 @@
             }
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulEmailVerification);
-            return this.RedirectToPage(LoginPage);
+            return this.RedirectToLoginPage();
         }
     }
 }

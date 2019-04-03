@@ -62,13 +62,13 @@
 
             var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = this.Url.Page(
-                EmailConfirmationPage,
+                EmailMessages.EmailConfirmationPage,
                 null,
                 new { userId = user.Id, code },
                 this.Request.Scheme);
             await this.emailSender.SendEmailAsync(GlobalConstants.BankSystemEmail, this.Input.Email,
-                EmailSubject,
-                string.Format(EmailMessage, HtmlEncoder.Default.Encode(callbackUrl)));
+                EmailMessages.ConfirmEmailSubject,
+                string.Format(EmailMessages.EmailConfirmationMessage, HtmlEncoder.Default.Encode(callbackUrl)));
 
             this.ShowSuccessMessage(NotificationMessages.EmailVerificationLinkResentSuccessfully);
             return this.RedirectToHome();
