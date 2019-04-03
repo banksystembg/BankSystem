@@ -14,9 +14,6 @@
     [AllowAnonymous]
     public class LoginModel : BasePageModel
     {
-        private const string EmailNotVerified =
-            "Your email is not verified. Please verify your email by clicking <a href=\"{0}\">here</a>";
-
         private const string SendEmailPage = "/Account/SendEmailVerification";
 
         private readonly ILogger<LoginModel> logger;
@@ -91,11 +88,7 @@
 
                 if (result.IsNotAllowed)
                 {
-                    var url = this.Url.Page(SendEmailPage);
-
-                    this.TempData[GlobalConstants.TempDataRawHtmlKey] =
-                        string.Format(EmailNotVerified, HtmlEncoder.Default.Encode(url));
-                    return this.Page();
+                    return this.RedirectToPage(SendEmailPage);
                 }
 
                 this.ShowErrorMessage(NotificationMessages.InvalidCredentials);
