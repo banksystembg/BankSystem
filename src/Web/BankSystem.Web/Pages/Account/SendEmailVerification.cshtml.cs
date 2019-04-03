@@ -57,7 +57,7 @@
             if (isEmailConfirmed)
             {
                 this.ShowErrorMessage(NotificationMessages.EmailAlreadyVerified);
-                return this.RedirectToHome();
+                return this.RedirectToLoginPage();
             }
 
             var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
