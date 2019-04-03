@@ -9,6 +9,7 @@ namespace BankSystem.Web.Pages
         protected const string EmailSubject = "Confirm your email";
         protected const string EmailMessage = "Please confirm your email by <a href=\"{0}\">clicking here</a>.";
         protected const string EmailConfirmationPage = "/Account/ConfirmEmail";
+        protected const string LoginPage = "/Account/Login";
 
         public IActionResult RedirectToHome() => this.RedirectToAction("Index", "Home");
 
