@@ -58,5 +58,7 @@ namespace BankSystem.Common
 
         public const string EmailVerificationFailed =
             "An error occured while verifying your email. Please try again later and if this error continues to occur, contact our support center";
+
+        public const string EmailAlreadyVerified = "Email is already verified.";
     }
 }

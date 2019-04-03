@@ -53,6 +53,13 @@
                 return this.Page();
             }
 
+            bool isEmailConfirmed = await this.signInManager.UserManager.IsEmailConfirmedAsync(user);
+            if (isEmailConfirmed)
+            {
+                this.ShowErrorMessage(NotificationMessages.EmailAlreadyVerified);
+                return this.RedirectToHome();
+            }
+
             var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = this.Url.Page(
                 EmailConfirmationPage,
@@ -63,7 +70,7 @@
                 EmailSubject,
                 string.Format(EmailMessage, HtmlEncoder.Default.Encode(callbackUrl)));
 
-            this.ShowSuccessMessage(NotificationMessages.EmailVerificationLinkSendSuccessfully);
+            this.ShowSuccessMessage(NotificationMessages.EmailVerificationLinkResentSuccessfully);
             return this.RedirectToHome();
         }
 
