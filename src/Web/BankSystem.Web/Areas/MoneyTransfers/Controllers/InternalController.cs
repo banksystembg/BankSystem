@@ -98,7 +98,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             sourceServiceModel.Source = account.UniqueId;
             sourceServiceModel.Amount *= -1;
             sourceServiceModel.SenderName = account.UserFullName;
-            sourceServiceModel.RecipientName = account.UserFullName;
+            sourceServiceModel.RecipientName = destinationAccount.UserFullName;
 
             if (!await this.moneyTransferService.CreateMoneyTransferAsync(sourceServiceModel))
             {
