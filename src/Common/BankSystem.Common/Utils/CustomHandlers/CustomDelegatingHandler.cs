@@ -31,24 +31,25 @@
                 RsaExtensions.FromXmlString(rsa, this.bankKey);
                 var aesParams = CryptographyExtensions.GenerateKey();
                 var key = Convert.FromBase64String(aesParams[0]);
-                var IV = Convert.FromBase64String(aesParams[1]);
+                var iv = Convert.FromBase64String(aesParams[1]);
 
                 var content = await request.Content.ReadAsByteArrayAsync();
                 var signedData = rsa.SignData(content, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-                var requestSignedData = CryptographyExtensions.Encrypt(Convert.ToBase64String(signedData), key, IV);
 
                 string encryptedKey;
-                string encryptedIV;
+                string encryptedIv;
                 using (var encryptionRsa = RSA.Create())
                 {
                     RsaExtensions.FromXmlString(encryptionRsa, this.apiSigningKey);
-                    encryptedKey = Convert.ToBase64String(encryptionRsa.Encrypt(Convert.FromBase64String(aesParams[0]), RSAEncryptionPadding.Pkcs1));
-                    encryptedIV = Convert.ToBase64String(encryptionRsa.Encrypt(Convert.FromBase64String(aesParams[1]), RSAEncryptionPadding.Pkcs1));
+                    encryptedKey = Convert.ToBase64String(encryptionRsa.Encrypt(key, RSAEncryptionPadding.Pkcs1));
+                    encryptedIv = Convert.ToBase64String(encryptionRsa.Encrypt(iv, RSAEncryptionPadding.Pkcs1));
                 }
 
                 //Setting the values in the Authorization header using custom scheme (bsw)
+                var dataToSend = $"{this.bankName},{this.bankSwiftCode},{this.bankCountry},{Convert.ToBase64String(signedData)}";
+                var encryptedData = CryptographyExtensions.Encrypt(dataToSend, key, iv);
                 request.Headers.Authorization = new AuthenticationHeaderValue(GlobalConstants.AuthenticationScheme,
-                    $"{this.bankName},{this.bankSwiftCode},{this.bankCountry},{encryptedKey},{encryptedIV},{Convert.ToBase64String(requestSignedData)}");
+                    $"{encryptedKey},{encryptedIv},{Convert.ToBase64String(encryptedData)}");
 
                 var response = await base.SendAsync(request, cancellationToken);
 

@@ -33,9 +33,9 @@
             if (authHeader != null)
             {
                 var encryptedKey = authHeader[0].Remove(0, GlobalConstants.AuthenticationScheme.Length).Trim();
-                var encryptedIV = authHeader[1];
-                var incomingBase64Signature = authHeader[2];
-                var isValid = this.IsValidRequest(context, encryptedKey, encryptedIV, incomingBase64Signature);
+                var encryptedIv = authHeader[1];
+                var incomingData = authHeader[2];
+                var isValid = this.IsValidRequest(context, encryptedKey, encryptedIv, incomingData);
 
                 if (!isValid)
                 {
@@ -51,8 +51,8 @@
         private bool IsValidRequest(
             ActionExecutingContext context,
             string encryptedKey,
-            string encryptedIV,
-            string incomingBase64Signature)
+            string encryptedIv,
+            string incomingData)
         {
             var request = context.HttpContext.Request;
 
@@ -74,24 +74,22 @@
                 this.configuration = configOptions?.Value;
 
                 // Decrypt
-                string decrypted;
+                string decryptedSignature;
                 using (var rsa = RSA.Create())
                 {
                     RsaExtensions.FromXmlString(rsa, this.configuration?.Key);
                     var decryptedKey = rsa.Decrypt(Convert.FromBase64String(encryptedKey), RSAEncryptionPadding.Pkcs1);
-                    var decryptedIV = rsa.Decrypt(Convert.FromBase64String(encryptedIV), RSAEncryptionPadding.Pkcs1);
+                    var decryptedIv = rsa.Decrypt(Convert.FromBase64String(encryptedIv), RSAEncryptionPadding.Pkcs1);
 
-                    decrypted = CryptographyExtensions.Decrypt(Convert.FromBase64String(incomingBase64Signature),
-                        decryptedKey, decryptedIV);
+                    decryptedSignature = CryptographyExtensions.Decrypt(Convert.FromBase64String(incomingData), decryptedKey, decryptedIv);
                 }
 
-                // Verify signature with central api key
+                // Verify signature with bank api key
                 using (var rsa = RSA.Create())
                 {
                     RsaExtensions.FromXmlString(rsa, this.configuration?.CentralApiPublicKey);
-                    var isVerified = rsa
-                        .VerifyData(signature, Convert.FromBase64String(decrypted), HashAlgorithmName.SHA256,
-                            RSASignaturePadding.Pkcs1);
+                    var decrypt = Convert.FromBase64String(decryptedSignature);
+                    var isVerified = rsa.VerifyData(signature, decrypt, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
                     return isVerified;
                 }
