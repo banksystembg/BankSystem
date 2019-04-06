@@ -1,4 +1,4 @@
-namespace BankSystem.Web.PaymentHelpers
+namespace BankSystem.Web.Infrastructure.Helpers
 {
     using System;
     using System.Security.Cryptography;
