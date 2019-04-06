@@ -6,11 +6,12 @@
     using AutoMapper;
     using Common;
     using Infrastructure.Filters;
+    using Infrastructure.Helpers.GlobalTransferHelpers;
+    using Infrastructure.Helpers.GlobalTransferHelpers.Models;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Interfaces;
     using Services.Models.Card;
-    using Services.Models.GlobalTransfer;
 
     [Route("api/[controller]")]
     [IgnoreAntiforgeryToken]
@@ -59,7 +60,7 @@
                 return this.BadRequest();
             }
 
-            var serviceModel = Mapper.Map<GlobalTransferServiceModel>(model);
+            var serviceModel = Mapper.Map<GlobalTransferDto>(model);
             serviceModel.SourceAccountId = card.AccountId;
 
             var result = await this.globalTransferHelper.TransferMoneyAsync(serviceModel);

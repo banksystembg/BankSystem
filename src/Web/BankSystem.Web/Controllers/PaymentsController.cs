@@ -8,15 +8,16 @@ namespace BankSystem.Web.Controllers
     using System.Web;
     using AutoMapper;
     using Common;
+    using Infrastructure.Helpers;
+    using Infrastructure.Helpers.GlobalTransferHelpers;
+    using Infrastructure.Helpers.GlobalTransferHelpers.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Models.BankAccount;
-    using PaymentHelpers;
     using Services.Interfaces;
     using Services.Models.BankAccount;
-    using Services.Models.GlobalTransfer;
 
     [Authorize]
     public class PaymentsController : BaseController
@@ -150,7 +151,7 @@ namespace BankSystem.Web.Controllers
                 string returnUrl = paymentRequest.ReturnUrl;
 
                 // transfer money to destination account
-                var serviceModel = new GlobalTransferServiceModel
+                var serviceModel = new GlobalTransferDto
                 {
                     Amount = paymentInfo.Amount,
                     Description = paymentInfo.Description,

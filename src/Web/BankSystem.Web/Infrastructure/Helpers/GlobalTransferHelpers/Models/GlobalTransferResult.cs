@@ -1,4 +1,4 @@
-namespace BankSystem.Services.Models.GlobalTransfer
+namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers.Models
 {
     public enum GlobalTransferResult
     {

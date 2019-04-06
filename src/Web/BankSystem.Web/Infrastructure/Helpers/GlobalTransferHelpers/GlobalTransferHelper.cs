@@ -1,15 +1,17 @@
-namespace BankSystem.Services.Implementations
+namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
 {
+    using System;
     using System.Net.Http;
+    using System.Security.Cryptography;
+    using System.Text;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Common.AutoMapping.Interfaces;
     using Common.Utils;
-    using Common.Utils.CustomHandlers;
-    using Interfaces;
-    using Models.BankAccount;
-    using Models.GlobalTransfer;
-    using Models.MoneyTransfer;
+    using Models;
+    using Newtonsoft.Json;
+    using Services.Interfaces;
+    using Services.Models.BankAccount;
+    using Services.Models.MoneyTransfer;
 
     public class GlobalTransferHelper : IGlobalTransferHelper
     {
@@ -29,7 +31,7 @@ namespace BankSystem.Services.Implementations
             this.bankConfigurationHelper = bankConfigurationHelper;
         }
 
-        public async Task<GlobalTransferResult> TransferMoneyAsync(GlobalTransferServiceModel model)
+        public async Task<GlobalTransferResult> TransferMoneyAsync(GlobalTransferDto model)
         {
             if (!ValidationUtil.IsObjectValid(model))
             {
@@ -57,7 +59,6 @@ namespace BankSystem.Services.Implementations
             submitDto.SenderAccountUniqueId = account.UniqueId;
 
             bool remoteSuccess = await this.ContactCentralApiAsync(submitDto);
-
             if (!remoteSuccess)
             {
                 return GlobalTransferResult.GeneralFailure;
@@ -76,47 +77,58 @@ namespace BankSystem.Services.Implementations
             };
 
             bool success = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);
-
             return !success ? GlobalTransferResult.GeneralFailure : GlobalTransferResult.Succeeded;
         }
 
         private async Task<bool> ContactCentralApiAsync(CentralApiSubmitTransferDto model)
         {
-            var customHandler = new CustomDelegatingHandler(
-                this.bankConfigurationHelper.CentralApiPublicKey,
-                this.bankConfigurationHelper.Key,
-                this.bankConfigurationHelper.BankName,
-                this.bankConfigurationHelper.UniqueIdentifier,
-                this.bankConfigurationHelper.BankCountry);
+            var encryptedData = this.SignAndEncryptData(model);
 
-            var client = HttpClientFactory.Create(customHandler);
-
+            var client = new HttpClient();
             var response = await client.PostAsJsonAsync(
                 string.Format(CentralApiTransferSubmitUrlFormat, this.bankConfigurationHelper.CentralApiAddress),
-                model);
+                encryptedData);
 
             return response.IsSuccessStatusCode;
         }
 
-        private class CentralApiSubmitTransferDto : IMapWith<GlobalTransferServiceModel>
+        private string SignAndEncryptData(CentralApiSubmitTransferDto model)
         {
-            public string Description { get; set; }
+            using (var rsa = RSA.Create())
+            {
+                RsaExtensions.FromXmlString(rsa, this.bankConfigurationHelper.Key);
+                var aesParams = CryptographyExtensions.GenerateKey();
+                var key = Convert.FromBase64String(aesParams[0]);
+                var iv = Convert.FromBase64String(aesParams[1]);
 
-            public decimal Amount { get; set; }
+                var signedData = rsa
+                    .SignData(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model)), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
-            public string SenderName { get; set; }
+                string encryptedKey;
+                string encryptedIv;
+                using (var encryptionRsa = RSA.Create())
+                {
+                    RsaExtensions.FromXmlString(encryptionRsa, this.bankConfigurationHelper.CentralApiPublicKey);
+                    encryptedKey = Convert.ToBase64String(encryptionRsa.Encrypt(key, RSAEncryptionPadding.Pkcs1));
+                    encryptedIv = Convert.ToBase64String(encryptionRsa.Encrypt(iv, RSAEncryptionPadding.Pkcs1));
+                }
 
-            public string RecipientName { get; set; }
+                var json = new
+                {
+                    this.bankConfigurationHelper.BankName,
+                    BankSwiftCode = this.bankConfigurationHelper.UniqueIdentifier,
+                    this.bankConfigurationHelper.BankCountry,
+                    EncryptedKey = encryptedKey,
+                    EncryptedIv = encryptedIv,
+                    Data = Convert.ToBase64String(CryptographyExtensions.Encrypt(JsonConvert.SerializeObject(model), key, iv)),
+                    SignedData = Convert.ToBase64String(signedData)
+                };
 
-            public string SenderAccountUniqueId { get; set; }
+                var jsonRequest = JsonConvert.SerializeObject(json);
+                var encryptedData = Convert.ToBase64String(Encoding.UTF8.GetBytes(jsonRequest));
 
-            public string DestinationBankSwiftCode { get; set; }
-
-            public string DestinationBankName { get; set; }
-
-            public string DestinationBankCountry { get; set; }
-
-            public string DestinationBankAccountUniqueId { get; set; }
+                return encryptedData;
+            }
         }
     }
 }

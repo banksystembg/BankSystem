@@ -5,11 +5,12 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using Common;
+    using Infrastructure.Helpers.GlobalTransferHelpers;
+    using Infrastructure.Helpers.GlobalTransferHelpers.Models;
     using Microsoft.AspNetCore.Mvc;
     using Models.Global.Create;
     using Services.Interfaces;
     using Services.Models.BankAccount;
-    using Services.Models.GlobalTransfer;
 
     public class GlobalController : BaseMoneyTransferController
     {
@@ -76,7 +77,7 @@
                 return this.View(model);
             }
 
-            var serviceModel = Mapper.Map<GlobalTransferServiceModel>(model);
+            var serviceModel = Mapper.Map<GlobalTransferDto>(model);
             serviceModel.SourceAccountId = model.AccountId;
             serviceModel.RecipientName = model.DestinationBank.Account.UserFullName;
 
@@ -92,12 +93,10 @@
                 }
 
                 this.ShowErrorMessage(NotificationMessages.TryAgainLaterError);
-
                 return this.RedirectToHome();
             }
 
             this.ShowSuccessMessage(NotificationMessages.SuccessfulMoneyTransfer);
-
             return this.RedirectToHome();
         }
     }
