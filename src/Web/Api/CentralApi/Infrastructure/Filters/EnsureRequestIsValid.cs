@@ -5,9 +5,7 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
-    using BankSystem.Common;
     using BankSystem.Common.Utils;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Options;
@@ -22,43 +20,22 @@
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var request = context.HttpContext.Request;
-            // check the scheme and auth header
-            if (!request.Headers.ContainsKey(GlobalConstants.AuthorizationHeader) && !request.Headers[GlobalConstants.AuthorizationHeader][0]
-                    .Contains(GlobalConstants.AuthenticationScheme, StringComparison.Ordinal))
+            var isValid = this.IsValidRequest(context)
+                .GetAwaiter()
+                .GetResult();
+
+            if (!isValid)
             {
                 context.Result = new ForbidResult();
 
                 return;
             }
 
-            var authHeader = request.Headers.GetCommaSeparatedValues(GlobalConstants.AuthorizationHeader);
-            if (authHeader != null)
-            {
-                var encryptedKey = authHeader[0].Remove(0, GlobalConstants.AuthenticationScheme.Length).Trim();
-                var encryptedIv = authHeader[1];
-                var incomingData = authHeader[2];
-
-                var isValid = this.IsValidRequest(context, encryptedKey, encryptedIv, incomingData)
-                    .GetAwaiter()
-                    .GetResult();
-
-                if (!isValid)
-                {
-                    context.Result = new ForbidResult();
-
-                    return;
-                }
-            }
-
             base.OnActionExecuting(context);
         }
 
         private async Task<bool> IsValidRequest(
-            ActionExecutingContext context,
-            string encryptedKey,
-            string encryptedIv,
-            string incomingData)
+            ActionExecutingContext context)
         {
             var request = context.HttpContext.Request;
             var bankService = request.HttpContext.RequestServices.GetService(typeof(IBanksService)) as BanksService;
@@ -67,51 +44,53 @@
             this.configuration = configOptions?.Value;
 
             var actionArguments = context.ActionArguments;
-            if (actionArguments.Values != null)
+            var model = actionArguments.Values?.First();
+
+            if (model == null)
             {
-                var model = ActionArgumentsUtil.GetModel(actionArguments);
-
-                if (model == null)
-                {
-                    return false;
-                }
-
-                // Decrypt
-                string decrypted;
-                using (var rsa = RSA.Create())
-                {
-                    RsaExtensions.FromXmlString(rsa, this.configuration?.Key);
-                    var decryptedKey = rsa.Decrypt(Convert.FromBase64String(encryptedKey), RSAEncryptionPadding.Pkcs1);
-                    var decryptedIv = rsa.Decrypt(Convert.FromBase64String(encryptedIv), RSAEncryptionPadding.Pkcs1);
-
-                    decrypted = CryptographyExtensions.Decrypt(Convert.FromBase64String(incomingData), decryptedKey, decryptedIv);
-                }
-
-                var dataArgs = decrypted
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .ToArray();
-
-                var bank = await bankService.GetBankAsync<BankServiceModel>(dataArgs[0], dataArgs[1], dataArgs[2]);
-                if (bank.ApiKey == null)
-                {
-                    return false;
-                }
-
-                var serializedModel = JsonConvert.SerializeObject(model);
-                var signature = Encoding.UTF8.GetBytes(serializedModel);
-
-                // Verify signature with bank api key
-                using (var rsa = RSA.Create())
-                {
-                    RsaExtensions.FromXmlString(rsa, bank.ApiKey);
-                    var decrypt = Convert.FromBase64String(dataArgs[3]);
-                    var isVerified = rsa.VerifyData(signature, decrypt, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-
-                    return isVerified;
-                }
+                return false;
             }
 
-            return false;
+            var incomingData = Encoding.UTF8.GetString(Convert.FromBase64String(model.ToString()));
+            dynamic deserializedData = JsonConvert.DeserializeObject(incomingData);
+            var bankName = deserializedData.BankName.ToString();
+            var bankSwiftCode = deserializedData.BankSwiftCode.ToString();
+            var bankCountry = deserializedData.BankCountry.ToString();
+
+            var bank = await bankService.GetBankAsync<BankServiceModel>(bankName, bankSwiftCode,
+                bankCountry);
+
+            if (bank == null)
+            {
+                return false;
+            }
+
+            var encryptedKey = deserializedData.EncryptedKey.ToString();
+            var encryptedIv = deserializedData.EncryptedIv.ToString();
+            var data = deserializedData.Data.ToString();
+            var signature = deserializedData.SignedData.ToString();
+
+            // Decrypt
+            string decrypted;
+            using (var rsa = RSA.Create())
+            {
+                RsaExtensions.FromXmlString(rsa, this.configuration?.Key);
+                var decryptedKey = rsa.Decrypt(Convert.FromBase64String(encryptedKey), RSAEncryptionPadding.Pkcs1);
+                var decryptedIv = rsa.Decrypt(Convert.FromBase64String(encryptedIv), RSAEncryptionPadding.Pkcs1);
+
+                decrypted = CryptographyExtensions.Decrypt(Convert.FromBase64String(data), decryptedKey, decryptedIv);
+            }
+
+            // Verify
+            using (var rsa = RSA.Create())
+            {
+                RsaExtensions.FromXmlString(rsa, bank.ApiKey);
+
+                var decrypt = Encoding.UTF8.GetBytes(decrypted);
+                var isVerified = rsa.VerifyData(decrypt, Convert.FromBase64String(signature), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+                return isVerified;
+            }
         }
     }
 }
