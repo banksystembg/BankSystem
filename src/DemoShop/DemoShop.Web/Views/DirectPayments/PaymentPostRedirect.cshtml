@@ -7,14 +7,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Redirecting</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Processing</title>
+    <style>
+        html, body, main {
+            width: 100%;
+            height: 100%;
+            background-color: #f3f3f3;
+            margin: 0;
+        }
+
+        main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        h2 { font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; }
+
+        .loader {
+            border: 0.5em solid transparent;
+            border-radius: 50%;
+            border-top: 0.5em solid #007bff;
+            width: 5em;
+            height: 5em;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @@keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-
-<h4>Redirecting...</h4>
-<form id="redirectForm" method="post" action="@Model.Url" asp-antiforgery="false">
-    <input type="hidden" name="@Model.PaymentDataFormKey" value="@Model.PaymentData"/>
-</form>
+<main>
+    <div class="loader"></div>
+    <h2>Processing...</h2>
+    <form id="redirectForm" method="post" action="@Model.Url" asp-antiforgery="false">
+        <input type="hidden" name="@Model.PaymentDataFormKey" value="@Model.PaymentData"/>
+    </form>
+</main>
 
 <script>
     window.onload = function() {
