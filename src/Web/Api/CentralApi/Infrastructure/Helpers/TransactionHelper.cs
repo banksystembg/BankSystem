@@ -4,15 +4,15 @@
     using System.Security.Cryptography;
     using System.Text;
     using BankSystem.Common.Utils;
-    using Models;
     using Newtonsoft.Json;
 
     public static class TransactionHelper
     {
-        public static string SignAndEncryptData(
-            SendTransactionModel model,
+        public static string SignAndEncryptData<T>(
+            T model,
             string apiSigningKey,
             string bankKey)
+            where T : class
         {
             // Sign data with api private key
             using (var rsa = RSA.Create())
@@ -22,7 +22,7 @@
                 var key = Convert.FromBase64String(aesParams[0]);
                 var iv = Convert.FromBase64String(aesParams[1]);
 
-                var signedData = Convert.ToBase64String(rsa
+                var signature = Convert.ToBase64String(rsa
                     .SignData(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model)), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
 
                 // Encrypt with bank public key
@@ -40,7 +40,7 @@
                     EncryptedKey = encryptedKey,
                     EncryptedIv = encryptedIv,
                     Data = Convert.ToBase64String(CryptographyExtensions.Encrypt(JsonConvert.SerializeObject(model), key, iv)),
-                    SignedData = signedData
+                    Signature = signature
                 };
 
                 var serializedJson = JsonConvert.SerializeObject(json);

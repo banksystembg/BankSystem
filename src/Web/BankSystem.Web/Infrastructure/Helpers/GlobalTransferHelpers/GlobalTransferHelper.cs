@@ -101,8 +101,8 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
                 var key = Convert.FromBase64String(aesParams[0]);
                 var iv = Convert.FromBase64String(aesParams[1]);
 
-                var signedData = rsa
-                    .SignData(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model)), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                var signature = Convert.ToBase64String(rsa
+                    .SignData(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model)), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
 
                 string encryptedKey;
                 string encryptedIv;
@@ -121,7 +121,7 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
                     EncryptedKey = encryptedKey,
                     EncryptedIv = encryptedIv,
                     Data = Convert.ToBase64String(CryptographyExtensions.Encrypt(JsonConvert.SerializeObject(model), key, iv)),
-                    SignedData = Convert.ToBase64String(signedData)
+                    Signature = signature
                 };
 
                 var jsonRequest = JsonConvert.SerializeObject(json);
