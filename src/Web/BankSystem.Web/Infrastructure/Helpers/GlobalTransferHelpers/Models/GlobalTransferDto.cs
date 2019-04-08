@@ -1,9 +1,9 @@
-namespace BankSystem.Services.Models.GlobalTransfer
+namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers.Models
 {
     using System.ComponentModel.DataAnnotations;
     using Common;
 
-    public class GlobalTransferServiceModel
+    public class GlobalTransferDto
     {
         [Required]
         public string SourceAccountId { get; set; }

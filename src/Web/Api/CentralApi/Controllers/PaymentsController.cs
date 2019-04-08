@@ -4,11 +4,11 @@ namespace CentralApi.Controllers
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Infrastructure.Helpers.PaymentHelpers;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Models;
-    using PaymentHelpers;
     using Services.Interfaces;
     using Services.Models.Banks;
 

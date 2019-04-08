@@ -3,7 +3,9 @@ namespace BankSystem.Services.Implementations
     using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
+    using Common.Configuration;
     using Interfaces;
+    using Microsoft.Extensions.Options;
 
     public class BankAccountUniqueIdHelper : IBankAccountUniqueIdHelper
     {
@@ -16,12 +18,12 @@ namespace BankSystem.Services.Implementations
          * 
          */
 
-        private readonly IBankConfigurationHelper bankConfiguration;
+        private readonly BankConfiguration bankConfiguration;
         private Random random;
 
-        public BankAccountUniqueIdHelper(IBankConfigurationHelper bankConfiguration)
+        public BankAccountUniqueIdHelper(IOptions<BankConfiguration> bankConfigurationOptions)
         {
-            this.bankConfiguration = bankConfiguration;
+            this.bankConfiguration = bankConfigurationOptions.Value;
         }
 
         public string GenerateAccountUniqueId()

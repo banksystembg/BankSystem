@@ -26,8 +26,7 @@
         {
 
             this.dbContext = base.DatabaseInstance;
-            this.bankAccountService = new BankAccountService(this.dbContext, new BankAccountUniqueIdHelper(
-                new BankConfigurationHelper(base.MockedBankConfiguration.Object)));
+            this.bankAccountService = new BankAccountService(this.dbContext, new BankAccountUniqueIdHelper(base.MockedBankConfiguration.Object));
         }
 
         [Fact]

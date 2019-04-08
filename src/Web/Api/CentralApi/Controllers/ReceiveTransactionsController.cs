@@ -6,15 +6,17 @@
     using AutoMapper;
     using Infrastructure.Filters;
     using Infrastructure.Handlers;
+    using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Models;
+    using Newtonsoft.Json;
     using Services.Interfaces;
     using Services.Models.Banks;
 
     [Route("api/[controller]")]
     [ApiController]
-    [EnsureRequestIsValid]
+    [DecryptAndVerifyRequest]
     public class ReceiveTransactionsController : ControllerBase
     {
         private const string BankRefusedTheRequestMessage = "{0} refused the transfer. If this error continues to occur please contact our support center";
@@ -31,8 +33,9 @@
 
         // POST api/values
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ReceiveTransactionModel model)
+        public async Task<IActionResult> Post([FromBody] string data)
         {
+            var model = JsonConvert.DeserializeObject<ReceiveTransactionModel>(data);
             var bank = await this.banksService.GetBankAsync<BankServiceModel>(model.DestinationBankName, model.DestinationBankSwiftCode,
                 model.DestinationBankCountry);
 
@@ -41,10 +44,10 @@
                 return this.NotFound(string.Format(BankNotFound, model.DestinationBankName));
             }
 
-            var customHandler = new CustomCentralApiDelegatingHandler(this.configuration.Key, bank.ApiKey);
-            var client = HttpClientFactory.Create(customHandler);
             var sendModel = Mapper.Map<SendTransactionModel>(model);
-            var response = await client.PostAsJsonAsync(bank.ApiAddress, sendModel);
+            var encryptedAndSignedData = TransactionHelper.SignAndEncryptData(sendModel, this.configuration.Key, bank.ApiKey);
+            var client = new HttpClient();
+            var response = await client.PostAsJsonAsync(bank.ApiAddress, encryptedAndSignedData);
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 return this.BadRequest(string.Format(BankRefusedTheRequestMessage, model.DestinationBankName));

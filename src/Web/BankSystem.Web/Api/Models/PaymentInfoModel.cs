@@ -2,9 +2,9 @@
 {
     using System.ComponentModel.DataAnnotations;
     using Common.AutoMapping.Interfaces;
-    using Services.Models.GlobalTransfer;
+    using Infrastructure.Helpers.GlobalTransferHelpers.Models;
 
-    public class PaymentInfoModel : IMapWith<GlobalTransferServiceModel>
+    public class PaymentInfoModel : IMapWith<GlobalTransferDto>
     {
         [Required]
         public decimal Amount { get; set; }

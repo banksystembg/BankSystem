@@ -4,6 +4,7 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using Infrastructure.Handlers;
+    using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Models;
@@ -36,9 +37,9 @@
                     return this.BadRequest();
                 }
 
-                var customHandler = new CustomCentralApiDelegatingHandler(this.configuration.Key, bank.ApiKey);
-                var client = HttpClientFactory.Create(customHandler);
-                var request = await client.PostAsJsonAsync(bank.CardPaymentUrl, model);
+                var encryptedAndSignedData = TransactionHelper.SignAndEncryptData(model, this.configuration.Key, bank.ApiKey);
+                var client = new HttpClient();
+                var request = await client.PostAsJsonAsync(bank.CardPaymentUrl, encryptedAndSignedData);
 
                 if (request.StatusCode != HttpStatusCode.OK)
                 {

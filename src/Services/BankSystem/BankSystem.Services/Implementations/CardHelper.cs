@@ -3,23 +3,25 @@
     using System;
     using System.Linq;
     using System.Text;
+    using Common.Configuration;
     using Interfaces;
+    using Microsoft.Extensions.Options;
 
     public class CardHelper : ICardHelper
     {
         // Convert to int.
         private static readonly Func<char, int> CharToInt = c => c - '0';
 
-        private readonly IBankConfigurationHelper bankConfigurationHelper;
+        private readonly BankConfiguration bankConfiguration;
 
         // New Double Concept => 7 * 2 = 14 => 1 + 4 = 5.
         private readonly Func<int, int> doubleDigit = i => (i * 2).ToString().ToCharArray().Select(CharToInt).Sum();
         private readonly Func<int, bool> isEven = i => i % 2 == 0;
         private readonly Random random;
 
-        public CardHelper(IBankConfigurationHelper bankConfigurationHelper)
+        public CardHelper(IOptions<BankConfiguration> bankConfigurationOptions)
         {
-            this.bankConfigurationHelper = bankConfigurationHelper;
+            this.bankConfiguration = bankConfigurationOptions.Value;
             this.random = new Random();
         }
 
@@ -45,7 +47,7 @@
         public string Generate16DigitNumber()
         {
             var sb = new StringBuilder();
-            sb.Append(this.bankConfigurationHelper.First3CardDigits);
+            sb.Append(this.bankConfiguration.First3CardDigits);
             for (int i = 0; i < 12; i++)
             {
                 sb.Append(this.random.Next(0, 10));
