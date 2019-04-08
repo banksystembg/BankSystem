@@ -11,20 +11,21 @@
     else
     {
         <h3>All payments from all accounts</h3>
-        <table class="table table-bordered table-hover">
+        <table class="table table-hover table-bordered auto-datatable">
             <thead>
             <tr>
-                <th>Details</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Amount</th>
-                <th>Date</th>
+                <th data-priority="2">Date</th>
+                <th data-priority="4">Details</th>
+                <th data-priority="3">From</th>
+                <th data-priority="5">To</th>
+                <th data-priority="1">Amount</th>
             </tr>
             </thead>
             <tbody>
             @foreach (var moneyTransfer in Model.MoneyTransfers)
             {
                 <tr>
+                    <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
                     <td class="word-break-all">@moneyTransfer.Description</td>
                     <td>
                         <p>@moneyTransfer.SenderName</p>
@@ -34,15 +35,16 @@
                         <p>@moneyTransfer.RecipientName</p>
                         <p>@moneyTransfer.Destination</p>
                     </td>
-                    @if (moneyTransfer.Amount < 0)
-                    {
-                        <td class="text-red">@moneyTransfer.Amount EUR</td>
-                    }
-                    else
-                    {
-                        <td class="text-green">+@moneyTransfer.Amount EUR</td>
-                    }
-                    <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
+                    <td>
+                        @if (moneyTransfer.Amount < 0)
+                        {
+                            <span class="text-red">@moneyTransfer.Amount EUR</span>
+                        }
+                        else
+                        {
+                            <span class="text-green">+@moneyTransfer.Amount EUR</span>
+                        }
+                    </td>
                 </tr>
             }
             </tbody>
