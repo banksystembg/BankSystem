@@ -1,12 +1,12 @@
 ﻿namespace BankSystem.Services.Tests.Tests
 {
+    using System;
     using Common.Configuration;
     using Data;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
     using Moq;
     using Setup;
-    using System;
 
     public abstract class BaseTest
     {

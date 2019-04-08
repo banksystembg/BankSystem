@@ -1,5 +1,7 @@
 ﻿namespace CentralApi.Services.Tests.Tests
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using CentralApi.Models;
     using Data;
     using FluentAssertions;
@@ -7,12 +9,16 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Banks;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class BankServiceTests : BaseTest
     {
+        public BankServiceTests()
+        {
+            this.dbContext = this.DatabaseInstance;
+            this.banksService = new BanksService(this.dbContext);
+        }
+
         private const string SampleBankName = "Bank system";
         private const string SampleBankCountry = "Bulgaria";
         private const string SampleBankSwiftCode = "ABC";
@@ -22,26 +28,114 @@
         private readonly CentralApiDbContext dbContext;
         private readonly IBanksService banksService;
 
-        public BankServiceTests()
-        {
-            this.dbContext = base.DatabaseInstance;
-            this.banksService = new BanksService(this.dbContext);
-        }
-
-        [Fact]
-        public async Task GetBankAsync_WithInvalidBankName_ShouldReturnNull()
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("    !")]
+        [InlineData("totally invalid id")]
+        public async Task GetBankByIdAsync_WithInvalidId_ShouldReturnNull(string id)
         {
             // Arrange
             await this.SeedBanks(10);
 
             // Act
-            var result = await this.banksService
-                .GetBankAsync<BankServiceModel>(null, SampleBankCountry, SampleBankSwiftCode);
+            var result = await this.banksService.GetBankByIdAsync<BankServiceModel>(id);
 
             // Assert
             result
                 .Should()
                 .BeNull();
+        }
+
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("    !")]
+        [InlineData("totally invalid id")]
+        public async Task GetBankByBankIdentificationCardNumbersAsync_WithInvalidIdentificationNumber_ShouldReturnNull(string identificationNumbers)
+        {
+            // Arrange
+            await this.SeedBanks(10);
+
+            // Act
+            var result = await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankServiceModel>(identificationNumbers);
+
+            // Assert
+            result
+                .Should()
+                .BeNull();
+        }
+
+        private async Task SeedBanks(int count)
+        {
+            var banks = new List<Bank>();
+            for (int i = 1; i <= count; i++)
+            {
+                var bank = new Bank
+                {
+                    Id = i.ToString(),
+                    Name = $"{SampleBankName}_{i}",
+                    Location = $"{SampleBankCountry}_{i}",
+                    SwiftCode = $"{SampleBankSwiftCode}_{i}",
+                    PaymentUrl = SamplePaymentUrl,
+                    BankIdentificationCardNumbers = $"{SampleIdentificationNumbers}{i}"
+                };
+
+                banks.Add(bank);
+            }
+
+            await this.dbContext.Banks.AddRangeAsync(banks);
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        [Fact]
+        public async Task GetAllBanksSupportingPaymentsAsync_ShouldOrderByLocationAndThenByName()
+        {
+            // Arrange
+            await this.SeedBanks(10);
+
+            // Act
+            var result = await this.banksService.GetAllBanksSupportingPaymentsAsync<BankListingServiceModel>();
+
+            // Assert
+            result
+                .Should()
+                .BeInAscendingOrder(b => b.Location)
+                .And
+                .BeInAscendingOrder(b => b.Name);
+        }
+
+        [Fact]
+        public async Task GetAllBanksSupportingPaymentsAsync_ShouldReturnCorrectModel()
+        {
+            // Arrange
+            await this.SeedBanks(3);
+
+            // Act
+            var result = await this.banksService.GetAllBanksSupportingPaymentsAsync<BankListingServiceModel>();
+
+            // Assert
+            result
+                .Should()
+                .AllBeAssignableTo<BankListingServiceModel>();
+        }
+
+        [Fact]
+        public async Task GetAllBanksSupportingPaymentsAsync_ShouldReturnOnlyBanks_With_NonNullablePaymentUrls()
+        {
+            // Arrange
+            const int count = 10;
+            await this.SeedBanks(count);
+
+            // Seed one more bank which doesn't support payments
+            await this.dbContext.Banks.AddAsync(new Bank());
+            await this.dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await this.banksService.GetAllBanksSupportingPaymentsAsync<BankListingServiceModel>();
+
+            // Assert
+            result
+                .Should()
+                .HaveCount(count);
         }
 
         [Fact]
@@ -53,6 +147,22 @@
             // Act
             var result = await this.banksService
                 .GetBankAsync<BankServiceModel>(SampleBankName, null, SampleBankSwiftCode);
+
+            // Assert
+            result
+                .Should()
+                .BeNull();
+        }
+
+        [Fact]
+        public async Task GetBankAsync_WithInvalidBankName_ShouldReturnNull()
+        {
+            // Arrange
+            await this.SeedBanks(10);
+
+            // Act
+            var result = await this.banksService
+                .GetBankAsync<BankServiceModel>(null, SampleBankCountry, SampleBankSwiftCode);
 
             // Assert
             result
@@ -94,73 +204,20 @@
         }
 
         [Fact]
-        public async Task GetAllBanksSupportingPaymentsAsync_ShouldReturnOnlyBanks_With_NonNullablePaymentUrls()
+        public async Task GetBankByBankIdentificationCardNumbersAsync_WitValidIdentificationNumber_ShouldReturnCorrectEntity()
         {
             // Arrange
-            const int count = 10;
-            await this.SeedBanks(count);
-
-            // Seed one more bank which doesn't support payments
-            await this.dbContext.Banks.AddAsync(new Bank());
+            const string expectedId = "1";
+            await this.dbContext.Banks.AddAsync(new Bank { Id = expectedId, BankIdentificationCardNumbers = SampleIdentificationNumbers });
             await this.dbContext.SaveChangesAsync();
 
             // Act
-            var result = await this.banksService.GetAllBanksSupportingPaymentsAsync<BankListingServiceModel>();
+            var result = await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankListingServiceModel>(SampleIdentificationNumbers);
 
             // Assert
             result
                 .Should()
-                .HaveCount(count);
-        }
-
-        [Fact]
-        public async Task GetAllBanksSupportingPaymentsAsync_ShouldReturnCorrectModel()
-        {
-            // Arrange
-            await this.SeedBanks(3);
-
-            // Act
-            var result = await this.banksService.GetAllBanksSupportingPaymentsAsync<BankListingServiceModel>();
-
-            // Assert
-            result
-                .Should()
-                .AllBeAssignableTo<BankListingServiceModel>();
-        }
-
-        [Fact]
-        public async Task GetAllBanksSupportingPaymentsAsync_ShouldOrderByLocationAndThenByName()
-        {
-            // Arrange
-            await this.SeedBanks(10);
-
-            // Act
-            var result = await this.banksService.GetAllBanksSupportingPaymentsAsync<BankListingServiceModel>();
-
-            // Assert
-            result
-                .Should()
-                .BeInAscendingOrder(b => b.Location)
-                .And
-                .BeInAscendingOrder(b => b.Name);
-        }
-
-        [Theory]
-        [InlineData(" ")]
-        [InlineData("    !")]
-        [InlineData("totally invalid id")]
-        public async Task GetBankByIdAsync_WithInvalidId_ShouldReturnNull(string id)
-        {
-            // Arrange
-            await this.SeedBanks(10);
-
-            // Act
-            var result = await this.banksService.GetBankByIdAsync<BankServiceModel>(id);
-
-            // Assert
-            result
-                .Should()
-                .BeNull();
+                .Match(x => x.As<BankListingServiceModel>().Id == expectedId);
         }
 
         [Fact]
@@ -191,63 +248,6 @@
             result
                 .Should()
                 .BeAssignableTo<BankListingServiceModel>();
-        }
-
-        [Theory]
-        [InlineData(" ")]
-        [InlineData("    !")]
-        [InlineData("totally invalid id")]
-        public async Task GetBankByBankIdentificationCardNumbersAsync_WithInvalidIdentificationNumber_ShouldReturnNull(string identificationNumbers)
-        {
-            // Arrange
-            await this.SeedBanks(10);
-
-            // Act
-            var result = await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankServiceModel>(identificationNumbers);
-
-            // Assert
-            result
-                .Should()
-                .BeNull();
-        }
-
-        [Fact]
-        public async Task GetBankByBankIdentificationCardNumbersAsync_WitValidIdentificationNumber_ShouldReturnCorrectEntity()
-        {
-            // Arrange
-            const string expectedId = "1";
-            await this.dbContext.Banks.AddAsync(new Bank { Id = expectedId, BankIdentificationCardNumbers = SampleIdentificationNumbers });
-            await this.dbContext.SaveChangesAsync();
-
-            // Act
-            var result = await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankListingServiceModel>(SampleIdentificationNumbers);
-
-            // Assert
-            result
-                .Should()
-                .Match(x => x.As<BankListingServiceModel>().Id == expectedId);
-        }
-
-        private async Task SeedBanks(int count)
-        {
-            var banks = new List<Bank>();
-            for (int i = 1; i <= count; i++)
-            {
-                var bank = new Bank
-                {
-                    Id = i.ToString(),
-                    Name = $"{SampleBankName}_{i}",
-                    Location = $"{SampleBankCountry}_{i}",
-                    SwiftCode = $"{SampleBankSwiftCode}_{i}",
-                    PaymentUrl = SamplePaymentUrl,
-                    BankIdentificationCardNumbers = $"{SampleIdentificationNumbers}{i}",
-                };
-
-                banks.Add(bank);
-            }
-
-            await this.dbContext.Banks.AddRangeAsync(banks);
-            await this.dbContext.SaveChangesAsync();
         }
     }
 }

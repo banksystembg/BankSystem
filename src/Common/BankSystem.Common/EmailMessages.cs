@@ -9,6 +9,7 @@
         public const string ReceiveMoneySubject = "You've received money";
         public const string ReceiveMoneyMessage = "€{0} have been transferred to your account. Please log in your account for additional information.";
         public const string SendMoneySubject = "You've sent money";
+
         public const string SendMoneyMessage =
             "€{0} have been transferred from your account. If it was not you, please contact our support center as fast as possible!";
     }

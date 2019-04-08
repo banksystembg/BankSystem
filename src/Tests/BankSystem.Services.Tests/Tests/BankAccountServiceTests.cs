@@ -1,19 +1,26 @@
 ﻿namespace BankSystem.Services.Tests.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using BankSystem.Models;
     using Data;
     using FluentAssertions;
     using Implementations;
     using Interfaces;
     using Models.BankAccount;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class BankAccountServiceTests : BaseTest
     {
+        public BankAccountServiceTests()
+        {
+
+            this.dbContext = this.DatabaseInstance;
+            this.bankAccountService = new BankAccountService(this.dbContext, new BankAccountUniqueIdHelper(this.MockedBankConfiguration.Object));
+        }
+
         private const string SampleBankAccountName = "Test bank account name";
         private const string SampleBankAccountUserId = "adfsdvxc-123ewsf";
         private const string SampleBankAccountId = "1";
@@ -22,19 +29,79 @@
         private readonly BankSystemDbContext dbContext;
         private readonly IBankAccountService bankAccountService;
 
-        public BankAccountServiceTests()
+        [Theory]
+        [InlineData("-1")]
+        [InlineData("   ")]
+        [InlineData("")]
+        [InlineData("someRandomValue")]
+        public async Task ChangeAccountNameAsync_WithInvalidId_ShouldReturnFalse(string id)
         {
+            // Arrange
+            await this.SeedBankAccountAsync();
 
-            this.dbContext = base.DatabaseInstance;
-            this.bankAccountService = new BankAccountService(this.dbContext, new BankAccountUniqueIdHelper(base.MockedBankConfiguration.Object));
+            // Act
+            var result = await this.bankAccountService.ChangeAccountNameAsync(id, SampleBankAccountName);
+
+            // Assert
+            result
+                .Should()
+                .BeFalse();
+        }
+
+        private async Task SeedUserAsync()
+        {
+            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleBankAccountUserId, FullName = SampleBankAccountUniqueId });
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        private async Task<BankAccount> SeedBankAccountAsync()
+        {
+            var model = new BankAccount
+            {
+                Id = SampleBankAccountId,
+                Name = SampleBankAccountName,
+                UniqueId = SampleBankAccountUniqueId,
+                UserId = SampleBankAccountUserId
+
+            };
+            await this.dbContext.Accounts.AddAsync(model);
+            await this.dbContext.SaveChangesAsync();
+
+            return model;
         }
 
         [Fact]
-        public async Task CreateAsync_WithInvalidUserId_ShouldReturnNull_And_NotInsertInDatabase()
+        public async Task ChangeAccountNameAsync_WithValidId_ShouldReturnTrue_And_ChangeNameSuccessfully()
+        {
+            // Arrange
+            var model = await this.SeedBankAccountAsync();
+            var newName = "changed!";
+
+            // Act
+            var result = await this.bankAccountService.ChangeAccountNameAsync(model.Id, newName);
+
+            // Assert
+            result
+                .Should()
+                .BeTrue();
+
+            // Ensure that name is changed
+            var dbModel = await this.dbContext
+                .Accounts
+                .FindAsync(model.Id);
+
+            dbModel.Name
+                .Should()
+                .BeEquivalentTo(newName);
+        }
+
+        [Fact]
+        public async Task CreateAsync_WithInvalidNameLength_ShouldReturnNull_And_NotInsertInDatabase()
         {
             // Arrange
             await this.SeedUserAsync();
-            var model = new BankAccountCreateServiceModel { Name = SampleBankAccountName, UserId = null };
+            // Name is invalid when it's longer than 35 characters
+            var model = new BankAccountCreateServiceModel { Name = new string('c', 36), UserId = SampleBankAccountUserId };
 
             // Act
             var result = await this.bankAccountService.CreateAsync(model);
@@ -51,12 +118,11 @@
         }
 
         [Fact]
-        public async Task CreateAsync_WithInvalidNameLength_ShouldReturnNull_And_NotInsertInDatabase()
+        public async Task CreateAsync_WithInvalidUserId_ShouldReturnNull_And_NotInsertInDatabase()
         {
             // Arrange
             await this.SeedUserAsync();
-            // Name is invalid when it's longer than 35 characters
-            var model = new BankAccountCreateServiceModel { Name = new string('c', 36), UserId = SampleBankAccountUserId };
+            var model = new BankAccountCreateServiceModel { Name = SampleBankAccountName, UserId = null };
 
             // Act
             var result = await this.bankAccountService.CreateAsync(model);
@@ -116,36 +182,48 @@
         }
 
         [Fact]
-        public async Task GetByUniqueIdAsync_WithInvalidUniqueId_ShouldReturnNull()
+        public async Task GetAllAccountsAsync_ShouldReturnCollectionWithCorrectModels()
         {
             // Arrange
             await this.SeedBankAccountAsync();
 
             // Act
-            var result = await this.bankAccountService.GetByUniqueIdAsync<BankAccountIndexServiceModel>(null);
+            var result = await this.bankAccountService.GetAllAccountsAsync<BankAccountDetailsServiceModel>();
 
-            // Arrange
+            // Assert
             result
                 .Should()
-                .BeNull();
+                .AllBeAssignableTo<IEnumerable<BankAccountDetailsServiceModel>>();
         }
 
         [Fact]
-        public async Task GetByUniqueIdAsync_WithValidUniqueId_ShouldReturnCorrectEntity()
+        public async Task GetAllAccountsByUserIdAsync_WithInvalidId_ShouldReturnEmptyModel()
+        {
+            // Arrange
+            await this.SeedBankAccountAsync();
+            // Act
+            var result =
+                await this.bankAccountService.GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(null);
+
+            // Assert
+            result
+                .Should()
+                .BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task GetAllAccountsByUserIdAsync_WithValidId_ShouldReturnCorrectModel()
         {
             // Arrange
             var model = await this.SeedBankAccountAsync();
-            var expectedUniqueId = model.UniqueId;
-
             // Act
-            var result = await this.bankAccountService.GetByUniqueIdAsync<BankAccountIndexServiceModel>(model.UniqueId);
+            var result =
+                await this.bankAccountService.GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(model.UserId);
 
-            // Arrange
+            // Assert
             result
                 .Should()
-                .NotBeNull()
-                .And
-                .Match(x => x.As<BankAccountIndexServiceModel>().UniqueId == expectedUniqueId);
+                .BeAssignableTo<IEnumerable<BankAccountIndexServiceModel>>();
         }
 
         [Fact]
@@ -185,118 +263,36 @@
         }
 
         [Fact]
-        public async Task GetAllAccountsByUserIdAsync_WithInvalidId_ShouldReturnEmptyModel()
+        public async Task GetByUniqueIdAsync_WithInvalidUniqueId_ShouldReturnNull()
         {
             // Arrange
             await this.SeedBankAccountAsync();
-            // Act
-            var result =
-                await this.bankAccountService.GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(null);
 
-            // Assert
+            // Act
+            var result = await this.bankAccountService.GetByUniqueIdAsync<BankAccountIndexServiceModel>(null);
+
+            // Arrange
             result
                 .Should()
-                .BeNullOrEmpty();
+                .BeNull();
         }
 
         [Fact]
-        public async Task GetAllAccountsByUserIdAsync_WithValidId_ShouldReturnCorrectModel()
+        public async Task GetByUniqueIdAsync_WithValidUniqueId_ShouldReturnCorrectEntity()
         {
             // Arrange
             var model = await this.SeedBankAccountAsync();
+            var expectedUniqueId = model.UniqueId;
+
             // Act
-            var result =
-                await this.bankAccountService.GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(model.UserId);
+            var result = await this.bankAccountService.GetByUniqueIdAsync<BankAccountIndexServiceModel>(model.UniqueId);
 
-            // Assert
-            result
-                .Should()
-                .BeAssignableTo<IEnumerable<BankAccountIndexServiceModel>>();
-        }
-
-        [Fact]
-        public async Task GetAllAccountsAsync_ShouldReturnCollectionWithCorrectModels()
-        {
             // Arrange
-            await this.SeedBankAccountAsync();
-
-            // Act
-            var result = await this.bankAccountService.GetAllAccountsAsync<BankAccountDetailsServiceModel>();
-
-            // Assert
             result
                 .Should()
-                .AllBeAssignableTo<IEnumerable<BankAccountDetailsServiceModel>>();
+                .NotBeNull()
+                .And
+                .Match(x => x.As<BankAccountIndexServiceModel>().UniqueId == expectedUniqueId);
         }
-
-        [Theory]
-        [InlineData("-1")]
-        [InlineData("   ")]
-        [InlineData("")]
-        [InlineData("someRandomValue")]
-        public async Task ChangeAccountNameAsync_WithInvalidId_ShouldReturnFalse(string id)
-        {
-            // Arrange
-            await this.SeedBankAccountAsync();
-
-            // Act
-            var result = await this.bankAccountService.ChangeAccountNameAsync(id, SampleBankAccountName);
-
-            // Assert
-            result
-                .Should()
-                .BeFalse();
-        }
-
-        [Fact]
-        public async Task ChangeAccountNameAsync_WithValidId_ShouldReturnTrue_And_ChangeNameSuccessfully()
-        {
-            // Arrange
-            var model = await this.SeedBankAccountAsync();
-            var newName = "changed!";
-
-            // Act
-            var result = await this.bankAccountService.ChangeAccountNameAsync(model.Id, newName);
-
-            // Assert
-            result
-                .Should()
-                .BeTrue();
-
-            // Ensure that name is changed
-            var dbModel = await this.dbContext
-                .Accounts
-                .FindAsync(model.Id);
-
-            dbModel.Name
-                .Should()
-                .BeEquivalentTo(newName);
-        }
-
-        #region privateMethods
-
-        private async Task SeedUserAsync()
-        {
-            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleBankAccountUserId, FullName = SampleBankAccountUniqueId });
-            await this.dbContext.SaveChangesAsync();
-        }
-
-        private async Task<BankAccount> SeedBankAccountAsync()
-        {
-            var model = new BankAccount
-            {
-                Id = SampleBankAccountId,
-                Name = SampleBankAccountName,
-                UniqueId = SampleBankAccountUniqueId,
-                UserId = SampleBankAccountUserId,
-
-            };
-            await this.dbContext.Accounts.AddAsync(model);
-            await this.dbContext.SaveChangesAsync();
-
-            return model;
-        }
-
-        #endregion
     }
 }
