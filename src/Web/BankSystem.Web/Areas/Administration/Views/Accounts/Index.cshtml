@@ -6,20 +6,20 @@
 <div class="container">
     @if (!Model.BankAccounts.Any())
     {
-        <h3>No money transfers have been made from this account</h3>
+        <h3>No bank accounts have been created</h3>
     }
     else
     {
         <h3>All bank accounts</h3>
-        <table class="table table-bordered table-hover">
+        <table class="table table-hover table-bordered auto-datatable">
             <thead>
             <tr>
-                <th>Account number</th>
-                <th>Balance</th>
-                <th>Owner</th>
-                <th>Owner's email</th>
-                <th>Date of creation</th>
-                <th>Display name</th>
+                <th data-priority="1">Account number</th>
+                <th data-priority="5">Balance</th>
+                <th data-priority="3">Owner</th>
+                <th data-priority="2">Owner's email</th>
+                <th data-priority="4">Date of creation</th>
+                <th data-priority="6">Display name</th>
             </tr>
             </thead>
             <tbody>
@@ -27,7 +27,7 @@
             {
                 <tr>
                     <td>@account.UniqueId</td>
-                    <td class="text-green">€@account.Balance</td>
+                    <td><span class="text-green">€@account.Balance</span></td>
                     <td>@account.UserFullName</td>
                     <td>@account.UserUserName</td>
                     <td class="auto-format-date">@account.CreatedOn.ToString("O")</td>

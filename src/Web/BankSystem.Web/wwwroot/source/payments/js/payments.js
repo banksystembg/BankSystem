@@ -9,11 +9,10 @@
 
 $('#payBtn').click(function () {
 
+    let btn = $('#payBtn');
+
     function paymentFailed(errorMessage) {
-        $('#cancelBtn').removeClass('disabled')
-            .removeClass('btn-outline-secondary')
-            .addClass('btn-outline-primary')
-            .focus();
+        $('#cancelBtn').removeClass('disabled');
 
         btn.addClass('btn-danger');
         btn.html('<i class="fas fa-times"></i> Failed');
@@ -21,6 +20,16 @@ $('#payBtn').click(function () {
         let errAlert = $('#errAlert');
         errAlert.text(errorMessage);
         errAlert.slideDown();
+
+        $('#accountPicker').prop('disabled', false);
+
+        setTimeout(function () {
+                btn.removeClass('btn-danger');
+                btn.addClass('btn-primary');
+                btn.text(payBtnText);
+                btn.prop('disabled', false);
+            },
+            3000);
     }
 
     window.onbeforeunload = function () {
@@ -28,8 +37,6 @@ $('#payBtn').click(function () {
     };
 
     $('#cancelBtn').addClass('disabled');
-
-    let btn = $('#payBtn');
 
     btn.prop('disabled', true);
     btn.html('<i class="fas fa-circle-notch fa-spin"></i> Processing');
