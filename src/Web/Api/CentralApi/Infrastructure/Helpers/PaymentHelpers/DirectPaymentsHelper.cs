@@ -1,4 +1,4 @@
-namespace CentralApi.PaymentHelpers
+namespace CentralApi.Infrastructure.Helpers.PaymentHelpers
 {
     using System;
     using System.Security.Cryptography;
