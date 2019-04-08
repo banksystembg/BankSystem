@@ -4,33 +4,29 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container">
-    <div class="row mx-5">
-        <div class="col-12 col-md-6 p-1">
-            <div class="card floating-card shadow m-2 background-green h-100">
-                <i class="fas fa-university fa-16x text-center my-4"></i>
-                <div class="card-body">
-                    <h5 class="card-title">Internal transfers</h5>
-                    <p class="card-text">Payment transfer between two accounts in the same bank (including your own accounts)</p>
-                    @* TODO: Add link when it's implemented *@
-                </div>
-                <div class="card-footer">
-                    <a asp-area="MoneyTransfers" asp-controller="Internal" asp-action="Create" class="btn btn-primary align-bottom stretched-link">Create new payment</a>
-                </div>
+<div class="row mx-lg-5">
+    <div class="col-12 col-md-6 p-1">
+        <div class="card floating-card shadow m-2 background-green h-100">
+            <i class="fas fa-university fa-16x text-center my-4"></i>
+            <div class="card-body">
+                <h5 class="card-title">Internal transfers</h5>
+                <p class="card-text">Payment transfer between two accounts in the same bank (including your own accounts)</p>
+            </div>
+            <div class="card-footer">
+                <a asp-area="MoneyTransfers" asp-controller="Internal" asp-action="Create" class="btn btn-primary align-bottom stretched-link">Create new payment</a>
             </div>
         </div>
-        <div class="col-12 col-md-6 p-1">
-            <div class="card floating-card shadow m-2 background-blue h-100">
-                <i class="fas fa-globe-europe fa-16x text-center my-4"></i>
-                <div class="card-body">
-                    <h5 class="card-title">Worldwide transfers</h5>
-                    <p class="card-text">Payment transfer to a bank in the country or abroad.</p>
-                </div>
-                <div class="card-footer">
-                    <a asp-area="MoneyTransfers" asp-controller="Global" asp-action="Create" class="btn btn-primary align-bottom stretched-link">Create new payment</a>
-                </div>
+    </div>
+    <div class="col-12 col-md-6 p-1">
+        <div class="card floating-card shadow m-2 background-blue h-100">
+            <i class="fas fa-globe-europe fa-16x text-center my-4"></i>
+            <div class="card-body">
+                <h5 class="card-title">Worldwide transfers</h5>
+                <p class="card-text">Payment transfer to a bank in the country or abroad.</p>
+            </div>
+            <div class="card-footer">
+                <a asp-area="MoneyTransfers" asp-controller="Global" asp-action="Create" class="btn btn-primary align-bottom stretched-link">Create new payment</a>
             </div>
         </div>
     </div>
 </div>
-
