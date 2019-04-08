@@ -44,33 +44,40 @@
                 return false;
             }
 
-            var incomingData = Encoding.UTF8.GetString(Convert.FromBase64String(model.ToString()));
-            dynamic deserializedData = JsonConvert.DeserializeObject(incomingData);
-            string encryptedKey = deserializedData.EncryptedKey;
-            string encryptedIv = deserializedData.EncryptedIv;
-            string data = deserializedData.Data;
-            string signature = deserializedData.Signature;
+            try
+            {
+                var incomingData = Encoding.UTF8.GetString(Convert.FromBase64String(model.ToString()));
+                dynamic deserializedData = JsonConvert.DeserializeObject(incomingData);
+                string encryptedKey = deserializedData.EncryptedKey;
+                string encryptedIv = deserializedData.EncryptedIv;
+                string data = deserializedData.Data;
+                string signature = deserializedData.Signature;
 
-            var decryptedData = SignatureVerificationUtil
-                .DecryptDataAndVerifySignature(
-                    this.configuration?.Key,
-                    this.configuration?.CentralApiPublicKey,
-                    encryptedKey,
-                    encryptedIv,
-                    data,
-                    signature);
+                var decryptedData = SignatureVerificationUtil
+                    .DecryptDataAndVerifySignature(
+                        this.configuration?.Key,
+                        this.configuration?.CentralApiPublicKey,
+                        encryptedKey,
+                        encryptedIv,
+                        data,
+                        signature);
 
-            if (decryptedData == null)
+                if (decryptedData == null)
+                {
+                    return false;
+                }
+
+                // Modify body
+                var key = actionArguments.Keys.First();
+                actionArguments.Remove(key);
+                actionArguments.Add(key, decryptedData);
+
+                return true;
+            }
+            catch
             {
                 return false;
             }
-
-            // Modify body
-            var key = actionArguments.Keys.First();
-            actionArguments.Remove(key);
-            actionArguments.Add(key, decryptedData);
-
-            return true;
         }
     }
 }

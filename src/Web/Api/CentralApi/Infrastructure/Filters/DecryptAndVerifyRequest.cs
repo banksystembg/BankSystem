@@ -50,44 +50,51 @@
                 return false;
             }
 
-            var incomingData = Encoding.UTF8.GetString(Convert.FromBase64String(model.ToString()));
-            dynamic deserializedData = JsonConvert.DeserializeObject(incomingData);
-            string bankName = deserializedData.BankName;
-            string bankSwiftCode = deserializedData.BankSwiftCode;
-            string bankCountry = deserializedData.BankCountry;
+            try
+            {
+                var incomingData = Encoding.UTF8.GetString(Convert.FromBase64String(model.ToString()));
+                dynamic deserializedData = JsonConvert.DeserializeObject(incomingData);
+                string bankName = deserializedData.BankName;
+                string bankSwiftCode = deserializedData.BankSwiftCode;
+                string bankCountry = deserializedData.BankCountry;
 
-            var bank = await bankService.GetBankAsync<BankServiceModel>(bankName, bankSwiftCode, bankCountry);
+                var bank = await bankService.GetBankAsync<BankServiceModel>(bankName, bankSwiftCode, bankCountry);
 
-            if (bank == null)
+                if (bank == null)
+                {
+                    return false;
+                }
+
+                string encryptedKey = deserializedData.EncryptedKey;
+                string encryptedIv = deserializedData.EncryptedIv;
+                string data = deserializedData.Data;
+                string signature = deserializedData.Signature;
+
+                var decryptedData = SignatureVerificationUtil
+                    .DecryptDataAndVerifySignature(
+                        this.configuration.Key,
+                        bank.ApiKey,
+                        encryptedKey,
+                        encryptedIv,
+                        data,
+                        signature);
+
+                if (decryptedData == null)
+                {
+                    return false;
+                }
+
+                // Modify body
+                var key = actionArguments.Keys.First();
+                actionArguments.Remove(key);
+                actionArguments.Add(key, decryptedData);
+
+                return true;
+            }
+            catch
             {
                 return false;
             }
-
-            string encryptedKey = deserializedData.EncryptedKey;
-            string encryptedIv = deserializedData.EncryptedIv;
-            string data = deserializedData.Data;
-            string signature = deserializedData.Signature;
-
-            var decryptedData = SignatureVerificationUtil
-                .DecryptDataAndVerifySignature(
-                    this.configuration.Key,
-                    bank.ApiKey,
-                    encryptedKey,
-                    encryptedIv,
-                    data,
-                    signature);
-
-            if (decryptedData == null)
-            {
-                return false;
-            }
-
-            // Modify body
-            var key = actionArguments.Keys.First();
-            actionArguments.Remove(key);
-            actionArguments.Add(key, decryptedData);
-
-            return true;
         }
     }
 }
