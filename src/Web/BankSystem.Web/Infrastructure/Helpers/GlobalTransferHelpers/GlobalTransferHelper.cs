@@ -6,7 +6,9 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
     using System.Text;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Common.Configuration;
     using Common.Utils;
+    using Microsoft.Extensions.Options;
     using Models;
     using Newtonsoft.Json;
     using Services.Interfaces;
@@ -18,17 +20,17 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
         private const string CentralApiTransferSubmitUrlFormat = "{0}api/ReceiveTransactions";
 
         private readonly IBankAccountService bankAccountService;
-        private readonly IBankConfigurationHelper bankConfigurationHelper;
+        private readonly BankConfiguration bankConfiguration;
         private readonly IMoneyTransferService moneyTransferService;
 
         public GlobalTransferHelper(
             IBankAccountService bankAccountService,
             IMoneyTransferService moneyTransferService,
-            IBankConfigurationHelper bankConfigurationHelper)
+            IOptions<BankConfiguration> bankConfigurationOptions)
         {
             this.bankAccountService = bankAccountService;
             this.moneyTransferService = moneyTransferService;
-            this.bankConfigurationHelper = bankConfigurationHelper;
+            this.bankConfiguration = bankConfigurationOptions.Value;
         }
 
         public async Task<GlobalTransferResult> TransferMoneyAsync(GlobalTransferDto model)
@@ -86,7 +88,7 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
 
             var client = new HttpClient();
             var response = await client.PostAsJsonAsync(
-                string.Format(CentralApiTransferSubmitUrlFormat, this.bankConfigurationHelper.CentralApiAddress),
+                string.Format(CentralApiTransferSubmitUrlFormat, this.bankConfiguration.CentralApiAddress),
                 encryptedData);
 
             return response.IsSuccessStatusCode;
@@ -96,7 +98,7 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
         {
             using (var rsa = RSA.Create())
             {
-                RsaExtensions.FromXmlString(rsa, this.bankConfigurationHelper.Key);
+                RsaExtensions.FromXmlString(rsa, this.bankConfiguration.Key);
                 var aesParams = CryptographyExtensions.GenerateKey();
                 var key = Convert.FromBase64String(aesParams[0]);
                 var iv = Convert.FromBase64String(aesParams[1]);
@@ -108,16 +110,16 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
                 string encryptedIv;
                 using (var encryptionRsa = RSA.Create())
                 {
-                    RsaExtensions.FromXmlString(encryptionRsa, this.bankConfigurationHelper.CentralApiPublicKey);
+                    RsaExtensions.FromXmlString(encryptionRsa, this.bankConfiguration.CentralApiPublicKey);
                     encryptedKey = Convert.ToBase64String(encryptionRsa.Encrypt(key, RSAEncryptionPadding.Pkcs1));
                     encryptedIv = Convert.ToBase64String(encryptionRsa.Encrypt(iv, RSAEncryptionPadding.Pkcs1));
                 }
 
                 var json = new
                 {
-                    this.bankConfigurationHelper.BankName,
-                    BankSwiftCode = this.bankConfigurationHelper.UniqueIdentifier,
-                    this.bankConfigurationHelper.BankCountry,
+                    BankName = this.bankConfiguration.BankName,
+                    BankSwiftCode = this.bankConfiguration.UniqueIdentifier,
+                    BankCountry = this.bankConfiguration.Country,
                     EncryptedKey = encryptedKey,
                     EncryptedIv = encryptedIv,
                     Data = Convert.ToBase64String(CryptographyExtensions.Encrypt(JsonConvert.SerializeObject(model), key, iv)),

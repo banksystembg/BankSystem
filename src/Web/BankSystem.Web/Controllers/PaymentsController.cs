@@ -8,12 +8,14 @@ namespace BankSystem.Web.Controllers
     using System.Web;
     using AutoMapper;
     using Common;
+    using Common.Configuration;
     using Infrastructure.Helpers;
     using Infrastructure.Helpers.GlobalTransferHelpers;
     using Infrastructure.Helpers.GlobalTransferHelpers.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
     using Models;
     using Models.BankAccount;
     using Services.Interfaces;
@@ -26,17 +28,17 @@ namespace BankSystem.Web.Controllers
         private const string PaymentDataCookie = "PaymentData";
         private readonly IBankAccountService bankAccountService;
 
-        private readonly IBankConfigurationHelper bankConfigurationHelper;
+        private readonly BankConfiguration bankConfiguration;
         private readonly IGlobalTransferHelper globalTransferHelper;
         private readonly IUserService userService;
 
         public PaymentsController(
-            IBankConfigurationHelper bankConfigurationHelper,
+            IOptions<BankConfiguration> bankConfigurationOptions,
             IBankAccountService bankAccountService,
             IUserService userService,
             IGlobalTransferHelper globalTransferHelper)
         {
-            this.bankConfigurationHelper = bankConfigurationHelper;
+            this.bankConfiguration = bankConfigurationOptions.Value;
             this.bankAccountService = bankAccountService;
             this.userService = userService;
             this.globalTransferHelper = globalTransferHelper;
@@ -86,7 +88,7 @@ namespace BankSystem.Web.Controllers
             try
             {
                 dynamic paymentRequest =
-                    DirectPaymentsHelper.ParsePaymentRequest(data, this.bankConfigurationHelper.CentralApiPublicKey);
+                    DirectPaymentsHelper.ParsePaymentRequest(data, this.bankConfiguration.CentralApiPublicKey);
                 if (paymentRequest == null)
                 {
                     return this.BadRequest();
@@ -139,7 +141,7 @@ namespace BankSystem.Web.Controllers
             {
                 // read and validate payment data
                 dynamic paymentRequest =
-                    DirectPaymentsHelper.ParsePaymentRequest(data, this.bankConfigurationHelper.CentralApiPublicKey);
+                    DirectPaymentsHelper.ParsePaymentRequest(data, this.bankConfiguration.CentralApiPublicKey);
 
                 if (paymentRequest == null)
                 {
@@ -177,7 +179,7 @@ namespace BankSystem.Web.Controllers
 
                 // return signed success response
                 var response = DirectPaymentsHelper.GenerateSuccessResponse(paymentRequest,
-                    this.bankConfigurationHelper.Key);
+                    this.bankConfiguration.Key);
 
                 return this.Ok(new
                 {

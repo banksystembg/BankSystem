@@ -29,7 +29,7 @@
         public CardServiceTests()
         {
             this.dbContext = base.DatabaseInstance;
-            this.cardService = new CardService(this.dbContext, new CardHelper(new BankConfigurationHelper(this.MockedBankConfiguration.Object)));
+            this.cardService = new CardService(this.dbContext, new CardHelper(this.MockedBankConfiguration.Object));
         }
 
         [Fact]

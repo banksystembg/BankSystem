@@ -5,8 +5,10 @@ namespace BankSystem.Web.Controllers
     using Areas.MoneyTransfers.Models;
     using AutoMapper;
     using Common;
+    using Common.Configuration;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
     using Models.BankAccount;
     using Services.Interfaces;
     using Services.Models.BankAccount;
@@ -17,7 +19,7 @@ namespace BankSystem.Web.Controllers
         private const int ItemsPerPage = 10;
 
         private readonly IBankAccountService bankAccountService;
-        private readonly IBankConfigurationHelper bankConfigurationHelper;
+        private readonly BankConfiguration bankConfiguration;
         private readonly IMoneyTransferService moneyTransferService;
         private readonly IUserService userService;
 
@@ -25,12 +27,12 @@ namespace BankSystem.Web.Controllers
             IBankAccountService bankAccountService,
             IUserService userService,
             IMoneyTransferService moneyTransferService,
-            IBankConfigurationHelper bankConfigurationHelper)
+            IOptions<BankConfiguration> bankConfigurationOptions)
         {
             this.bankAccountService = bankAccountService;
             this.userService = userService;
             this.moneyTransferService = moneyTransferService;
-            this.bankConfigurationHelper = bankConfigurationHelper;
+            this.bankConfiguration = bankConfigurationOptions.Value;
         }
 
         public IActionResult Create()
@@ -81,9 +83,9 @@ namespace BankSystem.Web.Controllers
             var viewModel = Mapper.Map<BankAccountDetailsViewModel>(account);
             viewModel.MoneyTransfers = transfers;
             viewModel.MoneyTransfersCount = allTransfers.Length;
-            viewModel.BankName = this.bankConfigurationHelper.BankName;
-            viewModel.BankCode = this.bankConfigurationHelper.UniqueIdentifier;
-            viewModel.BankCountry = this.bankConfigurationHelper.BankCountry;
+            viewModel.BankName = this.bankConfiguration.BankName;
+            viewModel.BankCode = this.bankConfiguration.UniqueIdentifier;
+            viewModel.BankCountry = this.bankConfiguration.Country;
 
             return this.View(viewModel);
         }
