@@ -16,7 +16,7 @@
 
     [Route("api/[controller]")]
     [ApiController]
-    [EnsureRequestIsValid]
+    [DecryptAndVerifyRequest]
     public class ReceiveTransactionsController : ControllerBase
     {
         private const string BankRefusedTheRequestMessage = "{0} refused the transfer. If this error continues to occur please contact our support center";

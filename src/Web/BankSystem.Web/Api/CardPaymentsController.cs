@@ -10,12 +10,13 @@
     using Infrastructure.Helpers.GlobalTransferHelpers.Models;
     using Microsoft.AspNetCore.Mvc;
     using Models;
+    using Newtonsoft.Json;
     using Services.Interfaces;
     using Services.Models.Card;
 
     [Route("api/[controller]")]
     [IgnoreAntiforgeryToken]
-    [EnsureRequestIsSigned]
+    [DecryptAndVerifyRequest]
     [ApiController]
     public class CardPaymentsController : ControllerBase
     {
@@ -30,8 +31,9 @@
 
         // POST: api/CardPayments
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] PaymentInfoModel model)
+        public async Task<IActionResult> Post([FromBody] string data)
         {
+            var model = JsonConvert.DeserializeObject<PaymentInfoModel>(data);
             if (model.Amount <= 0)
             {
                 return this.BadRequest();

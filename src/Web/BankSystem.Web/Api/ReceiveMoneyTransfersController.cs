@@ -5,13 +5,14 @@
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models;
+    using Newtonsoft.Json;
     using Services.Interfaces;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
 
     [Route("api/[controller]")]
     [ApiController]
-    [EnsureRequestIsSigned]
+    [DecryptAndVerifyRequest]
     [IgnoreAntiforgeryToken]
     public class ReceiveMoneyTransfersController : ControllerBase
     {
@@ -28,8 +29,9 @@
 
         // POST api/values
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ReceiveMoneyTransferModel model)
+        public async Task<IActionResult> Post([FromBody] string data)
         {
+            var model = JsonConvert.DeserializeObject<ReceiveMoneyTransferModel>(data);
             if (!this.TryValidateModel(model))
             {
                 return this.NoContent();
