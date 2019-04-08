@@ -1,10 +1,10 @@
 ﻿namespace BankSystem.Web.Models.BankAccount
 {
+    using System;
     using Areas.MoneyTransfers.Models;
     using Common.AutoMapping.Interfaces;
     using Infrastructure.Collections;
     using Services.Models.BankAccount;
-    using System;
 
     public class BankAccountDetailsViewModel : IMapWith<BankAccountDetailsServiceModel>
     {

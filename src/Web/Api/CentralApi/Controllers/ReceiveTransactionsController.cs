@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using Infrastructure.Filters;
-    using Infrastructure.Handlers;
     using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;

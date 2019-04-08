@@ -6,7 +6,7 @@
     public class TestSetup
     {
         private static readonly object Sync = new object();
-        private static bool mapperInitialized = false;
+        private static bool mapperInitialized;
 
         public static void InitializeMapper()
         {

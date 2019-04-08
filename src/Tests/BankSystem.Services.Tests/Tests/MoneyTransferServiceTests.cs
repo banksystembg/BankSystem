@@ -1,5 +1,9 @@
 ﻿namespace BankSystem.Services.Tests.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using BankSystem.Models;
     using Common;
     using Common.EmailSender.Interface;
@@ -10,14 +14,16 @@
     using Microsoft.EntityFrameworkCore;
     using Models.MoneyTransfer;
     using Moq;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class MoneyTransferServiceTests : BaseTest
     {
+        public MoneyTransferServiceTests()
+        {
+            this.dbContext = this.DatabaseInstance;
+            this.moneyTransferService = new MoneyTransferService(this.dbContext, Mock.Of<IEmailSender>());
+        }
+
         private const string SampleId = "gsdxcvew-sdfdscx-xcgds";
         private const string SampleDescription = "I'm sending money due to...";
         private const decimal SampleAmount = 10;
@@ -34,12 +40,6 @@
 
         private readonly BankSystemDbContext dbContext;
         private readonly IMoneyTransferService moneyTransferService;
-
-        public MoneyTransferServiceTests()
-        {
-            this.dbContext = base.DatabaseInstance;
-            this.moneyTransferService = new MoneyTransferService(this.dbContext, Mock.Of<IEmailSender>());
-        }
 
         [Theory]
         [InlineData(null)]
@@ -60,74 +60,6 @@
             result
                 .Should()
                 .BeNullOrEmpty();
-        }
-
-        [Fact]
-        public async Task GetAllMoneyTransfersAsync_WithValidUserId_ShouldReturnCollectionOfCorrectEntities()
-        {
-            // Arrange
-            var model = await this.SeedMoneyTransfersAsync();
-            // Act
-            var result =
-                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(model.Account.UserId);
-
-            // Assert
-            result
-                .Should()
-                .AllBeAssignableTo<MoneyTransferListingServiceModel>()
-                .And
-                .Match<IEnumerable<MoneyTransferListingServiceModel>>(x => x.All(c => c.Source == model.Source));
-        }
-
-        [Fact]
-        public async Task GetAllMoneyTransfersAsync_ShouldReturnOrderedByMadeOnCollection()
-        {
-            // Arrange
-            await this.SeedBankAccountAsync();
-            for (int i = 0; i < 10; i++)
-            {
-                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
-                {
-                    Id = $"{SampleId}_{i}",
-                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
-                    MadeOn = DateTime.UtcNow.AddMinutes(i)
-                });
-            }
-
-            await this.dbContext.SaveChangesAsync();
-            // Act
-            var result =
-                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleUserId);
-
-            // Assert
-            result
-                .Should()
-                .BeInDescendingOrder(x => x.MadeOn);
-        }
-
-        [Fact]
-        public async Task GetAllMoneyTransfersAsync_ShouldReturnCorrectCount()
-        {
-            // Arrange
-            const int count = 10;
-            await this.SeedBankAccountAsync();
-            for (int i = 1; i <= count; i++)
-            {
-                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
-                {
-                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
-                });
-            }
-
-            await this.dbContext.SaveChangesAsync();
-            // Act
-            var result =
-                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleUserId);
-
-            // Assert
-            result
-                .Should()
-                .HaveCount(count);
         }
 
         [Theory]
@@ -151,74 +83,6 @@
                 .BeNullOrEmpty();
         }
 
-        [Fact]
-        public async Task GetAllMoneyTransfersForAccountAsync_WithValidUserId_ShouldReturnCollectionOfCorrectEntities()
-        {
-            // Arrange
-            var model = await this.SeedMoneyTransfersAsync();
-            // Act
-            var result =
-                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(model.Account.Id);
-
-            // Assert
-            result
-                .Should()
-                .AllBeAssignableTo<MoneyTransferListingServiceModel>()
-                .And
-                .Match<IEnumerable<MoneyTransferListingServiceModel>>(x => x.All(c => c.Source == model.Source));
-        }
-
-        [Fact]
-        public async Task GetAllMoneyTransfersForAccountAsync_ShouldReturnOrderedByMadeOnCollection()
-        {
-            // Arrange
-            await this.SeedBankAccountAsync();
-            for (int i = 0; i < 10; i++)
-            {
-                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
-                {
-                    Id = $"{SampleId}_{i}",
-                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
-                    MadeOn = DateTime.UtcNow.AddMinutes(i)
-                });
-            }
-
-            await this.dbContext.SaveChangesAsync();
-            // Act
-            var result =
-                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(SampleBankAccountId);
-
-            // Assert
-            result
-                .Should()
-                .BeInDescendingOrder(x => x.MadeOn);
-        }
-
-        [Fact]
-        public async Task GetAllMoneyTransfersForAccountAsync_ShouldReturnCorrectCount()
-        {
-            // Arrange
-            const int count = 10;
-            await this.SeedBankAccountAsync();
-            for (int i = 1; i <= count; i++)
-            {
-                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
-                {
-                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
-                });
-            }
-
-            await this.dbContext.SaveChangesAsync();
-            // Act
-            var result =
-                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(SampleBankAccountId);
-
-            // Assert
-            result
-                .Should()
-                .HaveCount(count);
-        }
-
         [Theory]
         [InlineData(null)]
         [InlineData(" dassdgdf")]
@@ -240,73 +104,93 @@
                 .BeNullOrEmpty();
         }
 
-        [Fact]
-        public async Task GetLast10MoneyTransfersForUserAsync_WithValidUserId_ShouldReturnCollectionOfCorrectEntities()
+        private static MoneyTransferCreateServiceModel PrepareCreateModel(
+            string description = SampleDescription,
+            decimal amount = SampleAmount,
+            string accountId = SampleBankAccountId,
+            string destinationBankUniqueId = SampleDestination,
+            string source = SampleBankAccountId,
+            string senderName = SampleSenderName,
+            string recipientName = SampleRecipientName)
         {
-            // Arrange
-            var model = await this.SeedMoneyTransfersAsync();
-            // Act
-            var result =
-                await this.moneyTransferService.GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(model.Account.UserId);
+            var model = new MoneyTransferCreateServiceModel
+            {
+                Description = description,
+                Amount = amount,
+                AccountId = accountId,
+                DestinationBankAccountUniqueId = destinationBankUniqueId,
+                Source = source,
+                SenderName = senderName,
+                RecipientName = recipientName
+            };
 
-            // Assert
-            result
-                .Should()
-                .AllBeAssignableTo<MoneyTransferListingServiceModel>()
-                .And
-                .Match<IEnumerable<MoneyTransferListingServiceModel>>(x => x.All(c => c.Source == model.Source));
+            return model;
+        }
+
+        private async Task<MoneyTransfer> SeedMoneyTransfersAsync()
+        {
+            await this.SeedBankAccountAsync();
+            var model = new MoneyTransfer
+            {
+                Id = SampleId,
+                Description = SampleDescription,
+                Amount = SampleAmount,
+                Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
+                Destination = SampleDestination,
+                Source = SampleBankAccountId,
+                SenderName = SampleSenderName,
+                RecipientName = SampleRecipientName,
+                MadeOn = DateTime.UtcNow
+            };
+
+            await this.dbContext.Transfers.AddAsync(model);
+            await this.dbContext.SaveChangesAsync();
+
+            return model;
+        }
+
+        private async Task<BankAccount> SeedBankAccountAsync()
+        {
+            await this.SeedUserAsync();
+            var model = new BankAccount
+            {
+                Id = SampleBankAccountId,
+                Name = SampleBankAccountName,
+                UniqueId = SampleBankAccountUniqueId,
+                User = await this.dbContext.Users.FirstOrDefaultAsync()
+
+            };
+            await this.dbContext.Accounts.AddAsync(model);
+            await this.dbContext.SaveChangesAsync();
+
+            return model;
+        }
+
+        private async Task SeedUserAsync()
+        {
+            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleUserId, FullName = SampleUserFullname });
+            await this.dbContext.SaveChangesAsync();
         }
 
         [Fact]
-        public async Task GetLast10MoneyTransfersForUserAsync_ShouldReturnOrderedByMadeOnCollection()
+        public async Task CreateMoneyTransferAsync_WithDifferentId_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
         {
             // Arrange
             await this.SeedBankAccountAsync();
-            for (int i = 0; i < 22; i++)
-            {
-                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
-                {
-                    Id = $"{SampleId}_{i}",
-                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
-                    MadeOn = DateTime.UtcNow.AddMinutes(i)
-                });
-            }
+            var model = PrepareCreateModel(accountId: "another id");
 
-            await this.dbContext.SaveChangesAsync();
             // Act
-            var result =
-                await this.moneyTransferService.GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(SampleUserId);
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
 
             // Assert
             result
                 .Should()
-                .BeInDescendingOrder(x => x.MadeOn);
-        }
+                .BeFalse();
 
-        [Fact]
-        public async Task GetLast10MoneyTransfersForUserAsync_ShouldReturnCorrectCount()
-        {
-            // Arrange
-            const int count = 22;
-            const int expectedCount = 10;
-            await this.SeedBankAccountAsync();
-            for (int i = 1; i <= count; i++)
-            {
-                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
-                {
-                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
-                });
-            }
-
-            await this.dbContext.SaveChangesAsync();
-            // Act
-            var result =
-                await this.moneyTransferService.GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(SampleUserId);
-
-            // Assert
-            result
+            this.dbContext
+                .Transfers
                 .Should()
-                .HaveCount(expectedCount);
+                .BeEmpty();
         }
 
         [Fact]
@@ -331,70 +215,7 @@
         {
             // Arrange
             var invalidDescription = new string('m', ModelConstants.MoneyTransfer.DescriptionMaxLength + 1);
-            var model = PrepareCreateModel(description: invalidDescription);
-
-            // Act
-            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
-
-            // Assert
-            result
-                .Should()
-                .BeFalse();
-
-            this.dbContext
-                .Transfers
-                .Should()
-                .BeEmpty();
-        }
-
-        [Fact]
-        public async Task CreateMoneyTransferAsync_WithInvalidSenderName_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
-        {
-            // Arrange
-            var invalidSenderName = new string('m', ModelConstants.User.FullNameMaxLength + 1);
-            var model = PrepareCreateModel(senderName: invalidSenderName);
-
-            // Act
-            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
-
-            // Assert
-            result
-                .Should()
-                .BeFalse();
-
-            this.dbContext
-                .Transfers
-                .Should()
-                .BeEmpty();
-        }
-
-        [Fact]
-        public async Task CreateMoneyTransferAsync_WithInvalidRecipientName_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
-        {
-            // Arrange
-            var invalidRecipientName = new string('m', ModelConstants.User.FullNameMaxLength + 1);
-            var model = PrepareCreateModel(recipientName: invalidRecipientName);
-
-            // Act
-            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
-
-            // Assert
-            result
-                .Should()
-                .BeFalse();
-
-            this.dbContext
-                .Transfers
-                .Should()
-                .BeEmpty();
-        }
-
-        [Fact]
-        public async Task CreateMoneyTransferAsync_WithInvalidSource_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
-        {
-            // Arrange
-            var invalidSource = new string('m', ModelConstants.BankAccount.UniqueIdMaxLength + 1);
-            var model = PrepareCreateModel(source: invalidSource);
+            var model = PrepareCreateModel(invalidDescription);
 
             // Act
             var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
@@ -432,11 +253,11 @@
         }
 
         [Fact]
-        public async Task CreateMoneyTransferAsync_WithDifferentId_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
+        public async Task CreateMoneyTransferAsync_WithInvalidRecipientName_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
         {
             // Arrange
-            await this.SeedBankAccountAsync();
-            var model = PrepareCreateModel(accountId: "another id");
+            var invalidRecipientName = new string('m', ModelConstants.User.FullNameMaxLength + 1);
+            var model = PrepareCreateModel(recipientName: invalidRecipientName);
 
             // Act
             var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
@@ -453,12 +274,11 @@
         }
 
         [Fact]
-        public async Task CreateMoneyTransferAsync_WithValidModel_ShouldReturnTrue_And_InsertTransferInDatabase()
+        public async Task CreateMoneyTransferAsync_WithInvalidSenderName_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
         {
             // Arrange
-            var dbCount = this.dbContext.Transfers.Count();
-            await this.SeedBankAccountAsync();
-            var model = PrepareCreateModel();
+            var invalidSenderName = new string('m', ModelConstants.User.FullNameMaxLength + 1);
+            var model = PrepareCreateModel(senderName: invalidSenderName);
 
             // Act
             var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
@@ -466,12 +286,33 @@
             // Assert
             result
                 .Should()
-                .BeTrue();
+                .BeFalse();
 
             this.dbContext
                 .Transfers
                 .Should()
-                .HaveCount(dbCount + 1);
+                .BeEmpty();
+        }
+
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithInvalidSource_ShouldReturnFalse_And_NotAddMoneyTransferInDatabase()
+        {
+            // Arrange
+            var invalidSource = new string('m', ModelConstants.BankAccount.UniqueIdMaxLength + 1);
+            var model = PrepareCreateModel(source: invalidSource);
+
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
+
+            // Assert
+            result
+                .Should()
+                .BeFalse();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .BeEmpty();
         }
 
         [Fact]
@@ -497,75 +338,231 @@
                 .HaveCount(dbCount + 1);
         }
 
-        #region privateMethods
-
-        private static MoneyTransferCreateServiceModel PrepareCreateModel(
-            string description = SampleDescription,
-            decimal amount = SampleAmount,
-            string accountId = SampleBankAccountId,
-            string destinationBankUniqueId = SampleDestination,
-            string source = SampleBankAccountId,
-            string senderName = SampleSenderName,
-            string recipientName = SampleRecipientName)
+        [Fact]
+        public async Task CreateMoneyTransferAsync_WithValidModel_ShouldReturnTrue_And_InsertTransferInDatabase()
         {
-            var model = new MoneyTransferCreateServiceModel
-            {
-                Description = description,
-                Amount = amount,
-                AccountId = accountId,
-                DestinationBankAccountUniqueId = destinationBankUniqueId,
-                Source = source,
-                SenderName = senderName,
-                RecipientName = recipientName,
-            };
-
-            return model;
-        }
-
-        private async Task<MoneyTransfer> SeedMoneyTransfersAsync()
-        {
+            // Arrange
+            var dbCount = this.dbContext.Transfers.Count();
             await this.SeedBankAccountAsync();
-            var model = new MoneyTransfer
-            {
-                Id = SampleId,
-                Description = SampleDescription,
-                Amount = SampleAmount,
-                Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
-                Destination = SampleDestination,
-                Source = SampleBankAccountId,
-                SenderName = SampleSenderName,
-                RecipientName = SampleRecipientName,
-                MadeOn = DateTime.UtcNow,
-            };
+            var model = PrepareCreateModel();
 
-            await this.dbContext.Transfers.AddAsync(model);
-            await this.dbContext.SaveChangesAsync();
+            // Act
+            var result = await this.moneyTransferService.CreateMoneyTransferAsync(model);
 
-            return model;
+            // Assert
+            result
+                .Should()
+                .BeTrue();
+
+            this.dbContext
+                .Transfers
+                .Should()
+                .HaveCount(dbCount + 1);
         }
 
-        private async Task<BankAccount> SeedBankAccountAsync()
+        [Fact]
+        public async Task GetAllMoneyTransfersAsync_ShouldReturnCorrectCount()
         {
-            await this.SeedUserAsync();
-            var model = new BankAccount
+            // Arrange
+            const int count = 10;
+            await this.SeedBankAccountAsync();
+            for (int i = 1; i <= count; i++)
             {
-                Id = SampleBankAccountId,
-                Name = SampleBankAccountName,
-                UniqueId = SampleBankAccountUniqueId,
-                User = await this.dbContext.Users.FirstOrDefaultAsync(),
+                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
+                {
+                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync()
+                });
+            }
 
-            };
-            await this.dbContext.Accounts.AddAsync(model);
             await this.dbContext.SaveChangesAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleUserId);
 
-            return model;
+            // Assert
+            result
+                .Should()
+                .HaveCount(count);
         }
 
-        private async Task SeedUserAsync()
+        [Fact]
+        public async Task GetAllMoneyTransfersAsync_ShouldReturnOrderedByMadeOnCollection()
         {
-            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleUserId, FullName = SampleUserFullname, });
+            // Arrange
+            await this.SeedBankAccountAsync();
+            for (int i = 0; i < 10; i++)
+            {
+                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
+                {
+                    Id = $"{SampleId}_{i}",
+                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
+                    MadeOn = DateTime.UtcNow.AddMinutes(i)
+                });
+            }
+
             await this.dbContext.SaveChangesAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleUserId);
+
+            // Assert
+            result
+                .Should()
+                .BeInDescendingOrder(x => x.MadeOn);
         }
-        #endregion
+
+        [Fact]
+        public async Task GetAllMoneyTransfersAsync_WithValidUserId_ShouldReturnCollectionOfCorrectEntities()
+        {
+            // Arrange
+            var model = await this.SeedMoneyTransfersAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(model.Account.UserId);
+
+            // Assert
+            result
+                .Should()
+                .AllBeAssignableTo<MoneyTransferListingServiceModel>()
+                .And
+                .Match<IEnumerable<MoneyTransferListingServiceModel>>(x => x.All(c => c.Source == model.Source));
+        }
+
+        [Fact]
+        public async Task GetAllMoneyTransfersForAccountAsync_ShouldReturnCorrectCount()
+        {
+            // Arrange
+            const int count = 10;
+            await this.SeedBankAccountAsync();
+            for (int i = 1; i <= count; i++)
+            {
+                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
+                {
+                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync()
+                });
+            }
+
+            await this.dbContext.SaveChangesAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(SampleBankAccountId);
+
+            // Assert
+            result
+                .Should()
+                .HaveCount(count);
+        }
+
+        [Fact]
+        public async Task GetAllMoneyTransfersForAccountAsync_ShouldReturnOrderedByMadeOnCollection()
+        {
+            // Arrange
+            await this.SeedBankAccountAsync();
+            for (int i = 0; i < 10; i++)
+            {
+                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
+                {
+                    Id = $"{SampleId}_{i}",
+                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
+                    MadeOn = DateTime.UtcNow.AddMinutes(i)
+                });
+            }
+
+            await this.dbContext.SaveChangesAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(SampleBankAccountId);
+
+            // Assert
+            result
+                .Should()
+                .BeInDescendingOrder(x => x.MadeOn);
+        }
+
+        [Fact]
+        public async Task GetAllMoneyTransfersForAccountAsync_WithValidUserId_ShouldReturnCollectionOfCorrectEntities()
+        {
+            // Arrange
+            var model = await this.SeedMoneyTransfersAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(model.Account.Id);
+
+            // Assert
+            result
+                .Should()
+                .AllBeAssignableTo<MoneyTransferListingServiceModel>()
+                .And
+                .Match<IEnumerable<MoneyTransferListingServiceModel>>(x => x.All(c => c.Source == model.Source));
+        }
+
+        [Fact]
+        public async Task GetLast10MoneyTransfersForUserAsync_ShouldReturnCorrectCount()
+        {
+            // Arrange
+            const int count = 22;
+            const int expectedCount = 10;
+            await this.SeedBankAccountAsync();
+            for (int i = 1; i <= count; i++)
+            {
+                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
+                {
+                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync()
+                });
+            }
+
+            await this.dbContext.SaveChangesAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(SampleUserId);
+
+            // Assert
+            result
+                .Should()
+                .HaveCount(expectedCount);
+        }
+
+        [Fact]
+        public async Task GetLast10MoneyTransfersForUserAsync_ShouldReturnOrderedByMadeOnCollection()
+        {
+            // Arrange
+            await this.SeedBankAccountAsync();
+            for (int i = 0; i < 22; i++)
+            {
+                await this.dbContext.Transfers.AddAsync(new MoneyTransfer
+                {
+                    Id = $"{SampleId}_{i}",
+                    Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
+                    MadeOn = DateTime.UtcNow.AddMinutes(i)
+                });
+            }
+
+            await this.dbContext.SaveChangesAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(SampleUserId);
+
+            // Assert
+            result
+                .Should()
+                .BeInDescendingOrder(x => x.MadeOn);
+        }
+
+        [Fact]
+        public async Task GetLast10MoneyTransfersForUserAsync_WithValidUserId_ShouldReturnCollectionOfCorrectEntities()
+        {
+            // Arrange
+            var model = await this.SeedMoneyTransfersAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(model.Account.UserId);
+
+            // Assert
+            result
+                .Should()
+                .AllBeAssignableTo<MoneyTransferListingServiceModel>()
+                .And
+                .Match<IEnumerable<MoneyTransferListingServiceModel>>(x => x.All(c => c.Source == model.Source));
+        }
     }
 }

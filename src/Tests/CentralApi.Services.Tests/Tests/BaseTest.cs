@@ -1,9 +1,9 @@
 ﻿namespace CentralApi.Services.Tests.Tests
 {
+    using System;
     using Data;
     using Microsoft.EntityFrameworkCore;
     using Setup;
-    using System;
 
     public abstract class BaseTest
     {

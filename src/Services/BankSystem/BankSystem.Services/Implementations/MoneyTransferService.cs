@@ -1,5 +1,9 @@
 ﻿namespace BankSystem.Services.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
@@ -9,10 +13,6 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.MoneyTransfer;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class MoneyTransferService : BaseService, IMoneyTransferService
     {
