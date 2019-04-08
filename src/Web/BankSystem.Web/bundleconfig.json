@@ -2,7 +2,8 @@
   {
     "outputFileName": "wwwroot/bundle/vendor.min.css",
     "inputFiles": [
-      "wwwroot/source/vendor/css/bootstrap.css"
+      "wwwroot/source/vendor/css/bootstrap.css",
+      "wwwroot/source/vendor/css/datatables.css"
     ],
     "minify": {
       "enabled": true
@@ -15,7 +16,8 @@
       "wwwroot/source/vendor/js/bootstrap.js",
       "wwwroot/source/vendor/js/moment.js",
       "wwwroot/source/vendor/js/jquery.validate.js",
-      "wwwroot/source/vendor/js/jquery.validate.unobtrusive.js"
+      "wwwroot/source/vendor/js/jquery.validate.unobtrusive.js",
+      "wwwroot/source/vendor/js/datatables.js"
     ],
     "minify": {
       "enabled": true
@@ -34,26 +36,8 @@
     "outputFileName": "wwwroot/bundle/main.min.js",
     "inputFiles": [
       "wwwroot/source/main/js/moment-helper.js",
-      "wwwroot/source/main/js/auto-dropdown.js"
-    ],
-    "minify": {
-      "enabled": true
-    }
-  },
-  {
-    "outputFileName": "wwwroot/bundle/datatables.min.css",
-    "inputFiles": [
-      "wwwroot/source/datatables/css/datatables.css"
-    ],
-    "minify": {
-      "enabled": true
-    }
-  },
-  {
-    "outputFileName": "wwwroot/bundle/datatables.min.js",
-    "inputFiles": [
-      "wwwroot/source/datatables/js/datatables.js",
-      "wwwroot/source/datatables/js/datatables-init.js"
+      "wwwroot/source/main/js/auto-dropdown.js",
+      "wwwroot/source/main/js/auto-datatable.js"
     ],
     "minify": {
       "enabled": true
