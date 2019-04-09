@@ -3,6 +3,24 @@ html {
     min-height: 100%;
 }
 
+.loader {
+    border: 0.5em solid transparent;
+    border-radius: 50%;
+    border-top: 0.5em solid #007bff;
+    border-bottom: 0.5em solid #007bff;
+    width: 5em;
+    height: 5em;
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.bg-white-translucent {
+    background: rgba(255, 255, 255, 0.5);
+}
+
 @media (min-width: 768px) {
     .w-md-75 {
         width: 75% !important;
