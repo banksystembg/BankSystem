@@ -22,16 +22,13 @@
                 var key = Convert.FromBase64String(aesParams[0]);
                 var iv = Convert.FromBase64String(aesParams[1]);
 
-                var serializedModel = JsonConvert.SerializeObject(model);
-
                 var dataObject = new
                 {
-                    Model = serializedModel,
+                    Model = JsonConvert.SerializeObject(model),
                     Timestamp = DateTime.UtcNow
                 };
 
                 var data = JsonConvert.SerializeObject(dataObject);
-
                 var signature = Convert.ToBase64String(rsa
                     .SignData(Encoding.UTF8.GetBytes(data), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
 
