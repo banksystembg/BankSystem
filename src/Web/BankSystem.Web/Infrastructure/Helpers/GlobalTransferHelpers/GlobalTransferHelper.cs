@@ -104,8 +104,17 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
                 var iv = Convert.FromBase64String(aesParams[1]);
 
                 var serializedModel = JsonConvert.SerializeObject(model);
+
+                var dataObject = new
+                {
+                    Model = serializedModel,
+                    Timestamp = DateTime.UtcNow
+                };
+
+                var data = JsonConvert.SerializeObject(dataObject);
+
                 var signature = Convert.ToBase64String(rsa
-                    .SignData(Encoding.UTF8.GetBytes(serializedModel), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
+                    .SignData(Encoding.UTF8.GetBytes(data), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
 
                 string encryptedKey;
                 string encryptedIv;
@@ -116,6 +125,8 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
                     encryptedIv = Convert.ToBase64String(encryptionRsa.Encrypt(iv, RSAEncryptionPadding.Pkcs1));
                 }
 
+                var encryptedData = Convert.ToBase64String(CryptographyExtensions.Encrypt(data, key, iv));
+
                 var json = new
                 {
                     BankName = this.bankConfiguration.BankName,
@@ -123,14 +134,14 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
                     BankCountry = this.bankConfiguration.Country,
                     EncryptedKey = encryptedKey,
                     EncryptedIv = encryptedIv,
-                    Data = Convert.ToBase64String(CryptographyExtensions.Encrypt(serializedModel, key, iv)),
+                    Data = encryptedData,
                     Signature = signature
                 };
 
                 var jsonRequest = JsonConvert.SerializeObject(json);
-                var encryptedData = Convert.ToBase64String(Encoding.UTF8.GetBytes(jsonRequest));
+                var encryptedRequest = Convert.ToBase64String(Encoding.UTF8.GetBytes(jsonRequest));
 
-                return encryptedData;
+                return encryptedRequest;
             }
         }
     }
