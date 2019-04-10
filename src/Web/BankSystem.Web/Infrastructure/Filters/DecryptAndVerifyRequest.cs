@@ -5,6 +5,7 @@
     using System.Text;
     using Common.Configuration;
     using Common.Utils;
+    using Common.Utils.Models;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.DependencyInjection;
@@ -54,13 +55,15 @@
                 string signature = deserializedData.Signature;
 
                 var decryptedData = SignatureVerificationUtil
-                    .DecryptDataAndVerifySignature(
-                        this.configuration?.Key,
-                        this.configuration?.CentralApiPublicKey,
-                        encryptedKey,
-                        encryptedIv,
-                        data,
-                        signature);
+                    .DecryptDataAndVerifySignature(new SignatureVerificationModel
+                    {
+                        DecryptionPrivateKey = this.configuration.Key,
+                        SignaturePublicKey = this.configuration.CentralApiPublicKey,
+                        EncryptedKey = encryptedKey,
+                        EncryptedIv = encryptedIv,
+                        Data = data,
+                        Signature = signature
+                    });
 
                 if (decryptedData == null)
                 {

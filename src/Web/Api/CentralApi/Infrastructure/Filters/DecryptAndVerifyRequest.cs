@@ -5,6 +5,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using BankSystem.Common.Utils;
+    using BankSystem.Common.Utils.Models;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.DependencyInjection;
@@ -71,13 +72,15 @@
                 string signature = deserializedData.Signature;
 
                 var decryptedData = SignatureVerificationUtil
-                    .DecryptDataAndVerifySignature(
-                        this.configuration.Key,
-                        bank.ApiKey,
-                        encryptedKey,
-                        encryptedIv,
-                        data,
-                        signature);
+                    .DecryptDataAndVerifySignature(new SignatureVerificationModel
+                    {
+                        DecryptionPrivateKey = this.configuration.Key,
+                        SignaturePublicKey = bank.ApiKey,
+                        EncryptedKey = encryptedKey,
+                        EncryptedIv = encryptedIv,
+                        Data = data,
+                        Signature = signature
+                    });
 
                 if (decryptedData == null)
                 {
