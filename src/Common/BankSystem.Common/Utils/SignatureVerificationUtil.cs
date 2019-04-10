@@ -1,11 +1,15 @@
 ﻿namespace BankSystem.Common.Utils
 {
     using System;
+    using System.Globalization;
     using System.Security.Cryptography;
     using System.Text;
 
     public static class SignatureVerificationUtil
     {
+        private const int TimestampValidityBeforeIssuanceInMinutes = 2;
+        private const int TimestampValidityAfterIssuanceInMinutes = 2;
+
         public static string DecryptDataAndVerifySignature(
             string decryptionPrivateKey,
             string signaturePublicKey,
@@ -33,8 +37,52 @@
                 var decrypt = Encoding.UTF8.GetBytes(decrypted);
                 var isVerified = rsa.VerifyData(decrypt, Convert.FromBase64String(signature), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
-                return isVerified ? decrypted : null;
+                if (!isVerified)
+                {
+                    return null;
+                }
             }
+
+            // Check timestamp
+            var split = decrypted.Split('\0');
+
+            if (split.Length != 2)
+            {
+                return null;
+            }
+
+            var json = split[0];
+
+            bool timestampParsed = DateTime.TryParseExact(
+                split[1],
+                "O",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AdjustToUniversal,
+                out var timestamp);
+
+            if (!timestampParsed)
+            {
+                return null;
+            }
+
+            bool timestampValid = IsTimestampValid(timestamp);
+
+            if (!timestampValid)
+            {
+                return null;
+            }
+
+            return json;
+        }
+
+        private static bool IsTimestampValid(DateTime timestamp)
+        {
+            var currentTime = DateTime.UtcNow;
+
+            bool timestampValid = currentTime.AddMinutes(-TimestampValidityBeforeIssuanceInMinutes) < timestamp
+                                  && timestamp < currentTime.AddMinutes(TimestampValidityAfterIssuanceInMinutes);
+
+            return timestampValid;
         }
     }
 }
