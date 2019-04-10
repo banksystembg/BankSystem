@@ -1,7 +1,6 @@
 ﻿namespace CentralApi.Infrastructure.Helpers
 {
     using System;
-    using System.Globalization;
     using System.Security.Cryptography;
     using System.Text;
     using BankSystem.Common.Utils;
@@ -25,8 +24,13 @@
 
                 var serializedModel = JsonConvert.SerializeObject(model);
 
-                // Append timestamp
-                var data = serializedModel + '\0' + DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture);
+                var dataObject = new
+                {
+                    Model = serializedModel,
+                    Timestamp = DateTime.UtcNow
+                };
+
+                var data = JsonConvert.SerializeObject(dataObject);
 
                 var signature = Convert.ToBase64String(rsa
                     .SignData(Encoding.UTF8.GetBytes(data), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));

@@ -1,10 +1,10 @@
 ﻿namespace BankSystem.Common.Utils
 {
     using System;
-    using System.Globalization;
     using System.Security.Cryptography;
     using System.Text;
     using Models;
+    using Newtonsoft.Json;
 
     public static class SignatureVerificationUtil
     {
@@ -49,26 +49,11 @@
             }
 
             // Check timestamp
-            var split = decrypted.Split('\0');
+            dynamic dataObject = JsonConvert.DeserializeObject(decrypted);
 
-            if (split.Length != 2)
-            {
-                return null;
-            }
+            string json = dataObject.Model;
 
-            var json = split[0];
-
-            bool timestampParsed = DateTime.TryParseExact(
-                split[1],
-                "O",
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.AdjustToUniversal,
-                out var timestamp);
-
-            if (!timestampParsed)
-            {
-                return null;
-            }
+            DateTime timestamp = dataObject.Timestamp;
 
             bool timestampValid = IsTimestampValid(timestamp);
 
