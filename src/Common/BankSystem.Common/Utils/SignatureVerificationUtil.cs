@@ -1,10 +1,11 @@
 ﻿namespace BankSystem.Common.Utils
 {
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
     using Models;
     using Newtonsoft.Json;
+    using System;
+    using System.Globalization;
+    using System.Security.Cryptography;
+    using System.Text;
 
     public static class SignatureVerificationUtil
     {
@@ -48,21 +49,28 @@
                 }
             }
 
-            // Check timestamp
             dynamic dataObject = JsonConvert.DeserializeObject(decrypted);
-
             string json = dataObject.Model;
 
+            // Check timestamp
             DateTime timestamp = dataObject.Timestamp;
-
-            bool timestampValid = IsTimestampValid(timestamp);
-
-            if (!timestampValid)
+            if (timestamp.Kind != DateTimeKind.Utc)
             {
-                return null;
+                bool isParsed = DateTime.TryParseExact(
+                    timestamp.ToString(GlobalConstants.DateTimeFormat, CultureInfo.InvariantCulture),
+                    GlobalConstants.DateTimeFormat,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal,
+                    out timestamp);
+
+                if (!isParsed)
+                {
+                    return null;
+                }
             }
 
-            return json;
+            bool timestampValid = IsTimestampValid(timestamp);
+            return timestampValid ? json : null;
         }
 
         private static bool IsTimestampValid(DateTime timestamp)

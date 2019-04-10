@@ -60,7 +60,6 @@
                 string bankCountry = deserializedData.BankCountry;
 
                 var bank = await bankService.GetBankAsync<BankServiceModel>(bankName, bankSwiftCode, bankCountry);
-
                 if (bank == null)
                 {
                     return false;

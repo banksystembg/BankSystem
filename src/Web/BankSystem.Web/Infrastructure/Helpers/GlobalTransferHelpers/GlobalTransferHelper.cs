@@ -112,7 +112,6 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
                 };
 
                 var data = JsonConvert.SerializeObject(dataObject);
-
                 var signature = Convert.ToBase64String(rsa
                     .SignData(Encoding.UTF8.GetBytes(data), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
 

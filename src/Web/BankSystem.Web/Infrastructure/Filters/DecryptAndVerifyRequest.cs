@@ -49,6 +49,7 @@
             {
                 var incomingData = Encoding.UTF8.GetString(Convert.FromBase64String(model.ToString()));
                 dynamic deserializedData = JsonConvert.DeserializeObject(incomingData);
+
                 string encryptedKey = deserializedData.EncryptedKey;
                 string encryptedIv = deserializedData.EncryptedIv;
                 string data = deserializedData.Data;
