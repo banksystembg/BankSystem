@@ -34,6 +34,12 @@
         [InlineData(" ABCJ98131783")]
         [InlineData("ABC J98  1317 85 ")]
         [InlineData("ABCJz568235t89")]
+        [InlineData("ABCJ98131786")]
+        [InlineData("ABCA98131785")]
+        [InlineData("abcJ98131785")]
+        [InlineData("abcJ981317857")]
+        [InlineData("ABAJ98131785")]
+        [InlineData("ABCJA8131785")]
         public void IsUniqueIdValid_WithInvalidId_ShouldReturnFalse(string id)
         {
             // Act
