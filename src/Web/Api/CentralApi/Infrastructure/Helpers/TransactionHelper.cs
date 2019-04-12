@@ -23,7 +23,6 @@
                 var iv = Convert.FromBase64String(aesParams[1]);
 
                 var serializedModel = JsonConvert.SerializeObject(model);
-
                 var dataObject = new
                 {
                     Model = serializedModel,

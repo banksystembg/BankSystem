@@ -50,13 +50,10 @@
 
             // Check timestamp
             dynamic dataObject = JsonConvert.DeserializeObject(decrypted);
-
             string json = dataObject.Model;
-
             DateTime timestamp = dataObject.Timestamp;
 
             bool timestampValid = IsTimestampValid(timestamp);
-
             if (!timestampValid)
             {
                 return null;
