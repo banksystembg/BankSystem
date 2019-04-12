@@ -40,6 +40,10 @@ Direct payments are a way to securely pay on websites directly through a bank ac
 ### [DemoShop](https://github.com/banksystembg/BankSystem/wiki/DemoShop)
 DemoShop is an example web application implementing direct and card payments.
 
+### [User settings](https://github.com/banksystembg/BankSystem/wiki/User-settings)
+
+### [Bank administration](https://github.com/banksystembg/BankSystem/wiki/Bank-administration)
+
 ***
 
 **Used technologies:**
@@ -48,9 +52,15 @@ DemoShop is an example web application implementing direct and card payments.
 * ASP.NET Core MVC
 * ASP.NET Core Web API
 * Entity Framework Core
-* asymmetric encryption
+* Asymmetric & hybrid encryption
 * jQuery
 * AJAX
 * HTML
 * CSS
 * Bootstrap
+
+***
+
+## Development Timeline Visualization
+### [Video:](https://youtu.be/3Vm7BcysBVc)
+[![](http://img.youtube.com/vi/3Vm7BcysBVc/hqdefault.jpg)](https://youtu.be/3Vm7BcysBVc)
