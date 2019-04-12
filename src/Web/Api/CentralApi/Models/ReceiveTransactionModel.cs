@@ -38,5 +38,8 @@
         [Required]
         [MaxLength(ModelConstants.BankAccount.UniqueIdMaxLength)]
         public string DestinationBankAccountUniqueId { get; set; }
+
+        [Required]
+        public string ReferenceNumber { get; set; }
     }
 }

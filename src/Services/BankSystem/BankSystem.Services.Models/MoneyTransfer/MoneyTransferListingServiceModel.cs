@@ -19,5 +19,7 @@
         public string Source { get; set; }
 
         public string Destination { get; set; }
+
+        public string ReferenceNumber { get; set; }
     }
 }

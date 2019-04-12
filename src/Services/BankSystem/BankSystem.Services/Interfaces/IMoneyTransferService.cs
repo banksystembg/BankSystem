@@ -17,5 +17,8 @@
 
         Task<bool> CreateMoneyTransferAsync<T>(T model)
             where T : MoneyTransferBaseServiceModel;
+
+        Task<IEnumerable<T>> GetMoneyTransferAsync<T>(string referenceNumber)
+            where T : MoneyTransferBaseServiceModel;
     }
 }

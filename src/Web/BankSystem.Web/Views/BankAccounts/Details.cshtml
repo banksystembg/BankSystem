@@ -66,51 +66,54 @@
 
 @if (!Model.MoneyTransfers.Any())
 {
-    <h5 class="text-center text-muted">No money transfers have been made yet</h5>
+<h5 class="text-center text-muted">No money transfers have been made yet</h5>
 }
 else
 {
-    <h3 class="text-center">Last transfers</h3>
-    <table class="table table-hover table-bordered auto-datatable">
-        <thead>
+<h3 class="text-center">Last transfers</h3>
+<table class="table table-hover table-bordered auto-datatable">
+    <thead>
         <tr>
             <th data-priority="2">Date</th>
             <th data-priority="4">Details</th>
             <th data-priority="3">From</th>
             <th data-priority="5">To</th>
             <th data-priority="1">Amount</th>
+            <th class="none">Reference number</th>
+
         </tr>
-        </thead>
-        <tbody>
+    </thead>
+    <tbody>
         @foreach (var moneyTransfer in Model.MoneyTransfers)
         {
-            <tr>      
-                <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
-                <td class="word-break-all">@moneyTransfer.Description</td>
-                <td>
-                    <p>@moneyTransfer.SenderName</p>
-                    <p>@moneyTransfer.Source</p>
-                </td>
-                <td>
-                    <p>@moneyTransfer.RecipientName</p>
-                    <p>@moneyTransfer.Destination</p>
-                </td>
-                <td>
-                    @if (moneyTransfer.Amount < 0)
+        <tr>
+            <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
+            <td class="word-break-all">@moneyTransfer.Description</td>
+            <td>
+                <p>@moneyTransfer.SenderName</p>
+                <p>@moneyTransfer.Source</p>
+            </td>
+            <td>
+                <p>@moneyTransfer.RecipientName</p>
+                <p>@moneyTransfer.Destination</p>
+            </td>
+            <td>
+                @if (moneyTransfer.Amount < 0)
                     {
-                        <span class="text-red">@moneyTransfer.Amount EUR</span>
+                <span class="text-red">@moneyTransfer.Amount EUR</span>
                     }
                     else
                     {
-                        <span class="text-green">+@moneyTransfer.Amount EUR</span>
+                <span class="text-green">+@moneyTransfer.Amount EUR</span>
                     }
-                </td>
-            </tr>
+            </td>
+            <td>@moneyTransfer.ReferenceNumber</td>
+        </tr>
         }
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
-    <partial name="_PaginationPartial" model="@Model.MoneyTransfers"/>
+<partial name="_PaginationPartial" model="@Model.MoneyTransfers" />
 }
 
 <div id="editModal" class="modal fade" tabindex="-1" role="dialog">
