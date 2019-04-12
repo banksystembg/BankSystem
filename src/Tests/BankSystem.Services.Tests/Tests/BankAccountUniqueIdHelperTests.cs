@@ -14,6 +14,22 @@
             this.bankAccountUniqueIdHelper = new BankAccountUniqueIdHelper(this.MockedBankConfiguration.Object);
         }
 
+        [Fact]
+        public void GenerateAccountUniqueId_ShouldReturn12DigitsString()
+        {
+            // Act
+            var result = this.bankAccountUniqueIdHelper.GenerateAccountUniqueId();
+
+            // Assert
+            result
+                .Should()
+                .BeAssignableTo<string>();
+
+            result
+                .Should()
+                .HaveLength(12);
+        }
+
         [Theory]
         [InlineData(" ABCJ98131783")]
         [InlineData("ABCJ98131785 ")]
