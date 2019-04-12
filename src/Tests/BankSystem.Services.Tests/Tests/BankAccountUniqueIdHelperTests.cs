@@ -32,8 +32,8 @@
 
         [Theory]
         [InlineData(" ABCJ98131783")]
-        [InlineData("ABCJ98131785 ")]
-        [InlineData("   asd  ")]
+        [InlineData("ABC J98  1317 85 ")]
+        [InlineData("ABCJz568235t89")]
         public void IsUniqueIdValid_WithInvalidId_ShouldReturnFalse(string id)
         {
             // Act
@@ -48,6 +48,7 @@
         [Theory]
         [InlineData("ABCY12054790")]
         [InlineData("ABCY52630755")]
+        [InlineData("ABCJ98131785")]
         public void IsUniqueIdValid_WithValidId_ShouldReturnTrue(string id)
         {
             // Act
