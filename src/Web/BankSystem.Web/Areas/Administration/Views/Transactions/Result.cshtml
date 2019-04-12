@@ -1,0 +1,56 @@
+﻿@model TransactionListingViewModel
+@{
+    ViewData["Title"] = "Results";
+}
+
+<div class="container">
+    @if (Model.MoneyTransfers.Any())
+    {
+        <h2>Transfers with reference number @Model.ReferenceNumber</h2>
+
+        <table class="table table-hover table-bordered auto-datatable">
+            <thead>
+                <tr>
+                    <th data-priority="2">Date</th>
+                    <th data-priority="4">Details</th>
+                    <th data-priority="3">From</th>
+                    <th data-priority="5">To</th>
+                    <th data-priority="1">Amount</th>
+                    <th data-priority="6">Reference number</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var moneyTransfer in Model.MoneyTransfers)
+                {
+                    <tr>
+                        <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
+                        <td class="word-break-all">@moneyTransfer.Description</td>
+                        <td>
+                            <p>@moneyTransfer.SenderName</p>
+                            <p>@moneyTransfer.Source</p>
+                        </td>
+                        <td>
+                            <p>@moneyTransfer.RecipientName</p>
+                            <p>@moneyTransfer.Destination</p>
+                        </td>
+                        <td>
+                            @if (moneyTransfer.Amount < 0)
+                            {
+                                <span class="text-red">@moneyTransfer.Amount EUR</span>
+                            }
+                            else
+                            {
+                                <span class="text-green">+@moneyTransfer.Amount EUR</span>
+                            }
+                        </td>
+                        <td>@moneyTransfer.ReferenceNumber</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h2>No money transfer found with reference number @Model.ReferenceNumber !</h2>
+    }
+</div>
