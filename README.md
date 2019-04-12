@@ -48,9 +48,14 @@ DemoShop is an example web application implementing direct and card payments.
 * ASP.NET Core MVC
 * ASP.NET Core Web API
 * Entity Framework Core
-* asymmetric encryption
+* Asymmetric & hybrid encryption
 * jQuery
 * AJAX
 * HTML
 * CSS
 * Bootstrap
+
+
+## Development Timeline Visualization
+### [Video:](https://youtu.be/3Vm7BcysBVc)
+[![](http://img.youtube.com/vi/3Vm7BcysBVc/hqdefault.jpg)](https://youtu.be/3Vm7BcysBVc)
