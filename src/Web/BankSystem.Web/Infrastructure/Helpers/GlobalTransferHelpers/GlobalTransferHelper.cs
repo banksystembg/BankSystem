@@ -75,7 +75,8 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
                 AccountId = account.Id,
                 DestinationBankAccountUniqueId = model.DestinationBankAccountUniqueId,
                 SenderName = account.UserFullName,
-                RecipientName = model.RecipientName
+                RecipientName = model.RecipientName,
+                ReferenceNumber = submitDto.ReferenceNumber
             };
 
             bool success = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);
@@ -104,7 +105,6 @@ namespace BankSystem.Web.Infrastructure.Helpers.GlobalTransferHelpers
                 var iv = Convert.FromBase64String(aesParams[1]);
 
                 var serializedModel = JsonConvert.SerializeObject(model);
-
                 var dataObject = new
                 {
                     Model = serializedModel,

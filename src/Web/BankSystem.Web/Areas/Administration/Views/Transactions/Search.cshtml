@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Look up transaction";
+}
+
+<div class="container">
+    <div class="text-center w-md-75 w-lg-50 mx-auto my-4">
+        <h2>@ViewData["Title"]</h2>
+        <form method="get" asp-action="Result" asp-controller="Transactions">
+            <div class="form-group">
+                <label>Reference number</label>
+                <input required class="form-control" name="referenceNumber" />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>

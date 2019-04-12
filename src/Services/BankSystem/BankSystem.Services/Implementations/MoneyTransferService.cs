@@ -1,9 +1,5 @@
 ﻿namespace BankSystem.Services.Implementations
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
@@ -13,6 +9,10 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.MoneyTransfer;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class MoneyTransferService : BaseService, IMoneyTransferService
     {
@@ -23,6 +23,14 @@
         {
             this.emailSender = emailSender;
         }
+
+        public async Task<IEnumerable<T>> GetMoneyTransferAsync<T>(string referenceNumber)
+            where T : MoneyTransferBaseServiceModel
+            => await this.Context
+                .Transfers
+                .Where(t => t.ReferenceNumber == referenceNumber)
+                .ProjectTo<T>()
+                .ToArrayAsync();
 
         public async Task<IEnumerable<T>> GetAllMoneyTransfersAsync<T>(string userId)
             where T : MoneyTransferBaseServiceModel

@@ -5,6 +5,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
     using System.Threading.Tasks;
     using AutoMapper;
     using Common;
+    using Infrastructure;
     using Microsoft.AspNetCore.Mvc;
     using Models.Internal;
     using Services.Interfaces;
@@ -94,11 +95,13 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
                 return this.View(model);
             }
 
+            var referenceNumber = ReferenceNumberGenerator.GenerateReferenceNumber();
             var sourceServiceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
             sourceServiceModel.Source = account.UniqueId;
             sourceServiceModel.Amount *= -1;
             sourceServiceModel.SenderName = account.UserFullName;
             sourceServiceModel.RecipientName = destinationAccount.UserFullName;
+            sourceServiceModel.ReferenceNumber = referenceNumber;
 
             if (!await this.moneyTransferService.CreateMoneyTransferAsync(sourceServiceModel))
             {
@@ -113,6 +116,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             destinationServiceModel.AccountId = destinationAccount.Id;
             destinationServiceModel.SenderName = account.UserFullName;
             destinationServiceModel.RecipientName = destinationAccount.UserFullName;
+            destinationServiceModel.ReferenceNumber = referenceNumber;
 
             if (!await this.moneyTransferService.CreateMoneyTransferAsync(destinationServiceModel))
             {

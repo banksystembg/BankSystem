@@ -54,7 +54,8 @@
                 DestinationBankAccountUniqueId = model.DestinationBankAccountUniqueId,
                 Source = model.SenderAccountUniqueId,
                 SenderName = model.SenderName,
-                RecipientName = model.RecipientName
+                RecipientName = model.RecipientName,
+                ReferenceNumber = model.ReferenceNumber
             };
 
             var isSuccessful = await this.moneyTransferService.CreateMoneyTransferAsync(serviceModel);

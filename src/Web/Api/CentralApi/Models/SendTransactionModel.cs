@@ -27,5 +27,8 @@
         [Required]
         [MaxLength(ModelConstants.BankAccount.UniqueIdMaxLength)]
         public string SenderAccountUniqueId { get; set; }
+
+        [Required]
+        public string ReferenceNumber { get; set; }
     }
 }

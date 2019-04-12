@@ -79,12 +79,14 @@ else
             <th data-priority="3">From</th>
             <th data-priority="5">To</th>
             <th data-priority="1">Amount</th>
+            <th class="none">Reference number</th>
+
         </tr>
         </thead>
         <tbody>
         @foreach (var moneyTransfer in Model.MoneyTransfers)
         {
-            <tr>      
+            <tr>
                 <td class="auto-format-date">@moneyTransfer.MadeOn.ToString("O")</td>
                 <td class="word-break-all">@moneyTransfer.Description</td>
                 <td>
@@ -105,6 +107,7 @@ else
                         <span class="text-green">+@moneyTransfer.Amount EUR</span>
                     }
                 </td>
+                <td>@moneyTransfer.ReferenceNumber</td>
             </tr>
         }
         </tbody>

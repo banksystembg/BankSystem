@@ -2,14 +2,17 @@
 namespace BankSystem.Data.Migrations
 {
     using System;
+    using BankSystem.Data;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Infrastructure;
     using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
 
     [DbContext(typeof(BankSystemDbContext))]
-    partial class BankSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190411191454_AddReferenceNumberFieldInMoneyTransfersTable")]
+    partial class AddReferenceNumberFieldInMoneyTransfersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -34,12 +34,64 @@
         private const string SampleBankAccountName = "Test bank account name";
         private const string SampleBankAccountId = "1";
         private const string SampleBankAccountUniqueId = "UniqueId";
+        private const string SampleReferenceNumber = "18832258557125540";
 
         private const string SampleUserFullname = "user user";
         private const string SampleUserId = "adfsdvxc-123ewsf";
 
         private readonly BankSystemDbContext dbContext;
         private readonly IMoneyTransferService moneyTransferService;
+
+        [Theory]
+        [InlineData(" 031069130864508423")]
+        [InlineData("24675875i6452436 ")]
+        [InlineData("! 68o4473485669 ")]
+        [InlineData("   845768798069  10   ")]
+        [InlineData("45848o02835yu56=")]
+        public async Task GetMoneyTransferAsync_WithInvalidNumber_ShouldReturnEmptyCollection(string referenceNumber)
+        {
+            // Arrange
+            await this.SeedMoneyTransfersAsync();
+            // Act
+            var result =
+                await this.moneyTransferService.GetMoneyTransferAsync<MoneyTransferListingServiceModel>(referenceNumber);
+
+            // Assert
+            result
+                .Should()
+                .BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task GetMoneyTransferAsync_WithValidNumber_ShouldReturnCorrectEntities()
+        {
+            // Arrange
+            const string expectedRefNumber = SampleReferenceNumber;
+            await this.dbContext.Transfers.AddAsync(new MoneyTransfer
+            {
+                Description = SampleDescription,
+                Amount = SampleAmount,
+                Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
+                Destination = SampleDestination,
+                Source = SampleBankAccountId,
+                SenderName = SampleSenderName,
+                RecipientName = SampleRecipientName,
+                MadeOn = DateTime.UtcNow,
+                ReferenceNumber = expectedRefNumber,
+            });
+            await this.dbContext.SaveChangesAsync();
+
+            // Act
+            var result =
+                await this.moneyTransferService.GetMoneyTransferAsync<MoneyTransferListingServiceModel>(expectedRefNumber);
+
+            // Assert
+            result
+                .Should()
+                .NotBeNullOrEmpty()
+                .And
+                .Match(t => t.All(x => x.ReferenceNumber == expectedRefNumber));
+        }
 
         [Theory]
         [InlineData(null)]
@@ -102,74 +154,6 @@
             result
                 .Should()
                 .BeNullOrEmpty();
-        }
-
-        private static MoneyTransferCreateServiceModel PrepareCreateModel(
-            string description = SampleDescription,
-            decimal amount = SampleAmount,
-            string accountId = SampleBankAccountId,
-            string destinationBankUniqueId = SampleDestination,
-            string source = SampleBankAccountId,
-            string senderName = SampleSenderName,
-            string recipientName = SampleRecipientName)
-        {
-            var model = new MoneyTransferCreateServiceModel
-            {
-                Description = description,
-                Amount = amount,
-                AccountId = accountId,
-                DestinationBankAccountUniqueId = destinationBankUniqueId,
-                Source = source,
-                SenderName = senderName,
-                RecipientName = recipientName
-            };
-
-            return model;
-        }
-
-        private async Task<MoneyTransfer> SeedMoneyTransfersAsync()
-        {
-            await this.SeedBankAccountAsync();
-            var model = new MoneyTransfer
-            {
-                Id = SampleId,
-                Description = SampleDescription,
-                Amount = SampleAmount,
-                Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
-                Destination = SampleDestination,
-                Source = SampleBankAccountId,
-                SenderName = SampleSenderName,
-                RecipientName = SampleRecipientName,
-                MadeOn = DateTime.UtcNow
-            };
-
-            await this.dbContext.Transfers.AddAsync(model);
-            await this.dbContext.SaveChangesAsync();
-
-            return model;
-        }
-
-        private async Task<BankAccount> SeedBankAccountAsync()
-        {
-            await this.SeedUserAsync();
-            var model = new BankAccount
-            {
-                Id = SampleBankAccountId,
-                Name = SampleBankAccountName,
-                UniqueId = SampleBankAccountUniqueId,
-                User = await this.dbContext.Users.FirstOrDefaultAsync()
-
-            };
-            await this.dbContext.Accounts.AddAsync(model);
-            await this.dbContext.SaveChangesAsync();
-
-            return model;
-        }
-
-        private async Task SeedUserAsync()
-        {
-            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleUserId, FullName = SampleUserFullname });
-            await this.dbContext.SaveChangesAsync();
         }
 
         [Fact]
@@ -563,6 +547,76 @@
                 .AllBeAssignableTo<MoneyTransferListingServiceModel>()
                 .And
                 .Match<IEnumerable<MoneyTransferListingServiceModel>>(x => x.All(c => c.Source == model.Source));
+        }
+
+        private static MoneyTransferCreateServiceModel PrepareCreateModel(
+            string description = SampleDescription,
+            decimal amount = SampleAmount,
+            string accountId = SampleBankAccountId,
+            string destinationBankUniqueId = SampleDestination,
+            string source = SampleBankAccountId,
+            string senderName = SampleSenderName,
+            string recipientName = SampleRecipientName,
+            string referenceNumber = SampleReferenceNumber)
+        {
+            var model = new MoneyTransferCreateServiceModel
+            {
+                Description = description,
+                Amount = amount,
+                AccountId = accountId,
+                DestinationBankAccountUniqueId = destinationBankUniqueId,
+                Source = source,
+                SenderName = senderName,
+                RecipientName = recipientName,
+                ReferenceNumber = SampleReferenceNumber,
+            };
+
+            return model;
+        }
+
+        private async Task<MoneyTransfer> SeedMoneyTransfersAsync()
+        {
+            await this.SeedBankAccountAsync();
+            var model = new MoneyTransfer
+            {
+                Id = SampleId,
+                Description = SampleDescription,
+                Amount = SampleAmount,
+                Account = await this.dbContext.Accounts.FirstOrDefaultAsync(),
+                Destination = SampleDestination,
+                Source = SampleBankAccountId,
+                SenderName = SampleSenderName,
+                RecipientName = SampleRecipientName,
+                MadeOn = DateTime.UtcNow
+            };
+
+            await this.dbContext.Transfers.AddAsync(model);
+            await this.dbContext.SaveChangesAsync();
+
+            return model;
+        }
+
+        private async Task<BankAccount> SeedBankAccountAsync()
+        {
+            await this.SeedUserAsync();
+            var model = new BankAccount
+            {
+                Id = SampleBankAccountId,
+                Name = SampleBankAccountName,
+                UniqueId = SampleBankAccountUniqueId,
+                User = await this.dbContext.Users.FirstOrDefaultAsync()
+
+            };
+            await this.dbContext.Accounts.AddAsync(model);
+            await this.dbContext.SaveChangesAsync();
+
+            return model;
+        }
+
+        private async Task SeedUserAsync()
+        {
+            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleUserId, FullName = SampleUserFullname });
+            await this.dbContext.SaveChangesAsync();
         }
     }
 }

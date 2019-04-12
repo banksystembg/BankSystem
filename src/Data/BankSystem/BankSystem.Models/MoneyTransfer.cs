@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using Common;
-
     public class MoneyTransfer
     {
         public string Id { get; set; }
@@ -37,5 +36,8 @@
         [Required]
         [MaxLength(ModelConstants.BankAccount.UniqueIdMaxLength)]
         public string Destination { get; set; }
+
+        [Required]
+        public string ReferenceNumber { get; set; }
     }
 }
