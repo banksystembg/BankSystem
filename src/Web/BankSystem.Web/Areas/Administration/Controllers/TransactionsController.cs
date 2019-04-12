@@ -24,7 +24,7 @@
         {
             if (referenceNumber == null)
             {
-                return this.View();
+                return this.NotFound();
             }
 
             var moneyTransfers = (await this.moneyTransfer
