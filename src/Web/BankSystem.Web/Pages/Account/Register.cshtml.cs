@@ -116,7 +116,7 @@
                 MinimumLength = ModelConstants.User.PasswordMinLength)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
-            [RegularExpression(@"(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,100}$",
+            [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,100}$",
                 ErrorMessage = "Password minimum length is 6 characters and it must contain at least one uppercase letter, one lowercase letter and one number.")]
             public string Password { get; set; }
 
