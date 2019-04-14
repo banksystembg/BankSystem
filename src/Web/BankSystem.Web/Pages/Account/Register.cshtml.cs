@@ -111,13 +111,10 @@
             public string FullName { get; set; }
 
             [Required]
-            [StringLength(ModelConstants.User.PasswordMaxLength,
-                ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
-                MinimumLength = ModelConstants.User.PasswordMinLength)]
+            [StringLength(ModelConstants.User.PasswordMaxLength, MinimumLength = ModelConstants.User.PasswordMinLength)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
-            [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,100}$",
-                ErrorMessage = "Password minimum length is 6 characters and it must contain at least one uppercase letter, one lowercase letter and one number.")]
+            [RegularExpression(ModelConstants.User.PasswordRegex,
+                ErrorMessage = ModelConstants.User.PasswordErrorMessage)]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]

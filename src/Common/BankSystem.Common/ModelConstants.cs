@@ -8,6 +8,11 @@
 
             public const int PasswordMaxLength = 100;
             public const int PasswordMinLength = 6;
+
+            public const string PasswordRegex = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,100}$";
+
+            public const string PasswordErrorMessage =
+                "Password minimum length is 6 characters and it must contain at least one uppercase letter, one lowercase letter and one number.";
         }
 
         public static class BankAccount
