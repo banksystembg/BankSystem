@@ -77,6 +77,7 @@
             if (!isPasswordCorrect)
             {
                 this.ShowErrorMessage(NotificationMessages.InvalidPassword);
+                await this.LoadSharedKeyAndQrCodeUriAsync(user);
                 return this.Page();
             }
 
