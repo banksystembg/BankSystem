@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Web.Pages.Account
+namespace BankSystem.Web.Pages.Account
 {
     using BankSystem.Models;
     using Common;
@@ -111,18 +111,15 @@
             public string FullName { get; set; }
 
             [Required]
-            [StringLength(ModelConstants.User.PasswordMaxLength,
-                ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
-                MinimumLength = ModelConstants.User.PasswordMinLength)]
+            [StringLength(ModelConstants.User.PasswordMaxLength, MinimumLength = ModelConstants.User.PasswordMinLength)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
-            [RegularExpression(@"(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,100}$",
-                ErrorMessage = "Password minimum length is 6 characters and it must contain at least one uppercase letter, one lowercase letter and one number.")]
+            [RegularExpression(ModelConstants.User.PasswordRegex,
+                ErrorMessage = ModelConstants.User.PasswordErrorMessage)]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Compare(nameof(Password), ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
         }
 
