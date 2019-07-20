@@ -19,7 +19,9 @@
 
         Task<bool> ChangeAccountNameAsync(string accountId, string newName);
 
-        Task<IEnumerable<T>> GetAllAccountsAsync<T>()
+        Task<IEnumerable<T>> GetAccountsAsync<T>(int pageIndex = 1, int count = int.MaxValue)
             where T : BankAccountBaseServiceModel;
+
+        Task<int> GetCountOfAccountsAsync();
     }
 }

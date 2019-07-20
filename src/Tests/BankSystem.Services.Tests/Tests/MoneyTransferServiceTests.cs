@@ -106,7 +106,7 @@
             await this.SeedMoneyTransfersAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(userId);
+                await this.moneyTransferService.GetMoneyTransfersAsync<MoneyTransferListingServiceModel>(userId);
 
             // Assert
             result
@@ -127,7 +127,7 @@
             await this.SeedMoneyTransfersAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(accountId);
+                await this.moneyTransferService.GetMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(accountId);
 
             // Assert
             result
@@ -154,6 +154,38 @@
             result
                 .Should()
                 .BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task GetCountOfAllMoneyTransfersForUserAsync_ShouldReturnCorrectCount()
+        {
+            // Arrange
+            await this.SeedMoneyTransfersAsync();
+
+            // Act
+            var result =
+                await this.moneyTransferService.GetCountOfAllMoneyTransfersForUserAsync(SampleUserId);
+
+            // Assert
+            result
+                .Should()
+                .Be(await this.dbContext.Transfers.CountAsync(t => t.Account.UserId == SampleUserId));
+        }
+
+        [Fact]
+        public async Task GetCountOfAllMoneyTransfersForAccountAsync_ShouldReturnCorrectCount()
+        {
+            // Arrange
+            await this.SeedMoneyTransfersAsync();
+
+            // Act
+            var result =
+                await this.moneyTransferService.GetCountOfAllMoneyTransfersForAccountAsync(SampleBankAccountId);
+
+            // Assert
+            result
+                .Should()
+                .Be(await this.dbContext.Transfers.CountAsync(t => t.AccountId == SampleBankAccountId));
         }
 
         [Fact]
@@ -361,7 +393,7 @@
             await this.dbContext.SaveChangesAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleUserId);
+                await this.moneyTransferService.GetMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleUserId);
 
             // Assert
             result
@@ -387,7 +419,7 @@
             await this.dbContext.SaveChangesAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleUserId);
+                await this.moneyTransferService.GetMoneyTransfersAsync<MoneyTransferListingServiceModel>(SampleUserId);
 
             // Assert
             result
@@ -402,7 +434,7 @@
             var model = await this.SeedMoneyTransfersAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(model.Account.UserId);
+                await this.moneyTransferService.GetMoneyTransfersAsync<MoneyTransferListingServiceModel>(model.Account.UserId);
 
             // Assert
             result
@@ -429,7 +461,7 @@
             await this.dbContext.SaveChangesAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(SampleBankAccountId);
+                await this.moneyTransferService.GetMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(SampleBankAccountId);
 
             // Assert
             result
@@ -455,7 +487,7 @@
             await this.dbContext.SaveChangesAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(SampleBankAccountId);
+                await this.moneyTransferService.GetMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(SampleBankAccountId);
 
             // Assert
             result
@@ -470,7 +502,7 @@
             var model = await this.SeedMoneyTransfersAsync();
             // Act
             var result =
-                await this.moneyTransferService.GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(model.Account.Id);
+                await this.moneyTransferService.GetMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(model.Account.Id);
 
             // Assert
             result

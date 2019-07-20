@@ -73,12 +73,27 @@
             await this.SeedCardAsync();
 
             // Act
-            var result = await this.cardService.GetAllCardsAsync<CardDetailsServiceModel>(userId);
+            var result = await this.cardService.GetCardsAsync<CardDetailsServiceModel>(userId);
 
             // Assert
             result
                 .Should()
                 .BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task GetCountOfAllCardsOwnedByUserAsync_ShouldReturnCorrectCount()
+        {
+            // Arrange
+            await this.SeedCardAsync();
+
+            // Act
+            var result = await this.cardService.GetCountOfAllCardsOwnedByUserAsync(SampleUserId);
+
+            // Assert
+            result
+                .Should()
+                .Be(await this.dbContext.Cards.CountAsync(c=> c.UserId == SampleUserId));
         }
 
         [Theory]
@@ -231,7 +246,7 @@
             var model = await this.SeedCardAsync();
 
             // Act
-            var result = await this.cardService.GetAllCardsAsync<CardDetailsServiceModel>(model.UserId);
+            var result = await this.cardService.GetCardsAsync<CardDetailsServiceModel>(model.UserId);
 
             // Assert
             result
@@ -247,7 +262,7 @@
             var model = await this.SeedCardAsync();
 
             // Act
-            var result = await this.cardService.GetAllCardsAsync<CardDetailsServiceModel>(model.UserId);
+            var result = await this.cardService.GetCardsAsync<CardDetailsServiceModel>(model.UserId);
 
             // Assert
             result

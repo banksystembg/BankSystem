@@ -1,5 +1,6 @@
 ﻿namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
@@ -29,11 +30,13 @@
         [Route("/{area}/Archives")]
         public async Task<IActionResult> All(int pageIndex = 1)
         {
+            pageIndex = Math.Max(1, pageIndex);
+
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
             var allMoneyTransfers =
-                (await this.moneyTransferService.GetAllMoneyTransfersAsync<MoneyTransferListingServiceModel>(userId))
+                (await this.moneyTransferService.GetMoneyTransfersAsync<MoneyTransferListingServiceModel>(userId, pageIndex, PaymentsCountPerPage))
                 .Select(Mapper.Map<MoneyTransferListingDto>)
-                .ToPaginatedList(pageIndex, PaymentsCountPerPage);
+                .ToPaginatedList(await this.moneyTransferService.GetCountOfAllMoneyTransfersForUserAsync(userId), pageIndex, PaymentsCountPerPage);
 
             var transfers = new MoneyTransferListingViewModel
             {

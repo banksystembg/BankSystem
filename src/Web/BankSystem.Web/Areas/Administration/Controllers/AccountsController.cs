@@ -1,5 +1,6 @@
 namespace BankSystem.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
@@ -22,9 +23,11 @@ namespace BankSystem.Web.Areas.Administration.Controllers
 
         public async Task<IActionResult> Index(int pageIndex = 1)
         {
-            var allAccounts = (await this.bankAccountService.GetAllAccountsAsync<BankAccountDetailsServiceModel>())
+            pageIndex = Math.Max(1, pageIndex);
+
+            var allAccounts = (await this.bankAccountService.GetAccountsAsync<BankAccountDetailsServiceModel>(pageIndex, AccountsPerPage))
                 .Select(Mapper.Map<BankAccountListingViewModel>)
-                .ToPaginatedList(pageIndex, AccountsPerPage);
+                .ToPaginatedList(await this.bankAccountService.GetCountOfAccountsAsync(), pageIndex, AccountsPerPage);
 
             var transfers = new AllBankAccountsListViewModel
             {

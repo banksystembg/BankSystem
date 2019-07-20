@@ -9,6 +9,7 @@
     using FluentAssertions;
     using Implementations;
     using Interfaces;
+    using Microsoft.EntityFrameworkCore;
     using Models.BankAccount;
     using Xunit;
 
@@ -182,13 +183,13 @@
         }
 
         [Fact]
-        public async Task GetAllAccountsAsync_ShouldReturnCollectionWithCorrectModels()
+        public async Task GetAccountsAsync_ShouldReturnCollectionWithCorrectModels()
         {
             // Arrange
             await this.SeedBankAccountAsync();
 
             // Act
-            var result = await this.bankAccountService.GetAllAccountsAsync<BankAccountDetailsServiceModel>();
+            var result = await this.bankAccountService.GetAccountsAsync<BankAccountDetailsServiceModel>();
 
             // Assert
             result
@@ -224,6 +225,22 @@
             result
                 .Should()
                 .BeAssignableTo<IEnumerable<BankAccountIndexServiceModel>>();
+        }
+
+        [Fact]
+        public async Task GetCountOfAccountsAsync_ShouldReturnCorrectCount()
+        {
+            // Arrange
+            await this.SeedBankAccountAsync();
+
+            // Act
+            var result =
+                await this.bankAccountService.GetCountOfAccountsAsync();
+
+            // Assert
+            result
+                .Should()
+                .Be(await this.dbContext.Accounts.CountAsync());
         }
 
         [Fact]
