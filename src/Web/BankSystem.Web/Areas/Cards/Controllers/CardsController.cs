@@ -35,11 +35,13 @@
 
         public async Task<IActionResult> Index(int pageIndex = 1)
         {
+            pageIndex = Math.Max(1, pageIndex);
+
             var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
             var allCards = (await this.cardService
-                    .GetAllCardsAsync<CardDetailsServiceModel>(userId))
+                    .GetCardsAsync<CardDetailsServiceModel>(userId, pageIndex, CardsCountPerPage))
                 .Select(Mapper.Map<CardListingDto>)
-                .ToPaginatedList(pageIndex, CardsCountPerPage);
+                .ToPaginatedList(await this.cardService.GetCountOfAllCardsOwnedByUserAsync(userId), pageIndex, CardsCountPerPage);
 
             var cards = new CardListingViewModel
             {
@@ -136,7 +138,7 @@
         private async Task<IEnumerable<SelectListItem>> GetAllAccountsAsync(string userId)
             => (await this.bankAccountService
                     .GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(userId))
-                .Select(a => new SelectListItem {Text = a.Name, Value = a.Id})
+                .Select(a => new SelectListItem { Text = a.Name, Value = a.Id })
                 .ToArray();
     }
 }

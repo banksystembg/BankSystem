@@ -6,10 +6,10 @@
 
     public interface IMoneyTransferService
     {
-        Task<IEnumerable<T>> GetAllMoneyTransfersAsync<T>(string userId)
+        Task<IEnumerable<T>> GetMoneyTransfersAsync<T>(string userId, int pageIndex = 1, int count = int.MaxValue)
             where T : MoneyTransferBaseServiceModel;
 
-        Task<IEnumerable<T>> GetAllMoneyTransfersForAccountAsync<T>(string accountId)
+        Task<IEnumerable<T>> GetMoneyTransfersForAccountAsync<T>(string accountId, int pageIndex = 1, int count = int.MaxValue)
             where T : MoneyTransferBaseServiceModel;
 
         Task<IEnumerable<T>> GetLast10MoneyTransfersForUserAsync<T>(string userId)
@@ -20,5 +20,9 @@
 
         Task<IEnumerable<T>> GetMoneyTransferAsync<T>(string referenceNumber)
             where T : MoneyTransferBaseServiceModel;
+
+        Task<int> GetCountOfAllMoneyTransfersForAccountAsync(string accountId);
+
+        Task<int> GetCountOfAllMoneyTransfersForUserAsync(string userId);
     }
 }

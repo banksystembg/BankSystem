@@ -91,11 +91,18 @@
                 .ProjectTo<T>()
                 .ToArrayAsync();
 
-        public async Task<IEnumerable<T>> GetAllAccountsAsync<T>()
+        public async Task<IEnumerable<T>> GetAccountsAsync<T>(int pageIndex = 1, int count = int.MaxValue)
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
+                .Skip((pageIndex - 1) * count)
+                .Take(count)
                 .ProjectTo<T>()
                 .ToArrayAsync();
+
+        public async Task<int> GetCountOfAccountsAsync()
+            => await this.Context
+                .Accounts
+                .CountAsync();
     }
 }

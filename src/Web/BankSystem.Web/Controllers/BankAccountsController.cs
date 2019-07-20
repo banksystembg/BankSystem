@@ -1,5 +1,6 @@
 namespace BankSystem.Web.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Areas.MoneyTransfers.Models;
@@ -66,6 +67,8 @@ namespace BankSystem.Web.Controllers
 
         public async Task<IActionResult> Details(string id, int pageIndex = 1)
         {
+            pageIndex = Math.Max(1, pageIndex);
+
             var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(id);
             if (account == null ||
                 account.UserUserName != this.User.Identity.Name)
@@ -73,16 +76,15 @@ namespace BankSystem.Web.Controllers
                 return this.Forbid();
             }
 
-            var allTransfers = (await this.moneyTransferService
-                .GetAllMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id))
-                .ToArray();
-            var transfers = allTransfers
+            var allTransfersCount = await this.moneyTransferService.GetCountOfAllMoneyTransfersForAccountAsync(id);
+            var transfers = (await this.moneyTransferService
+                .GetMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id, pageIndex, ItemsPerPage))
                 .Select(Mapper.Map<MoneyTransferListingDto>)
-                .ToPaginatedList(pageIndex, ItemsPerPage);
+                .ToPaginatedList(allTransfersCount, pageIndex, ItemsPerPage);
 
             var viewModel = Mapper.Map<BankAccountDetailsViewModel>(account);
             viewModel.MoneyTransfers = transfers;
-            viewModel.MoneyTransfersCount = allTransfers.Length;
+            viewModel.MoneyTransfersCount = allTransfersCount;
             viewModel.BankName = this.bankConfiguration.BankName;
             viewModel.BankCode = this.bankConfiguration.UniqueIdentifier;
             viewModel.BankCountry = this.bankConfiguration.Country;

@@ -32,21 +32,35 @@
                 .ProjectTo<T>()
                 .ToArrayAsync();
 
-        public async Task<IEnumerable<T>> GetAllMoneyTransfersAsync<T>(string userId)
+        public async Task<int> GetCountOfAllMoneyTransfersForUserAsync(string userId)
+            => await this.Context
+                .Transfers
+                .CountAsync(t => t.Account.UserId == userId);
+
+        public async Task<IEnumerable<T>> GetMoneyTransfersAsync<T>(string userId, int pageIndex = 1, int count = int.MaxValue)
             where T : MoneyTransferBaseServiceModel
             => await this.Context
                 .Transfers
                 .Where(t => t.Account.UserId == userId)
                 .OrderByDescending(mt => mt.MadeOn)
+                .Skip((pageIndex - 1) * count)
+                .Take(count)
                 .ProjectTo<T>()
                 .ToArrayAsync();
 
-        public async Task<IEnumerable<T>> GetAllMoneyTransfersForAccountAsync<T>(string accountId)
+        public async Task<int> GetCountOfAllMoneyTransfersForAccountAsync(string accountId)
+            => await this.Context
+                .Transfers
+                .CountAsync(t => t.AccountId == accountId);
+
+        public async Task<IEnumerable<T>> GetMoneyTransfersForAccountAsync<T>(string accountId, int pageIndex = 1, int count = int.MaxValue)
             where T : MoneyTransferBaseServiceModel
             => await this.Context
                 .Transfers
                 .Where(t => t.AccountId == accountId)
                 .OrderByDescending(mt => mt.MadeOn)
+                .Skip((pageIndex - 1) * count)
+                .Take(count)
                 .ProjectTo<T>()
                 .ToArrayAsync();
 

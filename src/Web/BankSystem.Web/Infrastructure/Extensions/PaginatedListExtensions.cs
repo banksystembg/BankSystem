@@ -11,23 +11,17 @@
 
         public static PaginatedList<T> ToPaginatedList<T>(
             this IEnumerable<T> items,
+            int itemsTotalCount,
             int pageIndex,
             int itemsCountPerPage,
             int surroundingPagesCount = DefaultSurroundingPageCount)
         {
-            pageIndex = Math.Max(1, pageIndex);
-
             var itemsArray = items as T[] ?? items.ToArray();
 
-            var totalPages = (int) Math.Ceiling(itemsArray.Length / (double) itemsCountPerPage);
+            var totalPages = (int) Math.Ceiling(itemsTotalCount / (double) itemsCountPerPage);
             pageIndex = Math.Min(pageIndex, totalPages);
 
-            var itemsToShow = itemsArray
-                .Skip((pageIndex - 1) * itemsCountPerPage)
-                .Take(itemsCountPerPage)
-                .ToList();
-
-            return new PaginatedList<T>(itemsToShow, pageIndex, totalPages, surroundingPagesCount);
+            return new PaginatedList<T>(itemsArray, pageIndex, totalPages, surroundingPagesCount);
         }
     }
 }

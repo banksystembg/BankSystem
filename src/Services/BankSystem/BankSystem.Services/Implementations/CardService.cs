@@ -70,11 +70,18 @@
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
 
-        public async Task<IEnumerable<T>> GetAllCardsAsync<T>(string userId)
+        public async Task<int> GetCountOfAllCardsOwnedByUserAsync(string userId)
+            => await this.Context
+                .Cards
+                .CountAsync(c => c.UserId == userId);
+
+        public async Task<IEnumerable<T>> GetCardsAsync<T>(string userId, int pageIndex = 1, int count = int.MaxValue)
             where T : CardBaseServiceModel
             => await this.Context
                 .Cards
                 .Where(c => c.UserId == userId)
+                .Skip((pageIndex - 1) * count)
+                .Take(count)
                 .ProjectTo<T>()
                 .ToArrayAsync();
 
