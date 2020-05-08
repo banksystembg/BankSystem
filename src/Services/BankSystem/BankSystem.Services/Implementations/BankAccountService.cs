@@ -54,6 +54,7 @@
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
+                .AsNoTracking()
                 .Where(a => a.UniqueId == uniqueId)
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
@@ -62,6 +63,7 @@
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
+                .AsNoTracking()
                 .Where(a => a.Id == id)
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
@@ -87,6 +89,7 @@
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
+                .AsNoTracking()
                 .Where(a => a.UserId == userId)
                 .ProjectTo<T>()
                 .ToArrayAsync();
@@ -95,6 +98,7 @@
             where T : BankAccountBaseServiceModel
             => await this.Context
                 .Accounts
+                .AsNoTracking()
                 .Skip((pageIndex - 1) * count)
                 .Take(count)
                 .ProjectTo<T>()
