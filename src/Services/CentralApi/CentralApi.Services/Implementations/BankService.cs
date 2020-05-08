@@ -22,6 +22,7 @@
         {
             var bank = await this.Context
                 .Banks
+                .AsNoTracking()
                 .Where(b => string.Equals(b.Name, bankName, StringComparison.CurrentCultureIgnoreCase) &&
                             string.Equals(b.SwiftCode, swiftCode, StringComparison.CurrentCultureIgnoreCase)
                             && string.Equals(b.Location, bankCountry, StringComparison.CurrentCultureIgnoreCase))
@@ -34,7 +35,9 @@
         public async Task<IEnumerable<T>> GetAllBanksSupportingPaymentsAsync<T>()
             where T : BankBaseServiceModel
         {
-            var banks = await this.Context.Banks
+            var banks = await this.Context
+                .Banks
+                .AsNoTracking()
                 .Where(b => b.PaymentUrl != null)
                 .OrderBy(b => b.Location)
                 .ThenBy(b => b.Name)
@@ -47,7 +50,9 @@
         public async Task<T> GetBankByIdAsync<T>(string id)
             where T : BankBaseServiceModel
         {
-            return await this.Context.Banks
+            return await this.Context
+                .Banks
+                .AsNoTracking()
                 .Where(b => b.Id == id)
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
@@ -57,6 +62,7 @@
             where T : BankBaseServiceModel
             => await this.Context
                 .Banks
+                .AsNoTracking()
                 .Where(b => b.BankIdentificationCardNumbers == identificationCardNumbers)
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
