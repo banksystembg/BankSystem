@@ -55,6 +55,7 @@
             where T : CardBaseServiceModel
             => await this.Context
                 .Cards
+                .AsNoTracking()
                 .Where(c =>
                     c.Name == cardOwner &&
                     c.Number == cardNumber &&
@@ -65,7 +66,9 @@
 
         public async Task<T> GetAsync<T>(string id)
             where T : CardBaseServiceModel
-            => await this.Context.Cards
+            => await this.Context
+                .Cards
+                .AsNoTracking()
                 .Where(c => c.Id == id)
                 .ProjectTo<T>()
                 .SingleOrDefaultAsync();
@@ -79,6 +82,7 @@
             where T : CardBaseServiceModel
             => await this.Context
                 .Cards
+                .AsNoTracking()
                 .Where(c => c.UserId == userId)
                 .Skip((pageIndex - 1) * count)
                 .Take(count)
@@ -94,6 +98,7 @@
 
             var card = await this.Context
                 .Cards
+                .AsNoTracking()
                 .Where(c => c.Id == id)
                 .SingleOrDefaultAsync();
 

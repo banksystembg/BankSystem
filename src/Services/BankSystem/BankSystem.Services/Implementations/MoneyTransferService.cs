@@ -28,6 +28,7 @@
             where T : MoneyTransferBaseServiceModel
             => await this.Context
                 .Transfers
+                .AsNoTracking()
                 .Where(t => t.ReferenceNumber == referenceNumber)
                 .ProjectTo<T>()
                 .ToArrayAsync();
@@ -41,6 +42,7 @@
             where T : MoneyTransferBaseServiceModel
             => await this.Context
                 .Transfers
+                .AsNoTracking()
                 .Where(t => t.Account.UserId == userId)
                 .OrderByDescending(mt => mt.MadeOn)
                 .Skip((pageIndex - 1) * count)
@@ -57,6 +59,7 @@
             where T : MoneyTransferBaseServiceModel
             => await this.Context
                 .Transfers
+                .AsNoTracking()
                 .Where(t => t.AccountId == accountId)
                 .OrderByDescending(mt => mt.MadeOn)
                 .Skip((pageIndex - 1) * count)
@@ -68,6 +71,7 @@
             where T : MoneyTransferBaseServiceModel
             => await this.Context
                 .Transfers
+                .AsNoTracking()
                 .Where(mt => mt.Account.UserId == userId)
                 .OrderByDescending(mt => mt.MadeOn)
                 .Take(10)

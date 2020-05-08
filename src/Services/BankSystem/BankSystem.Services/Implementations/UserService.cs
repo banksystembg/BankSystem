@@ -16,6 +16,7 @@
         {
             var user = await this.Context
                 .Users
+                .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.UserName == username);
 
             return user?.Id;
@@ -25,6 +26,7 @@
         {
             var user = await this.Context
                 .Users
+                .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.Id == userId);
 
             return user?.FullName;
