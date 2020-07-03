@@ -28,7 +28,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CentralApiDbContext>(options =>
-                options.UseSqlServer(
+                options.UseNpgsql(
                     this.Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IBanksService, BanksService>();
 

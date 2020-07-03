@@ -27,7 +27,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DemoShopDbContext>(options =>
-                options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(this.Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<DemoShopUser, IdentityRole>(options =>
                 {

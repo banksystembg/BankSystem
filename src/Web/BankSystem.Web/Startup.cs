@@ -41,7 +41,7 @@
             });
 
             services.AddDbContextPool<BankSystemDbContext>(options =>
-                options.UseSqlServer(
+                options.UseNpgsql(
                     this.Configuration.GetConnectionString("DefaultConnection")));
 
             services
