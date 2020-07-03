@@ -27,7 +27,7 @@
             {
                 <tr>
                     <td>@account.UniqueId</td>
-                    <td><span class="text-green">€@account.Balance</span></td>
+                    <td><span class="text-green">€@account.Balance.ToString("f2")</span></td>
                     <td>@account.UserFullName</td>
                     <td>@account.UserUserName</td>
                     <td class="auto-format-date">@account.CreatedOn.ToString("O")</td>

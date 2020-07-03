@@ -21,7 +21,7 @@
                 </div>
                 <div class="d-flex flex-row justify-content-between">
                     <p>Current balance</p>
-                    <p class="text-green ml-3">€@Model.Balance</p>
+                    <p class="text-green ml-3">€@Model.Balance.ToString("f2")</p>
                 </div>
                 <div class="d-flex flex-row justify-content-between">
                     <p>Account number</p>
@@ -100,11 +100,11 @@ else
                 <td>
                     @if (moneyTransfer.Amount < 0)
                     {
-                        <span class="text-red">@moneyTransfer.Amount EUR</span>
+                        <span class="text-red">@moneyTransfer.Amount.ToString("f2") EUR</span>
                     }
                     else
                     {
-                        <span class="text-green">+@moneyTransfer.Amount EUR</span>
+                        <span class="text-green">+@moneyTransfer.Amount.ToString("f2") EUR</span>
                     }
                 </td>
                 <td>@moneyTransfer.ReferenceNumber</td>

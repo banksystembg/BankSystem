@@ -13,11 +13,11 @@
                 <img class="card-img-top product-thumbnail-img" src="@product.ImageUrl" alt="@product.Name">
                 <div class="card-body">
                     <h4 class="card-title">@product.Name</h4>
-                    <p class="card-text">€@product.Price</p>
+                    <p class="card-text">€@product.Price.ToString("f2")</p>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <button class="btn btn-primary" data-toggle="modal" data-target="#orderModal"
-                                data-id="@product.Id" data-name="@product.Name" data-price="@product.Price">
+                                data-id="@product.Id" data-name="@product.Name" data-price="@product.Price.ToString("f2")">
                             Buy now
                         </button>
                     }

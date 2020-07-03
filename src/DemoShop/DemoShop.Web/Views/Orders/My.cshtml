@@ -19,7 +19,7 @@
             <div class="col-12 col-lg-6">
                 <div class="mx-3">
                     <h4 class="mt-2">@order.ProductName</h4>
-                    <p class="text-secondary">€@order.ProductPrice</p>
+                    <p class="text-secondary">€@order.ProductPrice.ToString("f2")</p>
                     <p class="text-secondary">
                         Ordered on
                         @order.CreatedOn.ToString(dateFormat, CultureInfo.InvariantCulture),

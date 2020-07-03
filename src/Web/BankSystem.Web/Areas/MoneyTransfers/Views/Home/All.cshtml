@@ -39,11 +39,11 @@
                     <td>
                         @if (moneyTransfer.Amount < 0)
                         {
-                            <span class="text-red">@moneyTransfer.Amount EUR</span>
+                            <span class="text-red">@moneyTransfer.Amount.ToString("f2") EUR</span>
                         }
                         else
                         {
-                            <span class="text-green">+@moneyTransfer.Amount EUR</span>
+                            <span class="text-green">+@moneyTransfer.Amount.ToString("f2") EUR</span>
                         }
                     </td>
                     <td>@moneyTransfer.ReferenceNumber</td>
