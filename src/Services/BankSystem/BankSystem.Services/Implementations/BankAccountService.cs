@@ -43,6 +43,7 @@
 
             var dbModel = Mapper.Map<BankAccount>(model);
             dbModel.UniqueId = generatedUniqueId;
+            dbModel.Balance = 500;
 
             await this.Context.Accounts.AddAsync(dbModel);
             await this.Context.SaveChangesAsync();
