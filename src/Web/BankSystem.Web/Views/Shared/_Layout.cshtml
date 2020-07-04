@@ -19,12 +19,33 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BankSystem</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Test Bank 1</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown auto-dropdown">
+                            <a class="dropdown-toggle btn btn-primary" href="#" role="button">
+                                Links
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="https://banksystem-demoshop.herokuapp.com/">
+                                    DemoShop
+                                </a>
+                                <a class="dropdown-item" href="https://banksystem-1.herokuapp.com/">
+                                    Test Bank 1
+                                </a>
+                                <a class="dropdown-item" href="https://banksystem-2.herokuapp.com/">
+                                    Test Bank 2
+                                </a>
+                                <a class="dropdown-item" href="https://github.com/banksystembg/BankSystem/">
+                                    GitHub
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <ul class="navbar-nav mx-auto text-uppercase">

@@ -20,6 +20,25 @@
             </button>
             <div class="navbar-collapse collapse d-md-inline-flex">
                 <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle btn btn-primary mr-2" href="#" role="button" data-toggle="dropdown">
+                            Links
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="https://banksystem-demoshop.herokuapp.com/">
+                                DemoShop
+                            </a>
+                            <a class="dropdown-item" href="https://banksystem-1.herokuapp.com/">
+                                Test Bank 1
+                            </a>
+                            <a class="dropdown-item" href="https://banksystem-2.herokuapp.com/">
+                                Test Bank 2
+                            </a>
+                            <a class="dropdown-item" href="https://github.com/banksystembg/BankSystem/">
+                                GitHub
+                            </a>
+                        </div>
+                    </li>
                     @if (User.Identity.IsAuthenticated)
                     {
                          <li class="nav-item">
