@@ -9,6 +9,26 @@ It supports connecting multiple banks together through the _CentralApi_. This al
 
 BankSystem consists of two base components - the bank web application and the _CentralApi_, which securely connects banks running on separate machines together to process [transfers between different banks](https://github.com/banksystembg/BankSystem/wiki/Money-transfers#Global--worldwide-transfers), [card payments](https://github.com/banksystembg/BankSystem/wiki/Cards#Purchases) and [direct payments](https://github.com/banksystembg/BankSystem/wiki/Direct-payments).
 
+## Project links
+
+We have set up a network of two BankSystem instances and one [DemoShop](https://github.com/banksystembg/BankSystem/wiki/DemoShop), connected through a _CentralApi_. This network supports all BankSystem functionality, including [Global transfers](https://github.com/banksystembg/BankSystem/wiki/Money-transfers#global--worldwide-transfers), [Direct payments](https://github.com/banksystembg/BankSystem/wiki/Direct-payments) and [Card payments](https://github.com/banksystembg/BankSystem/wiki/Cards#purchases).
+
+|Project |Address
+|-|-
+|**DemoShop** |https://banksystem-demoshop.herokuapp.com/
+|**Test Bank 1** <br><br> **Transfer details:** <br> * Bank name - _Bank system_ <br> * Bank country - _Germany_ <br> * Bank code - _ABC_ |https://banksystem-1.herokuapp.com/
+|**Test Bank 2** <br><br> **Transfer details:** <br> * Bank name - _Bank system 2_ <br> * Bank country - _Netherlands_ <br> * Bank code - _CBA_ |https://banksystem-2.herokuapp.com/
+
+All of these projects have a demo account already registered:
+
+| Email                 | Password 
+|-----------------	|----------
+| test@test.com         | Test123$
+
+Additionally, all bank accounts created have an initial balance of €500 for demonstration purposes.
+
+
+
 ### [Bank accounts](https://github.com/banksystembg/BankSystem/wiki/Bank-accounts)
 Bank accounts hold information about their owner, balance, transactions, date of creation, etc.
 
