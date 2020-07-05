@@ -11,9 +11,7 @@ namespace DemoShop.Services.Implementations
 
     public class ProductsService : BaseService, IProductsService
     {
-        public ProductsService(DemoShopDbContext context) : base(context)
-        {
-        }
+        public ProductsService(DemoShopDbContext context) : base(context) { }
 
         public async Task CreateAsync(ProductCreateServiceModel model)
         {
@@ -30,13 +28,14 @@ namespace DemoShop.Services.Implementations
             };
 
             await this.Context.Products.AddAsync(dbModel);
-
             await this.Context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<ProductDetailsServiceModel>> GetAllAsync()
         {
-            var products = await this.Context.Products
+            var products = await this.Context
+                .Products
+                .AsNoTracking()
                 .OrderBy(p => p.Name)
                 .Select(p => new ProductDetailsServiceModel
                 {

@@ -11,9 +11,7 @@ namespace DemoShop.Services.Implementations
 
     public class OrdersService : BaseService, IOrdersService
     {
-        public OrdersService(DemoShopDbContext context) : base(context)
-        {
-        }
+        public OrdersService(DemoShopDbContext context) : base(context) { }
 
         public async Task<string> CreateAsync(OrderCreateServiceModel model)
         {
@@ -22,10 +20,13 @@ namespace DemoShop.Services.Implementations
                 return null;
             }
 
-            var user = await this.Context.Users.SingleOrDefaultAsync(u => u.UserName == model.UserName);
+            var user = await this.Context
+                .Users
+                .AsNoTracking()
+                .SingleOrDefaultAsync(u => u.UserName == model.UserName);
 
             if (user == null ||
-                !await this.Context.Products.AnyAsync(b => b.Id == model.ProductId))
+                !await this.Context.Products.AsNoTracking().AnyAsync(b => b.Id == model.ProductId))
             {
                 return null;
             }
@@ -39,7 +40,6 @@ namespace DemoShop.Services.Implementations
             };
 
             await this.Context.Orders.AddAsync(order);
-
             await this.Context.SaveChangesAsync();
 
             return order.Id;
@@ -47,7 +47,9 @@ namespace DemoShop.Services.Implementations
 
         public async Task<OrderDetailsServiceModel> GetByIdAsync(string id)
         {
-            var order = await this.Context.Orders
+            var order = await this.Context
+                .Orders
+                .AsNoTracking()
                 .Select(o => new OrderDetailsServiceModel
                 {
                     Id = o.Id,
@@ -65,7 +67,9 @@ namespace DemoShop.Services.Implementations
 
         public async Task<IEnumerable<OrderDetailsServiceModel>> GetAllForUserAsync(string userName)
         {
-            var orders = await this.Context.Orders
+            var orders = await this.Context
+                .Orders
+                .AsNoTracking()
                 .Where(p => p.User.UserName == userName)
                 .OrderByDescending(p => p.CreatedOn)
                 .Select(o => new OrderDetailsServiceModel
