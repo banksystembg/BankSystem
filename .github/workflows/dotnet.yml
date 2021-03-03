@@ -17,12 +17,49 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+
     - name: Restore dependencies
       run: dotnet restore
       working-directory: src
+
     - name: Build
       run: dotnet build --no-restore
       working-directory: src
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+
+    - name: set pr build number (if pr)
+      id: PRNUMBER
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: kkak10/pr-number-action@v1.3
+      
+      # set report file and title 
+    - name: Set Test Title
+      run: | 
+            if ${{ github.event_name == 'pull_request' }}
+            then
+              echo "title=Test Run for PR #${{steps.PRNUMBER.outputs.pr}} (${{github.run_number}})" >> $GITHUB_ENV
+              echo "file_name=TestReport.${{steps.PRNUMBER.outputs.pr}}.${{github.run_number}}.md" >> $GITHUB_ENV
+            else
+              echo "title=Test Run ${{github.run_number}}" >> $GITHUB_ENV
+              echo "file_name=TestReport.${{github.run_number}}.md" >> $GITHUB_ENV
+            fi
+      
+      # run tests with built project
+    - name: Test PR      
+      run: dotnet test --no-restore --no-build --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};"
       working-directory: src
+      
+      # upload report as build artifact
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      if: ${{always()}}
+      with:
+        name: 'Test Run'
+        path: ${{github.workspace}}/${{env.file_name}}
+        
+    - name: Comment PR
+      uses: machine-learning-apps/pr-comment@master
+      if: ${{ github.event_name == 'pull_request' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        path: ${{env.file_name}}
