@@ -11,7 +11,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Models;
-    using Services.Interfaces;
+    using Services.BankAccount;
+    using Services.Card;
     using Services.Models.BankAccount;
     using Services.Models.Card;
 
@@ -20,28 +21,28 @@
         private const int CardsCountPerPage = 10;
         private readonly IBankAccountService bankAccountService;
         private readonly ICardService cardService;
-
-        private readonly IUserService userService;
+        private readonly IMapper mapper;
 
         public CardsController(
-            IUserService userService,
             IBankAccountService bankAccountService,
-            ICardService cardService)
+            ICardService cardService,
+            IMapper mapper)
         {
-            this.userService = userService;
             this.bankAccountService = bankAccountService;
             this.cardService = cardService;
+            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index(int pageIndex = 1)
         {
             pageIndex = Math.Max(1, pageIndex);
 
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            var userId = this.GetCurrentUserId();
             var allCards = (await this.cardService
                     .GetCardsAsync<CardDetailsServiceModel>(userId, pageIndex, CardsCountPerPage))
-                .Select(Mapper.Map<CardListingDto>)
-                .ToPaginatedList(await this.cardService.GetCountOfAllCardsOwnedByUserAsync(userId), pageIndex, CardsCountPerPage);
+                .Select(this.mapper.Map<CardListingDto>)
+                .ToPaginatedList(await this.cardService.GetCountOfAllCardsOwnedByUserAsync(userId), pageIndex,
+                    CardsCountPerPage);
 
             var cards = new CardListingViewModel
             {
@@ -53,8 +54,7 @@
 
         public async Task<IActionResult> Create()
         {
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
-            var userAccounts = await this.GetAllAccountsAsync(userId);
+            var userAccounts = await this.GetAllAccountsAsync(this.GetCurrentUserId());
 
             var model = new CardCreateViewModel
             {
@@ -67,7 +67,7 @@
         [HttpPost]
         public async Task<IActionResult> Create(CardCreateViewModel model)
         {
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            var userId = this.GetCurrentUserId();
             if (!this.ModelState.IsValid)
             {
                 model.BankAccounts = await this.GetAllAccountsAsync(userId);
@@ -76,13 +76,12 @@
             }
 
             var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
-            if (account == null ||
-                account.UserUserName != this.User.Identity.Name)
+            if (account == null || account.UserId != userId)
             {
                 return this.Forbid();
             }
 
-            var serviceModel = Mapper.Map<CardCreateServiceModel>(model);
+            var serviceModel = this.mapper.Map<CardCreateServiceModel>(model);
             serviceModel.UserId = userId;
             serviceModel.Name = account.UserFullName;
             serviceModel.ExpiryDate = DateTime.UtcNow.AddYears(GlobalConstants.CardValidityInYears)
@@ -112,10 +111,7 @@
             }
 
             var card = await this.cardService.GetAsync<CardDetailsServiceModel>(id);
-
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
-
-            if (card == null || card.UserId != userId)
+            if (card == null || card.UserId != this.GetCurrentUserId())
             {
                 this.ShowErrorMessage(NotificationMessages.CardDoesNotExist);
 

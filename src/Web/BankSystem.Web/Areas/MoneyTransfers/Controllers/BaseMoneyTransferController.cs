@@ -4,7 +4,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
     using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Interfaces;
+    using Services.BankAccount;
     using Services.Models.BankAccount;
     using Web.Controllers;
     using Web.Models.BankAccount;
@@ -14,17 +14,18 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
     {
         private readonly IBankAccountService bankAccountService;
 
-        protected BaseMoneyTransferController(IBankAccountService bankAccountService)
+        protected BaseMoneyTransferController(IBankAccountService bankAccountService, IMapper mapper)
         {
             this.bankAccountService = bankAccountService;
+            this.Mapper = mapper;
         }
 
+        protected IMapper Mapper { get; }
+
         protected async Task<OwnBankAccountListingViewModel[]> GetAllAccountsAsync(string userId)
-        {
-            return (await this.bankAccountService
+            => (await this.bankAccountService
                     .GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(userId))
-                .Select(Mapper.Map<OwnBankAccountListingViewModel>)
+                .Select(this.Mapper.Map<OwnBankAccountListingViewModel>)
                 .ToArray();
-        }
     }
 }

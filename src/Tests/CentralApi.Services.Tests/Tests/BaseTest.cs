@@ -1,6 +1,7 @@
 ﻿namespace CentralApi.Services.Tests.Tests
 {
     using System;
+    using AutoMapper;
     using Data;
     using Microsoft.EntityFrameworkCore;
     using Setup;
@@ -8,9 +9,9 @@
     public abstract class BaseTest
     {
         protected BaseTest()
-        {
-            TestSetup.InitializeMapper();
-        }
+            => this.Mapper = TestSetup.InitializeMapper();
+
+        protected IMapper Mapper { get; }
 
         protected CentralApiDbContext DatabaseInstance
         {

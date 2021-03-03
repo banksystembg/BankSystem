@@ -2,9 +2,11 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using Common;
     public class MoneyTransfer
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
         [MaxLength(ModelConstants.MoneyTransfer.DescriptionMaxLength)]

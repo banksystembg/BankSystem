@@ -5,7 +5,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Models.Internal
     using Common;
     using Common.AutoMapping.Interfaces;
     using Microsoft.Extensions.DependencyInjection;
-    using Services.Interfaces;
+    using Services.BankAccount;
     using Services.Models.MoneyTransfer;
     using Web.Models.BankAccount;
 

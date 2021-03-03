@@ -11,7 +11,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
-    using Services.Interfaces;
+    using Services.Bank;
     using Services.Models.Banks;
 
     public class DecryptAndVerifyRequest : ActionFilterAttribute

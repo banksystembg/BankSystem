@@ -9,42 +9,51 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CentralApi.Data.Migrations
 {
     [DbContext(typeof(CentralApiDbContext))]
-    [Migration("20190414135203_RemoveBankShortName")]
-    partial class RemoveBankShortName
+    [Migration("20210303151133_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
+                .HasAnnotation("ProductVersion", "3.1.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("CentralApi.Models.Bank", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ApiAddress")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ApiKey")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BankIdentificationCardNumbers");
+                    b.Property<string>("BankIdentificationCardNumbers")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CardPaymentUrl");
+                    b.Property<string>("CardPaymentUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Location")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PaymentUrl");
+                    b.Property<string>("PaymentUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SwiftCode")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

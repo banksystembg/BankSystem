@@ -16,7 +16,7 @@ namespace BankSystem.Web.Controllers
     using Microsoft.Extensions.Options;
     using Models;
     using Models.BankAccount;
-    using Services.Interfaces;
+    using Services.BankAccount;
     using Services.Models.BankAccount;
 
     [Authorize]
@@ -28,18 +28,18 @@ namespace BankSystem.Web.Controllers
 
         private readonly BankConfiguration bankConfiguration;
         private readonly IGlobalTransferHelper globalTransferHelper;
-        private readonly IUserService userService;
+        private readonly IMapper mapper;
 
         public PaymentsController(
             IOptions<BankConfiguration> bankConfigurationOptions,
             IBankAccountService bankAccountService,
-            IUserService userService,
-            IGlobalTransferHelper globalTransferHelper)
+            IGlobalTransferHelper globalTransferHelper,
+            IMapper mapper)
         {
             this.bankConfiguration = bankConfigurationOptions.Value;
             this.bankAccountService = bankAccountService;
-            this.userService = userService;
             this.globalTransferHelper = globalTransferHelper;
+            this.mapper = mapper;
         }
 
         [HttpPost]
@@ -93,8 +93,6 @@ namespace BankSystem.Web.Controllers
 
                 dynamic paymentInfo = DirectPaymentsHelper.GetPaymentInfo(paymentRequest);
 
-                var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
-
                 var model = new PaymentConfirmBindingModel
                 {
                     Amount = paymentInfo.Amount,
@@ -103,7 +101,7 @@ namespace BankSystem.Web.Controllers
                     DestinationBankCountry = paymentInfo.DestinationBankCountry,
                     DestinationBankAccountUniqueId = paymentInfo.DestinationBankAccountUniqueId,
                     RecipientName = paymentInfo.RecipientName,
-                    OwnAccounts = await this.GetAllAccountsAsync(userId),
+                    OwnAccounts = await this.GetAllAccountsAsync(this.GetCurrentUserId()),
                     DataHash = DirectPaymentsHelper.Sha256Hash(data)
                 };
 
@@ -129,7 +127,7 @@ namespace BankSystem.Web.Controllers
 
             var account =
                 await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
-            if (account == null || account.UserUserName != this.User.Identity.Name)
+            if (account == null || account.UserId != this.GetCurrentUserId())
             {
                 return this.Forbid();
             }
@@ -192,20 +190,16 @@ namespace BankSystem.Web.Controllers
         }
 
         private IActionResult PaymentFailed(string message)
-        {
-            return this.Ok(new
+            => this.Ok(new
             {
                 success = false,
                 errorMessage = message
             });
-        }
 
         private async Task<OwnBankAccountListingViewModel[]> GetAllAccountsAsync(string userId)
-        {
-            return (await this.bankAccountService
+            => (await this.bankAccountService
                     .GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(userId))
-                .Select(Mapper.Map<OwnBankAccountListingViewModel>)
+                .Select(this.mapper.Map<OwnBankAccountListingViewModel>)
                 .ToArray();
-        }
     }
 }

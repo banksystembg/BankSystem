@@ -20,9 +20,7 @@
         }
 
         public IActionResult OnGet()
-        {
-            return !this.User.Identity.IsAuthenticated ? this.RedirectToHome() : this.Page();
-        }
+            => !this.User.Identity.IsAuthenticated ? this.RedirectToHome() : this.Page();
 
         public async Task<IActionResult> OnPost()
         {

@@ -9,8 +9,9 @@
     using Infrastructure.Helpers.GlobalTransferHelpers.Models;
     using Microsoft.AspNetCore.Mvc;
     using Models.Global.Create;
-    using Services.Interfaces;
+    using Services.BankAccount;
     using Services.Models.BankAccount;
+    using Services.User;
 
     public class GlobalController : BaseMoneyTransferController
     {
@@ -21,8 +22,9 @@
         public GlobalController(
             IBankAccountService bankAccountService,
             IUserService userService,
-            IGlobalTransferHelper globalTransferHelper)
-            : base(bankAccountService)
+            IGlobalTransferHelper globalTransferHelper,
+            IMapper mapper)
+            : base(bankAccountService, mapper)
         {
             this.bankAccountService = bankAccountService;
             this.userService = userService;
@@ -31,7 +33,7 @@
 
         public async Task<IActionResult> Create()
         {
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            var userId = this.GetCurrentUserId();
             var userAccounts = await this.GetAllAccountsAsync(userId);
             if (!userAccounts.Any())
             {
@@ -52,7 +54,7 @@
         [HttpPost]
         public async Task<IActionResult> Create(GlobalMoneyTransferCreateBindingModel model)
         {
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            var userId = this.GetCurrentUserId();
             model.SenderName = await this.userService.GetAccountOwnerFullnameAsync(userId);
             if (!this.TryValidateModel(model))
             {
@@ -63,7 +65,7 @@
 
             var account =
                 await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
-            if (account == null || account.UserUserName != this.User.Identity.Name)
+            if (account == null || account.UserId != userId)
             {
                 return this.Forbid();
             }
@@ -77,7 +79,7 @@
                 return this.View(model);
             }
 
-            var serviceModel = Mapper.Map<GlobalTransferDto>(model);
+            var serviceModel = this.Mapper.Map<GlobalTransferDto>(model);
             serviceModel.SourceAccountId = model.AccountId;
             serviceModel.RecipientName = model.DestinationBank.Account.UserFullName;
 

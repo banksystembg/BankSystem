@@ -9,9 +9,7 @@
         protected readonly DemoShopDbContext Context;
 
         protected BaseService(DemoShopDbContext context)
-        {
-            this.Context = context;
-        }
+            => this.Context = context;
 
         public static bool IsEntityStateValid(object model)
         {

@@ -8,25 +8,26 @@
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Models.BankAccount;
-    using Services.Interfaces;
+    using Services.BankAccount;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
+    using Services.MoneyTransfer;
 
     [AllowAnonymous]
     public class HomeController : BaseController
     {
         private readonly IBankAccountService bankAccountService;
         private readonly IMoneyTransferService moneyTransferService;
-        private readonly IUserService userService;
+        private readonly IMapper mapper;
 
         public HomeController(
             IBankAccountService bankAccountService,
-            IUserService userService,
-            IMoneyTransferService moneyTransferService)
+            IMoneyTransferService moneyTransferService,
+            IMapper mapper)
         {
             this.bankAccountService = bankAccountService;
-            this.userService = userService;
             this.moneyTransferService = moneyTransferService;
+            this.mapper = mapper;
         }
 
 
@@ -37,14 +38,15 @@
                 return this.View("IndexGuest");
             }
 
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            var userId = this.GetCurrentUserId();
+
             var bankAccounts =
                 (await this.bankAccountService.GetAllAccountsByUserIdAsync<BankAccountIndexServiceModel>(userId))
-                .Select(Mapper.Map<BankAccountIndexViewModel>)
+                .Select(this.mapper.Map<BankAccountIndexViewModel>)
                 .ToArray();
             var moneyTransfers = (await this.moneyTransferService
                     .GetLast10MoneyTransfersForUserAsync<MoneyTransferListingServiceModel>(userId))
-                .Select(Mapper.Map<MoneyTransferListingDto>)
+                .Select(this.mapper.Map<MoneyTransferListingDto>)
                 .ToArray();
 
             var viewModel = new HomeViewModel

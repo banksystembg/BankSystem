@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Models;
-    using Services.Interfaces;
+    using Services.Bank;
     using Services.Models.Banks;
 
     [ApiController]

@@ -11,9 +11,7 @@
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
-        {
-            return WebHost.CreateDefaultBuilder(args)
+            => WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
-        }
     }
 }

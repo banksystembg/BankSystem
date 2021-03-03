@@ -12,9 +12,7 @@
         private readonly SendGridConfiguration options;
 
         public EmailSender(IOptions<SendGridConfiguration> options)
-        {
-            this.options = options.Value;
-        }
+            => this.options = options.Value;
 
         public async Task<bool> SendEmailAsync(string receiver, string subject, string htmlMessage)
             => await this.SendEmailAsync(GlobalConstants.BankSystemEmail, receiver, subject, htmlMessage);

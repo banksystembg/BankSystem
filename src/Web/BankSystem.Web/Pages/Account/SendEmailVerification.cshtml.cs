@@ -35,9 +35,7 @@
         public ReCaptchaModel Recaptcha { get; set; }
 
         public IActionResult OnGet()
-        {
-            return this.Page();
-        }
+            => this.Page();
 
         public async Task<IActionResult> OnPostAsync()
         {

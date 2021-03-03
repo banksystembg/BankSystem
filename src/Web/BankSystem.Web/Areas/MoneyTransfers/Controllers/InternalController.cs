@@ -8,30 +8,29 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
     using Infrastructure;
     using Microsoft.AspNetCore.Mvc;
     using Models.Internal;
-    using Services.Interfaces;
+    using Services.BankAccount;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
+    using Services.MoneyTransfer;
 
     public class InternalController : BaseMoneyTransferController
     {
         private readonly IBankAccountService bankAccountService;
         private readonly IMoneyTransferService moneyTransferService;
-        private readonly IUserService userService;
-
+        
         public InternalController(
             IMoneyTransferService moneyTransferService,
             IBankAccountService bankAccountService,
-            IUserService userService)
-            : base(bankAccountService)
+            IMapper mapper)
+            : base(bankAccountService, mapper)
         {
             this.moneyTransferService = moneyTransferService;
-            this.userService = userService;
             this.bankAccountService = bankAccountService;
         }
 
         public async Task<IActionResult> Create()
         {
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            var userId = this.GetCurrentUserId();
             var userAccounts = await this.GetAllAccountsAsync(userId);
 
             if (!userAccounts.Any())
@@ -52,7 +51,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(InternalMoneyTransferCreateBindingModel model)
         {
-            var userId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            var userId = this.GetCurrentUserId();
 
             if (!this.ModelState.IsValid)
             {
@@ -62,7 +61,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             }
 
             var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(model.AccountId);
-            if (account == null || account.UserUserName != this.User.Identity.Name)
+            if (account == null || account.UserId != userId)
             {
                 return this.Forbid();
             }
@@ -96,7 +95,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
             }
 
             var referenceNumber = ReferenceNumberGenerator.GenerateReferenceNumber();
-            var sourceServiceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
+            var sourceServiceModel = this.Mapper.Map<MoneyTransferCreateServiceModel>(model);
             sourceServiceModel.Source = account.UniqueId;
             sourceServiceModel.Amount *= -1;
             sourceServiceModel.SenderName = account.UserFullName;
@@ -111,7 +110,7 @@ namespace BankSystem.Web.Areas.MoneyTransfers.Controllers
                 return this.View(model);
             }
 
-            var destinationServiceModel = Mapper.Map<MoneyTransferCreateServiceModel>(model);
+            var destinationServiceModel = this.Mapper.Map<MoneyTransferCreateServiceModel>(model);
             destinationServiceModel.Source = account.UniqueId;
             destinationServiceModel.AccountId = destinationAccount.Id;
             destinationServiceModel.SenderName = account.UserFullName;

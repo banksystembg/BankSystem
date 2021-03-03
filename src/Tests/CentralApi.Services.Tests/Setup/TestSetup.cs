@@ -3,24 +3,27 @@
     using AutoMapper;
     using BankSystem.Common.AutoMapping.Profiles;
 
-    public class TestSetup
+    public static class TestSetup
     {
+        private static IMapper mapper;
         private static readonly object Sync = new object();
         private static bool mapperInitialized;
 
-        public static void InitializeMapper()
+        public static IMapper InitializeMapper()
         {
             lock (Sync)
             {
-                if (!mapperInitialized)
+                if (mapperInitialized)
                 {
-                    Mapper.Initialize(config =>
-                    {
-                        config.AddProfile<DefaultProfile>();
-                    });
-
-                    mapperInitialized = true;
+                    return mapper;
                 }
+
+                var config = new MapperConfiguration(cfg => { cfg.AddProfile<DefaultProfile>(); });
+
+                mapper = config.CreateMapper();
+                mapperInitialized = true;
+
+                return mapper;
             }
         }
     }

@@ -9,7 +9,7 @@ namespace CentralApi.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Models;
-    using Services.Interfaces;
+    using Services.Bank;
     using Services.Models.Banks;
 
     public class PaymentsController : Controller
@@ -19,11 +19,16 @@ namespace CentralApi.Controllers
         private const string PaymentDataFormKey = "data";
 
         private readonly IBanksService banksService;
+        private readonly IMapper mapper;
         private readonly CentralApiConfiguration configuration;
 
-        public PaymentsController(IBanksService banksService, IOptions<CentralApiConfiguration> configuration)
+        public PaymentsController(
+            IBanksService banksService,
+            IMapper mapper,
+            IOptions<CentralApiConfiguration> configuration)
         {
             this.banksService = banksService;
+            this.mapper = mapper;
             this.configuration = configuration.Value;
         }
 
@@ -79,7 +84,7 @@ namespace CentralApi.Controllers
                 var paymentInfo = DirectPaymentsHelper.GetPaymentInfo(request);
 
                 var banks = (await this.banksService.GetAllBanksSupportingPaymentsAsync<BankListingServiceModel>())
-                    .Select(Mapper.Map<BankListingViewModel>)
+                    .Select(this.mapper.Map<BankListingViewModel>)
                     .ToArray();
 
                 var viewModel = new PaymentSelectBankViewModel
@@ -101,7 +106,7 @@ namespace CentralApi.Controllers
         [Route("/pay/continue")]
         public async Task<IActionResult> Continue([FromForm] string bankId)
         {
-            bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out string data);
+            bool cookieExists = this.Request.Cookies.TryGetValue(PaymentDataCookie, out var data);
 
             if (!cookieExists)
             {

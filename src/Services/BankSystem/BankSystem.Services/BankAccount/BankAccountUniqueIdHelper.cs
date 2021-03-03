@@ -1,10 +1,9 @@
-namespace BankSystem.Services.Implementations
+namespace BankSystem.Services.BankAccount
 {
     using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using Common.Configuration;
-    using Interfaces;
     using Microsoft.Extensions.Options;
 
     public class BankAccountUniqueIdHelper : IBankAccountUniqueIdHelper
@@ -22,9 +21,7 @@ namespace BankSystem.Services.Implementations
         private Random random;
 
         public BankAccountUniqueIdHelper(IOptions<BankConfiguration> bankConfigurationOptions)
-        {
-            this.bankConfiguration = bankConfigurationOptions.Value;
-        }
+            => this.bankConfiguration = bankConfigurationOptions.Value;
 
         public string GenerateAccountUniqueId()
         {

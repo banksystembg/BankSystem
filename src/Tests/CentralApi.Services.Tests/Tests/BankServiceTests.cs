@@ -2,13 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Bank;
     using CentralApi.Models;
     using Data;
     using FluentAssertions;
-    using Implementations;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Banks;
+    using Setup;
     using Xunit;
 
     public class BankServiceTests : BaseTest
@@ -16,7 +16,7 @@
         public BankServiceTests()
         {
             this.dbContext = this.DatabaseInstance;
-            this.banksService = new BanksService(this.dbContext);
+            this.banksService = new BanksService(this.dbContext, this.Mapper);
         }
 
         private const string SampleBankName = "Bank system";
@@ -50,13 +50,16 @@
         [InlineData(" ")]
         [InlineData("    !")]
         [InlineData("totally invalid id")]
-        public async Task GetBankByBankIdentificationCardNumbersAsync_WithInvalidIdentificationNumber_ShouldReturnNull(string identificationNumbers)
+        public async Task GetBankByBankIdentificationCardNumbersAsync_WithInvalidIdentificationNumber_ShouldReturnNull(
+            string identificationNumbers)
         {
             // Arrange
             await this.SeedBanks(10);
 
             // Act
-            var result = await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankServiceModel>(identificationNumbers);
+            var result =
+                await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankServiceModel>(
+                    identificationNumbers);
 
             // Assert
             result
@@ -195,7 +198,8 @@
 
             // Act
             var result = await this.banksService
-                .GetBankAsync<BankListingServiceModel>(expectedBank.Name, expectedBank.SwiftCode, expectedBank.Location);
+                .GetBankAsync<BankListingServiceModel>(expectedBank.Name, expectedBank.SwiftCode,
+                    expectedBank.Location);
 
             // Assert
             result
@@ -204,15 +208,19 @@
         }
 
         [Fact]
-        public async Task GetBankByBankIdentificationCardNumbersAsync_WitValidIdentificationNumber_ShouldReturnCorrectEntity()
+        public async Task
+            GetBankByBankIdentificationCardNumbersAsync_WitValidIdentificationNumber_ShouldReturnCorrectEntity()
         {
             // Arrange
             const string expectedId = "1";
-            await this.dbContext.Banks.AddAsync(new Bank { Id = expectedId, BankIdentificationCardNumbers = SampleIdentificationNumbers });
+            await this.dbContext.Banks.AddAsync(new Bank
+                { Id = expectedId, BankIdentificationCardNumbers = SampleIdentificationNumbers });
             await this.dbContext.SaveChangesAsync();
 
             // Act
-            var result = await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankListingServiceModel>(SampleIdentificationNumbers);
+            var result =
+                await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankListingServiceModel>(
+                    SampleIdentificationNumbers);
 
             // Assert
             result

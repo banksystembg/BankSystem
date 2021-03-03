@@ -8,23 +8,19 @@
     using Infrastructure;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Services.Implementations;
-    using Services.Interfaces;
+    using Microsoft.Extensions.Hosting;
+    using Services.Bank;
 
     public class Startup
     {
         public Startup(IConfiguration configuration)
-        {
-            this.Configuration = configuration;
-        }
+            => this.Configuration = configuration;
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CentralApiDbContext>(options =>
@@ -42,16 +38,13 @@
                     throw new ApplicationException("CentralApiConfiguration is invalid");
                 }
             });
-
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddAutoMapper(typeof(DefaultProfile));
+            services
+                .AddControllersWithViews();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            Mapper.Initialize(config => config.AddProfile<DefaultProfile>());
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -63,7 +56,13 @@
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.SeedData();
         }

@@ -18,9 +18,7 @@ namespace DemoShop.Web.Controllers
         private readonly IOrdersService ordersService;
 
         public OrdersController(IOrdersService ordersService)
-        {
-            this.ordersService = ordersService;
-        }
+            => this.ordersService = ordersService;
 
         public async Task<IActionResult> My()
         {

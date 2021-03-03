@@ -11,9 +11,10 @@ namespace BankSystem.Web.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Models.BankAccount;
-    using Services.Interfaces;
+    using Services.BankAccount;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
+    using Services.MoneyTransfer;
 
     public class BankAccountsController : BaseController
     {
@@ -22,24 +23,22 @@ namespace BankSystem.Web.Controllers
         private readonly IBankAccountService bankAccountService;
         private readonly BankConfiguration bankConfiguration;
         private readonly IMoneyTransferService moneyTransferService;
-        private readonly IUserService userService;
+        private readonly IMapper mapper;
 
         public BankAccountsController(
             IBankAccountService bankAccountService,
-            IUserService userService,
             IMoneyTransferService moneyTransferService,
-            IOptions<BankConfiguration> bankConfigurationOptions)
+            IOptions<BankConfiguration> bankConfigurationOptions,
+            IMapper mapper)
         {
             this.bankAccountService = bankAccountService;
-            this.userService = userService;
             this.moneyTransferService = moneyTransferService;
+            this.mapper = mapper;
             this.bankConfiguration = bankConfigurationOptions.Value;
         }
 
         public IActionResult Create()
-        {
-            return this.View();
-        }
+            => this.View();
 
         [HttpPost]
         public async Task<IActionResult> Create(BankAccountCreateBindingModel model)
@@ -49,8 +48,8 @@ namespace BankSystem.Web.Controllers
                 return this.View(model);
             }
 
-            var serviceModel = Mapper.Map<BankAccountCreateServiceModel>(model);
-            serviceModel.UserId = await this.userService.GetUserIdByUsernameAsync(this.User.Identity.Name);
+            var serviceModel = this.mapper.Map<BankAccountCreateServiceModel>(model);
+            serviceModel.UserId = this.GetCurrentUserId();
 
             var accountId = await this.bankAccountService.CreateAsync(serviceModel);
             if (accountId == null)
@@ -71,18 +70,18 @@ namespace BankSystem.Web.Controllers
 
             var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(id);
             if (account == null ||
-                account.UserUserName != this.User.Identity.Name)
+                account.UserId != this.GetCurrentUserId())
             {
                 return this.Forbid();
             }
 
             var allTransfersCount = await this.moneyTransferService.GetCountOfAllMoneyTransfersForAccountAsync(id);
             var transfers = (await this.moneyTransferService
-                .GetMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id, pageIndex, ItemsPerPage))
-                .Select(Mapper.Map<MoneyTransferListingDto>)
+                    .GetMoneyTransfersForAccountAsync<MoneyTransferListingServiceModel>(id, pageIndex, ItemsPerPage))
+                .Select(this.mapper.Map<MoneyTransferListingDto>)
                 .ToPaginatedList(allTransfersCount, pageIndex, ItemsPerPage);
 
-            var viewModel = Mapper.Map<BankAccountDetailsViewModel>(account);
+            var viewModel = this.mapper.Map<BankAccountDetailsViewModel>(account);
             viewModel.MoneyTransfers = transfers;
             viewModel.MoneyTransfersCount = allTransfersCount;
             viewModel.BankName = this.bankConfiguration.BankName;
@@ -105,7 +104,7 @@ namespace BankSystem.Web.Controllers
 
             var account = await this.bankAccountService.GetByIdAsync<BankAccountDetailsServiceModel>(accountId);
             if (account == null ||
-                account.UserUserName != this.User.Identity.Name)
+                account.UserId != this.GetCurrentUserId())
             {
                 return this.Ok(new
                 {

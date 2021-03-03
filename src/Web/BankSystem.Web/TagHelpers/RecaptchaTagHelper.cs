@@ -9,9 +9,7 @@
         private readonly IConfiguration configuration;
 
         public ReCaptchaTagHelper(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
+            => this.configuration = configuration;
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {

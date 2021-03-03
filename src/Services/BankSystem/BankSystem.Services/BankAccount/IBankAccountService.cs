@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Services.Interfaces
+﻿namespace BankSystem.Services.BankAccount
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

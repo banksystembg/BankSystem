@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Services.Interfaces
+﻿namespace BankSystem.Services.Card
 {
     public interface ICardHelper
     {

@@ -13,14 +13,10 @@ namespace DemoShop.Web.Controllers
         private readonly IProductsService productsService;
 
         public ProductsController(IProductsService productsService)
-        {
-            this.productsService = productsService;
-        }
+            => this.productsService = productsService;
 
         public IActionResult Create()
-        {
-            return this.View();
-        }
+            => this.View();
 
         [HttpPost]
         public async Task<IActionResult> Create(ProductCreateBindingModel model)

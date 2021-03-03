@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Services.Implementations
+﻿namespace BankSystem.Services.Card
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,18 +7,19 @@
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
     using Data;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Card;
 
     public class CardService : BaseService, ICardService
     {
         private readonly ICardHelper cardHelper;
+        private readonly IMapper mapper;
 
-        public CardService(BankSystemDbContext context, ICardHelper cardHelper)
+        public CardService(BankSystemDbContext context, ICardHelper cardHelper, IMapper mapper)
             : base(context)
         {
             this.cardHelper = cardHelper;
+            this.mapper = mapper;
         }
 
         public async Task<bool> CreateAsync(CardCreateServiceModel model)
@@ -35,9 +36,10 @@
             {
                 generatedNumber = this.cardHelper.Generate16DigitNumber();
                 generated3DigitSecurityCode = this.cardHelper.Generate3DigitSecurityCode();
-            } while (await this.Context.Cards.AnyAsync(a => a.Number == generatedNumber && a.SecurityCode == generated3DigitSecurityCode));
+            } while (await this.Context.Cards.AnyAsync(a
+                => a.Number == generatedNumber && a.SecurityCode == generated3DigitSecurityCode));
 
-            var dbModel = Mapper.Map<Card>(model);
+            var dbModel = this.mapper.Map<Card>(model);
             dbModel.Number = generatedNumber;
             dbModel.SecurityCode = generated3DigitSecurityCode;
 
@@ -61,7 +63,7 @@
                     c.Number == cardNumber &&
                     c.SecurityCode == cardSecurityCode &&
                     c.ExpiryDate == cardExpiryDate)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
 
         public async Task<T> GetAsync<T>(string id)
@@ -70,7 +72,7 @@
                 .Cards
                 .AsNoTracking()
                 .Where(c => c.Id == id)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
 
         public async Task<int> GetCountOfAllCardsOwnedByUserAsync(string userId)
@@ -86,7 +88,7 @@
                 .Where(c => c.UserId == userId)
                 .Skip((pageIndex - 1) * count)
                 .Take(count)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
         public async Task<bool> DeleteAsync(string id)
@@ -98,7 +100,6 @@
 
             var card = await this.Context
                 .Cards
-                .AsNoTracking()
                 .Where(c => c.Id == id)
                 .SingleOrDefaultAsync();
 

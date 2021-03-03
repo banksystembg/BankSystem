@@ -2,9 +2,10 @@
 {
     using System.Linq;
     using System.Reflection;
+    using Common.AutoMapping.Profiles;
     using Common.EmailSender.Interface;
     using Microsoft.Extensions.DependencyInjection;
-    using Services.Interfaces;
+    using Services;
 
     public static class ServiceCollectionExtensions
     {
@@ -21,6 +22,7 @@
         {
             var assembly = Assembly.GetAssembly(typeof(IEmailSender));
             AddAssemblyServices(services, assembly);
+            services.AddAutoMapper(typeof(DefaultProfile));
 
             return services;
         }
