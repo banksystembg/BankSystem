@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using System.ComponentModel.DataAnnotations;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     [AllowAnonymous]
@@ -29,7 +30,7 @@
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public string ReturnUrl { get; private set; }
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
@@ -39,7 +40,7 @@
                 this.ShowErrorMessage(NotificationMessages.SessionExpired);
             }
 
-            returnUrl = returnUrl ?? this.Url.Content("~/");
+            returnUrl ??= this.Url.Content("~/");
 
             if (this.User.Identity.IsAuthenticated)
             {
@@ -56,7 +57,7 @@
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? this.Url.Content("~/");
+            returnUrl ??= this.Url.Content("~/");
 
             if (this.User.Identity.IsAuthenticated)
             {
@@ -100,9 +101,21 @@
             {
                 this.TempData.Add(GlobalConstants.TempDataNoTwoFactorKey, true);
             }
+            
+            this.AddClaims(user);
 
             this.logger.LogInformation("User logged in.");
             return this.LocalRedirect(returnUrl);
+        }
+
+        private void AddClaims(BankUser user)
+        {
+            var claims = new Claim[2]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+            this.User.AddIdentity(new ClaimsIdentity(claims));
         }
 
         public class InputModel

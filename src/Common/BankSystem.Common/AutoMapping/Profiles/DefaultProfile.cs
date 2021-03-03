@@ -17,7 +17,6 @@
             var allTypes = AppDomain
                 .CurrentDomain
                 .GetAssemblies()
-                .Where(a => a.GetName().FullName.Contains(nameof(BankSystem)))
                 .SelectMany(a => a.GetTypes())
                 .ToArray();
 

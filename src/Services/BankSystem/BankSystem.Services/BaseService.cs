@@ -8,9 +8,7 @@ namespace BankSystem.Services
         protected readonly BankSystemDbContext Context;
 
         protected BaseService(BankSystemDbContext context)
-        {
-            this.Context = context;
-        }
+            => this.Context = context;
 
         protected bool IsEntityStateValid(object model)
             => ValidationUtil.IsObjectValid(model);

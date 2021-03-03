@@ -13,11 +13,13 @@
     public class BankAccountService : BaseService, IBankAccountService
     {
         private readonly IBankAccountUniqueIdHelper uniqueIdHelper;
-
-        public BankAccountService(BankSystemDbContext context, IBankAccountUniqueIdHelper uniqueIdHelper)
+        private readonly IMapper mapper;
+        
+        public BankAccountService(BankSystemDbContext context, IBankAccountUniqueIdHelper uniqueIdHelper, IMapper mapper)
             : base(context)
         {
             this.uniqueIdHelper = uniqueIdHelper;
+            this.mapper = mapper;
         }
 
         public async Task<string> CreateAsync(BankAccountCreateServiceModel model)
@@ -35,12 +37,9 @@
                 generatedUniqueId = this.uniqueIdHelper.GenerateAccountUniqueId();
             } while (this.Context.Accounts.Any(a => a.UniqueId == generatedUniqueId));
 
-            if (model.Name == null)
-            {
-                model.Name = generatedUniqueId;
-            }
+            model.Name ??= generatedUniqueId;
 
-            var dbModel = Mapper.Map<BankAccount>(model);
+            var dbModel = this.mapper.Map<BankAccount>(model);
             dbModel.UniqueId = generatedUniqueId;
 
             await this.Context.Accounts.AddAsync(dbModel);
@@ -55,7 +54,7 @@
                 .Accounts
                 .AsNoTracking()
                 .Where(a => a.UniqueId == uniqueId)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
 
         public async Task<T> GetByIdAsync<T>(string id)
@@ -64,7 +63,7 @@
                 .Accounts
                 .AsNoTracking()
                 .Where(a => a.Id == id)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
 
         public async Task<bool> ChangeAccountNameAsync(string accountId, string newName)
@@ -90,7 +89,7 @@
                 .Accounts
                 .AsNoTracking()
                 .Where(a => a.UserId == userId)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
         public async Task<IEnumerable<T>> GetAccountsAsync<T>(int pageIndex = 1, int count = int.MaxValue)
@@ -100,7 +99,7 @@
                 .AsNoTracking()
                 .Skip((pageIndex - 1) * count)
                 .Take(count)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
         public async Task<int> GetCountOfAccountsAsync()

@@ -11,7 +11,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Newtonsoft.Json;
-    using Services.Interfaces;
+    using Services.Card;
     using Services.Models.Card;
 
     [Route("api/[controller]")]
@@ -22,11 +22,13 @@
     {
         private readonly ICardService cardService;
         private readonly IGlobalTransferHelper globalTransferHelper;
-
-        public CardPaymentsController(IGlobalTransferHelper globalTransferHelper, ICardService cardService)
+        private readonly IMapper mapper;
+        
+        public CardPaymentsController(IGlobalTransferHelper globalTransferHelper, ICardService cardService, IMapper mapper)
         {
             this.globalTransferHelper = globalTransferHelper;
             this.cardService = cardService;
+            this.mapper = mapper;
         }
 
         // POST: api/CardPayments
@@ -34,7 +36,7 @@
         public async Task<IActionResult> Post([FromBody] string data)
         {
             var model = JsonConvert.DeserializeObject<PaymentInfoModel>(data);
-            if (model.Amount <= 0)
+            if (this.TryValidateModel(model))
             {
                 return this.BadRequest();
             }
@@ -62,7 +64,7 @@
                 return this.BadRequest();
             }
 
-            var serviceModel = Mapper.Map<GlobalTransferDto>(model);
+            var serviceModel = this.mapper.Map<GlobalTransferDto>(model);
             serviceModel.SourceAccountId = card.AccountId;
 
             var result = await this.globalTransferHelper.TransferMoneyAsync(serviceModel);

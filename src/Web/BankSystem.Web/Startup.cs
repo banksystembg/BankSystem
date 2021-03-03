@@ -114,8 +114,6 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            Mapper.Initialize(config => config.AddProfile<DefaultProfile>());
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -157,6 +155,9 @@
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    "areas",
+                    "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
             });

@@ -1,4 +1,4 @@
-﻿namespace CentralApi.Services.Implementations
+﻿namespace CentralApi.Services
 {
     using Data;
 
@@ -7,8 +7,6 @@
         protected readonly CentralApiDbContext Context;
 
         protected BaseService(CentralApiDbContext context)
-        {
-            this.Context = context;
-        }
+            => this.Context = context;
     }
 }

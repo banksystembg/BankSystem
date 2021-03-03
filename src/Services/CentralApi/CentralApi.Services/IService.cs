@@ -1,4 +1,4 @@
-﻿namespace CentralApi.Services.Interfaces
+﻿namespace CentralApi.Services
 {
     // Marker interface
     public interface IService

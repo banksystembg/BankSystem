@@ -1,4 +1,4 @@
-﻿namespace CentralApi.Services.Interfaces
+﻿namespace CentralApi.Services.Bank
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

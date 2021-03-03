@@ -27,7 +27,7 @@
         [InlineData("asd  1 ")]
         [InlineData("     10   ")]
         [InlineData("5215@%*)%@")]
-        public async Task GetUserIdByUsernameAsync_WithInvalidUsername_ShouldReturnNull(string username)
+        public async Task GetUserIdByUsernameAsync_WithInvalidUsername_Should_ReturnNull(string username)
         {
             // Arrange
             await this.SeedUserAsync();
@@ -45,7 +45,7 @@
         [InlineData("asd  1 ")]
         [InlineData("1246  10   ")]
         [InlineData("sdg-sdgfgscx-124r-dhf-")]
-        public async Task GetAccountOwnerFullnameAsync_WithInvalidUsername_ShouldReturnNull(string id)
+        public async Task GetAccountOwnerFullnameAsync_WithInvalidUsername_Should_ReturnNull(string id)
         {
             // Arrange
             await this.SeedUserAsync();
@@ -65,7 +65,7 @@
         }
 
         [Fact]
-        public async Task GetAccountOwnerFullnameAsync_WithValidUsername_ShouldReturnCorrectName()
+        public async Task GetAccountOwnerFullnameAsync_WithValidUsername_Should_ReturnCorrectName()
         {
             // Arrange
             await this.SeedUserAsync();
@@ -81,7 +81,7 @@
         }
 
         [Fact]
-        public async Task GetUserIdByUsernameAsync_WithValidUsername_ShouldReturnCorrectId()
+        public async Task GetUserIdByUsernameAsync_WithValidUsername_Should_ReturnCorrectId()
         {
             // Arrange
             await this.SeedUserAsync();

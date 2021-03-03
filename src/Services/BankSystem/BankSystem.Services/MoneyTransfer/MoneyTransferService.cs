@@ -16,11 +16,13 @@
     public class MoneyTransferService : BaseService, IMoneyTransferService
     {
         private readonly IEmailSender emailSender;
-
-        public MoneyTransferService(BankSystemDbContext context, IEmailSender emailSender)
+        private readonly IMapper mapper;
+        
+        public MoneyTransferService(BankSystemDbContext context, IEmailSender emailSender, IMapper mapper)
             : base(context)
         {
             this.emailSender = emailSender;
+            this.mapper = mapper;
         }
 
         public async Task<IEnumerable<T>> GetMoneyTransferAsync<T>(string referenceNumber)
@@ -29,7 +31,7 @@
                 .Transfers
                 .AsNoTracking()
                 .Where(t => t.ReferenceNumber == referenceNumber)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
         public async Task<int> GetCountOfAllMoneyTransfersForUserAsync(string userId)
@@ -46,7 +48,7 @@
                 .OrderByDescending(mt => mt.MadeOn)
                 .Skip((pageIndex - 1) * count)
                 .Take(count)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
         public async Task<int> GetCountOfAllMoneyTransfersForAccountAsync(string accountId)
@@ -63,7 +65,7 @@
                 .OrderByDescending(mt => mt.MadeOn)
                 .Skip((pageIndex - 1) * count)
                 .Take(count)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
         public async Task<IEnumerable<T>> GetLast10MoneyTransfersForUserAsync<T>(string userId)
@@ -74,7 +76,7 @@
                 .Where(mt => mt.Account.UserId == userId)
                 .OrderByDescending(mt => mt.MadeOn)
                 .Take(10)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
         public async Task<bool> CreateMoneyTransferAsync<T>(T model)
@@ -85,7 +87,7 @@
                 return false;
             }
 
-            var dbModel = Mapper.Map<MoneyTransfer>(model);
+            var dbModel = this.mapper.Map<MoneyTransfer>(model);
             var userAccount = await this.Context
                 .Accounts
                 .Include(u => u.User)

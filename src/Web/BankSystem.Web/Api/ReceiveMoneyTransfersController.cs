@@ -6,12 +6,13 @@
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Newtonsoft.Json;
-    using Services.Interfaces;
+    using Services.BankAccount;
     using Services.Models.BankAccount;
     using Services.Models.MoneyTransfer;
+    using Services.MoneyTransfer;
 
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     [DecryptAndVerifyRequest]
     [IgnoreAntiforgeryToken]
     public class ReceiveMoneyTransfersController : ControllerBase
@@ -34,16 +35,16 @@
             var model = JsonConvert.DeserializeObject<ReceiveMoneyTransferModel>(data);
             if (!this.TryValidateModel(model))
             {
-                return this.NoContent();
+                return this.BadRequest();
             }
 
             var account =
                 await this.bankAccountService.GetByUniqueIdAsync<BankAccountConciseServiceModel>(
                     model.DestinationBankAccountUniqueId);
             if (account == null || !string.Equals(account.UserFullName, model.RecipientName,
-                    StringComparison.InvariantCulture))
+                StringComparison.InvariantCulture))
             {
-                return this.NoContent();
+                return this.BadRequest();
             }
 
             var serviceModel = new MoneyTransferCreateServiceModel

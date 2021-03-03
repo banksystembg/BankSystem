@@ -1,6 +1,7 @@
 ﻿namespace BankSystem.Services.Tests.Tests
 {
     using System;
+    using AutoMapper;
     using Common.Configuration;
     using Data;
     using Microsoft.EntityFrameworkCore;
@@ -19,9 +20,9 @@
         private const string SampleBankKey = "sdf90234rewfsd0ij9oigsdf";
 
         protected BaseTest()
-        {
-            TestSetup.InitializeMapper();
-        }
+            => this.Mapper = TestSetup.InitializeMapper();
+
+        protected IMapper Mapper { get; }
 
         protected BankSystemDbContext DatabaseInstance
         {

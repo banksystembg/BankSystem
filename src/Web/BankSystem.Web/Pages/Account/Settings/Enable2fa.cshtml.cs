@@ -141,13 +141,11 @@
         }
 
         private string GenerateQrCodeUri(string email, string unformattedKey)
-        {
-            return string.Format(
+            => string.Format(
                 AuthenticatorUriFormat,
                 this.urlEncoder.Encode(nameof(BankSystem)),
                 this.urlEncoder.Encode(email),
                 unformattedKey);
-        }
 
         public class InputModel
         {

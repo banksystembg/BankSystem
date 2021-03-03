@@ -8,13 +8,11 @@
     using Infrastructure;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Services.Implementations;
-    using Services.Interfaces;
+    using Services.Bank;
 
     public class Startup
     {
@@ -40,15 +38,13 @@
                     throw new ApplicationException("CentralApiConfiguration is invalid");
                 }
             });
-
+            services.AddAutoMapper(typeof(DefaultProfile));
             services
                 .AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            Mapper.Initialize(config => config.AddProfile<DefaultProfile>());
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -60,7 +56,12 @@
             }
 
             app.UseHttpsRedirection();
+
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.SeedData();

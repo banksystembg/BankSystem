@@ -11,9 +11,7 @@
         private readonly IProductsService productsService;
 
         public HomeController(IProductsService productsService)
-        {
-            this.productsService = productsService;
-        }
+            => this.productsService = productsService;
 
         public async Task<IActionResult> Index()
         {

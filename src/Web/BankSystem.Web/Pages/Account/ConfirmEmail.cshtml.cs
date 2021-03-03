@@ -13,9 +13,7 @@
         private readonly UserManager<BankUser> userManager;
 
         public ConfirmEmail(UserManager<BankUser> userManager)
-        {
-            this.userManager = userManager;
-        }
+            => this.userManager = userManager;
 
         public async Task<IActionResult> OnGetAsync(string userId, string code)
         {

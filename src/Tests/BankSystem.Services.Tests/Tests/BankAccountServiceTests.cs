@@ -16,9 +16,9 @@
     {
         public BankAccountServiceTests()
         {
-
             this.dbContext = this.DatabaseInstance;
-            this.bankAccountService = new BankAccountService(this.dbContext, new BankAccountUniqueIdHelper(this.MockedBankConfiguration.Object));
+            this.bankAccountService = new BankAccountService(this.dbContext,
+                new BankAccountUniqueIdHelper(this.MockedBankConfiguration.Object), this.Mapper);
         }
 
         private const string SampleBankAccountName = "Test bank account name";
@@ -34,7 +34,7 @@
         [InlineData("   ")]
         [InlineData("")]
         [InlineData("someRandomValue")]
-        public async Task ChangeAccountNameAsync_WithInvalidId_ShouldReturnFalse(string id)
+        public async Task ChangeAccountNameAsync_WithInvalidId_Should_ReturnFalse(string id)
         {
             // Arrange
             await this.SeedBankAccountAsync();
@@ -50,7 +50,8 @@
 
         private async Task SeedUserAsync()
         {
-            await this.dbContext.Users.AddAsync(new BankUser { Id = SampleBankAccountUserId, FullName = SampleBankAccountUniqueId });
+            await this.dbContext.Users.AddAsync(new BankUser
+                { Id = SampleBankAccountUserId, FullName = SampleBankAccountUniqueId });
             await this.dbContext.SaveChangesAsync();
         }
 
@@ -62,7 +63,6 @@
                 Name = SampleBankAccountName,
                 UniqueId = SampleBankAccountUniqueId,
                 UserId = SampleBankAccountUserId
-
             };
             await this.dbContext.Accounts.AddAsync(model);
             await this.dbContext.SaveChangesAsync();
@@ -71,7 +71,7 @@
         }
 
         [Fact]
-        public async Task ChangeAccountNameAsync_WithValidId_ShouldReturnTrue_And_ChangeNameSuccessfully()
+        public async Task ChangeAccountNameAsync_WithValidId_Should_ReturnTrue_And_ChangeNameSuccessfully()
         {
             // Arrange
             var model = await this.SeedBankAccountAsync();
@@ -96,12 +96,13 @@
         }
 
         [Fact]
-        public async Task CreateAsync_WithInvalidNameLength_ShouldReturnNull_And_NotInsertInDatabase()
+        public async Task CreateAsync_WithInvalidNameLength_Should_ReturnNull_And_NotInsertInDatabase()
         {
             // Arrange
             await this.SeedUserAsync();
             // Name is invalid when it's longer than 35 characters
-            var model = new BankAccountCreateServiceModel { Name = new string('c', 36), UserId = SampleBankAccountUserId };
+            var model = new BankAccountCreateServiceModel
+                { Name = new string('c', 36), UserId = SampleBankAccountUserId };
 
             // Act
             var result = await this.bankAccountService.CreateAsync(model);
@@ -118,7 +119,7 @@
         }
 
         [Fact]
-        public async Task CreateAsync_WithInvalidUserId_ShouldReturnNull_And_NotInsertInDatabase()
+        public async Task CreateAsync_WithInvalidUserId_Should_ReturnNull_And_NotInsertInDatabase()
         {
             // Arrange
             await this.SeedUserAsync();
@@ -139,7 +140,7 @@
         }
 
         [Fact]
-        public async Task CreateAsync_WithValidModel_AndEmptyName_ShouldSetRandomString_And_ShouldReturnNonEmptyString_And_InsertInDatabase()
+        public async Task CreateAsync_WithValidModel_AndEmptyName_Should_SetRandomString()
         {
             // Arrange
             var count = this.dbContext.Accounts.Count();
@@ -163,12 +164,30 @@
         }
 
         [Fact]
-        public async Task CreateAsync_WithValidModel_ShouldReturnNonEmptyString()
+        public async Task CreateAsync_WithValidModel_Should__InsertInDatabase()
+        {
+            // Arrange
+            var count = this.dbContext.Accounts.Count();
+            await this.SeedUserAsync();
+            var model = new BankAccountCreateServiceModel { UserId = SampleBankAccountUserId };
+
+            // Act
+            await this.bankAccountService.CreateAsync(model);
+
+            this.dbContext
+                .Accounts
+                .Should()
+                .HaveCount(count + 1);
+        }
+
+        [Fact]
+        public async Task CreateAsync_WithValidModel_Should_ReturnNonEmptyString()
         {
             // Arrange
             await this.SeedUserAsync();
             // CreatedOn is not required since it has default value which is set from the class - Datetime.UtcNow
-            var model = new BankAccountCreateServiceModel { Name = SampleBankAccountName, UserId = SampleBankAccountUserId, CreatedOn = DateTime.UtcNow };
+            var model = new BankAccountCreateServiceModel
+                { Name = SampleBankAccountName, UserId = SampleBankAccountUserId, CreatedOn = DateTime.UtcNow };
 
             // Act
             var result = await this.bankAccountService.CreateAsync(model);
@@ -182,7 +201,7 @@
         }
 
         [Fact]
-        public async Task GetAccountsAsync_ShouldReturnCollectionWithCorrectModels()
+        public async Task GetAccountsAsync_Should_ReturnCollectionWithCorrectModels()
         {
             // Arrange
             await this.SeedBankAccountAsync();
@@ -197,7 +216,7 @@
         }
 
         [Fact]
-        public async Task GetAllAccountsByUserIdAsync_WithInvalidId_ShouldReturnEmptyModel()
+        public async Task GetAllAccountsByUserIdAsync_WithInvalidId_Should_ReturnEmptyModel()
         {
             // Arrange
             await this.SeedBankAccountAsync();
@@ -212,7 +231,7 @@
         }
 
         [Fact]
-        public async Task GetAllAccountsByUserIdAsync_WithValidId_ShouldReturnCorrectModel()
+        public async Task GetAllAccountsByUserIdAsync_WithValidId_Should_ReturnCorrectModel()
         {
             // Arrange
             var model = await this.SeedBankAccountAsync();
@@ -227,7 +246,7 @@
         }
 
         [Fact]
-        public async Task GetCountOfAccountsAsync_ShouldReturnCorrectCount()
+        public async Task GetCountOfAccountsAsync_Should_ReturnCorrectCount()
         {
             // Arrange
             await this.SeedBankAccountAsync();
@@ -243,7 +262,7 @@
         }
 
         [Fact]
-        public async Task GetByIdAsync_WithInvalidBankAccountId_ShouldReturnNull()
+        public async Task GetByIdAsync_WithInvalidBankAccountId_Should_ReturnNull()
         {
             // Arrange
             await this.SeedBankAccountAsync();
@@ -258,7 +277,7 @@
         }
 
         [Fact]
-        public async Task GetByIdAsync_WithValidBankAccountId_ShouldReturnCorrectEntity()
+        public async Task GetByIdAsync_WithValidBankAccountId_Should_ReturnCorrectEntity()
         {
             // Arrange
             var model = await this.SeedBankAccountAsync();
@@ -279,7 +298,7 @@
         }
 
         [Fact]
-        public async Task GetByUniqueIdAsync_WithInvalidUniqueId_ShouldReturnNull()
+        public async Task GetByUniqueIdAsync_WithInvalidUniqueId_Should_ReturnNull()
         {
             // Arrange
             await this.SeedBankAccountAsync();
@@ -294,7 +313,7 @@
         }
 
         [Fact]
-        public async Task GetByUniqueIdAsync_WithValidUniqueId_ShouldReturnCorrectEntity()
+        public async Task GetByUniqueIdAsync_WithValidUniqueId_Should_ReturnCorrectEntity()
         {
             // Arrange
             var model = await this.SeedBankAccountAsync();

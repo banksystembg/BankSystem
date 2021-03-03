@@ -21,9 +21,7 @@ namespace BankSystem.Services.BankAccount
         private Random random;
 
         public BankAccountUniqueIdHelper(IOptions<BankConfiguration> bankConfigurationOptions)
-        {
-            this.bankConfiguration = bankConfigurationOptions.Value;
-        }
+            => this.bankConfiguration = bankConfigurationOptions.Value;
 
         public string GenerateAccountUniqueId()
         {

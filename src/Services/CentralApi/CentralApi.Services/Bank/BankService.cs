@@ -1,32 +1,35 @@
-﻿namespace CentralApi.Services.Implementations
+﻿namespace CentralApi.Services.Bank
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
+    using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Data;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Banks;
 
     public class BanksService : BaseService, IBanksService
     {
-        public BanksService(CentralApiDbContext context)
+        private readonly IMapper mapper;
+        
+        public BanksService(CentralApiDbContext context, IMapper mapper)
             : base(context)
-        {
-        }
+            => this.mapper = mapper;
 
         public async Task<T> GetBankAsync<T>(string bankName, string swiftCode, string bankCountry)
             where T : BankBaseServiceModel
         {
+            const string likeExpression = "%{0}%";
             var bank = await this.Context
                 .Banks
-                .AsNoTracking()
-                .Where(b => string.Equals(b.Name, bankName, StringComparison.CurrentCultureIgnoreCase) &&
-                            string.Equals(b.SwiftCode, swiftCode, StringComparison.CurrentCultureIgnoreCase)
-                            && string.Equals(b.Location, bankCountry, StringComparison.CurrentCultureIgnoreCase))
-                .ProjectTo<T>()
+                .Where(b =>
+                    EF.Functions.Like(b.Name, string.Format(likeExpression, bankName)) &&
+                    EF.Functions.Like(b.SwiftCode, string.Format(likeExpression, swiftCode)) &&
+                    EF.Functions.Like(b.Location, string.Format(likeExpression, bankCountry)))
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
 
             return bank;
@@ -41,7 +44,7 @@
                 .Where(b => b.PaymentUrl != null)
                 .OrderBy(b => b.Location)
                 .ThenBy(b => b.Name)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
             return banks;
@@ -54,7 +57,7 @@
                 .Banks
                 .AsNoTracking()
                 .Where(b => b.Id == id)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
         }
 
@@ -64,7 +67,7 @@
                 .Banks
                 .AsNoTracking()
                 .Where(b => b.BankIdentificationCardNumbers == identificationCardNumbers)
-                .ProjectTo<T>()
+                .ProjectTo<T>(this.mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
     }
 }

@@ -3,19 +3,21 @@
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
     using MoneyTransfers.Models;
-    using Services.Interfaces;
     using Services.Models.MoneyTransfer;
     using System.Linq;
     using System.Threading.Tasks;
     using Models;
+    using Services.MoneyTransfer;
 
     public class TransactionsController : BaseAdministrationController
     {
         private readonly IMoneyTransferService moneyTransfer;
+        private readonly IMapper mapper;
 
-        public TransactionsController(IMoneyTransferService moneyTransfer)
+        public TransactionsController(IMoneyTransferService moneyTransfer, IMapper mapper)
         {
             this.moneyTransfer = moneyTransfer;
+            this.mapper = mapper;
         }
 
         public IActionResult Search() => this.View();
@@ -28,8 +30,8 @@
             }
 
             var moneyTransfers = (await this.moneyTransfer
-                .GetMoneyTransferAsync<MoneyTransferListingServiceModel>(referenceNumber))
-                .Select(Mapper.Map<MoneyTransferListingDto>);
+                    .GetMoneyTransferAsync<MoneyTransferListingServiceModel>(referenceNumber))
+                .Select(this.mapper.Map<MoneyTransferListingDto>);
 
             var viewModel = new TransactionListingViewModel
             {

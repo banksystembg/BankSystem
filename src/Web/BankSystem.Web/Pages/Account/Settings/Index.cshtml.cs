@@ -13,9 +13,7 @@
 
         public IndexModel(
             UserManager<BankUser> userManager)
-        {
-            this.userManager = userManager;
-        }
+            => this.userManager = userManager;
 
         public string Email { get; set; }
 

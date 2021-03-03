@@ -2,13 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Bank;
     using CentralApi.Models;
     using Data;
     using FluentAssertions;
-    using Implementations;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Banks;
+    using Setup;
     using Xunit;
 
     public class BankServiceTests : BaseTest
@@ -16,7 +16,7 @@
         public BankServiceTests()
         {
             this.dbContext = this.DatabaseInstance;
-            this.banksService = new BanksService(this.dbContext);
+            this.banksService = new BanksService(this.dbContext, this.Mapper);
         }
 
         private const string SampleBankName = "Bank system";
