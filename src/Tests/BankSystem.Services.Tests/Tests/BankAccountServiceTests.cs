@@ -4,11 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using BankAccount;
     using BankSystem.Models;
     using Data;
     using FluentAssertions;
-    using Implementations;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.BankAccount;
     using Xunit;

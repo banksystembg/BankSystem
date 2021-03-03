@@ -4,8 +4,7 @@
     using BankSystem.Models;
     using Data;
     using FluentAssertions;
-    using Implementations;
-    using Interfaces;
+    using User;
     using Xunit;
 
     public class UserServiceTests : BaseTest

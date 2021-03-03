@@ -1,8 +1,7 @@
 ﻿namespace BankSystem.Services.Tests.Tests
 {
+    using BankAccount;
     using FluentAssertions;
-    using Implementations;
-    using Interfaces;
     using Xunit;
 
     public class BankAccountUniqueIdHelperTests : BaseTest

@@ -18,19 +18,17 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Net.Http.Headers;
     using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
     public class Startup
     {
         public Startup(IConfiguration configuration)
-        {
-            this.Configuration = configuration;
-        }
+            => this.Configuration = configuration;
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -74,7 +72,8 @@
                 .AddCommonProjectServices()
                 .AddAuthentication();
 
-            services.Configure<SecurityStampValidatorOptions>(options => { options.ValidationInterval = TimeSpan.Zero; });
+            services.Configure<SecurityStampValidatorOptions>(
+                options => { options.ValidationInterval = TimeSpan.Zero; });
 
             services
                 .Configure<RouteOptions>(options => options.LowercaseUrls = true);
@@ -104,13 +103,16 @@
             services
                 .AddResponseCompression(options => options.EnableForHttps = true);
 
-            services.AddMvc(options => { options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>(); })
-                .AddRazorPagesOptions(options => { options.Conventions.AuthorizePage("/MoneyTransfers"); })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddRazorPages()
+                .AddRazorPagesOptions(options => options.Conventions.AuthorizePage("/MoneyTransfers"));
+
+            services
+                .AddControllers(options => options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             Mapper.Initialize(config => config.AddProfile<DefaultProfile>());
 
@@ -146,18 +148,17 @@
                 });
             app.UseCookiePolicy();
 
-            app.UseAuthentication();
-
             app.UseStatusCodePagesWithReExecute("/error/{0}");
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    "areas",
-                    "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute(
-                    "default",
-                    "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
             });
 
             app.InitializeDatabase();

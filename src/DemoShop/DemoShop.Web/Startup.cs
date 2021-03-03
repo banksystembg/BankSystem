@@ -7,22 +7,20 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Services.Implementations;
     using Services.Interfaces;
 
     public class Startup
     {
         public Startup(IConfiguration configuration)
-        {
-            this.Configuration = configuration;
-        }
+            => this.Configuration = configuration;
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -38,7 +36,7 @@
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequiredUniqueChars = 0;
                 })
-                .AddDefaultUI(UIFramework.Bootstrap4)
+                .AddDefaultUI()
                 .AddEntityFrameworkStores<DemoShopDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -52,13 +50,14 @@
                 .Configure<CardPaymentsConfiguration>(
                     this.Configuration.GetSection(nameof(CardPaymentsConfiguration)));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddScoped<IProductsService, ProductsService>();
             services.AddScoped<IOrdersService, OrdersService>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.InitializeDatabaseAsync().GetAwaiter().GetResult();
 
@@ -72,17 +71,20 @@
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseRouting();
             app.UseStatusCodePages();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    "default",
-                    "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    "areas",
+                    "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
             });
         }
     }

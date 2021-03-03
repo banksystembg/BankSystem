@@ -50,13 +50,16 @@
         [InlineData(" ")]
         [InlineData("    !")]
         [InlineData("totally invalid id")]
-        public async Task GetBankByBankIdentificationCardNumbersAsync_WithInvalidIdentificationNumber_ShouldReturnNull(string identificationNumbers)
+        public async Task GetBankByBankIdentificationCardNumbersAsync_WithInvalidIdentificationNumber_ShouldReturnNull(
+            string identificationNumbers)
         {
             // Arrange
             await this.SeedBanks(10);
 
             // Act
-            var result = await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankServiceModel>(identificationNumbers);
+            var result =
+                await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankServiceModel>(
+                    identificationNumbers);
 
             // Assert
             result
@@ -195,7 +198,8 @@
 
             // Act
             var result = await this.banksService
-                .GetBankAsync<BankListingServiceModel>(expectedBank.Name, expectedBank.SwiftCode, expectedBank.Location);
+                .GetBankAsync<BankListingServiceModel>(expectedBank.Name, expectedBank.SwiftCode,
+                    expectedBank.Location);
 
             // Assert
             result
@@ -204,15 +208,19 @@
         }
 
         [Fact]
-        public async Task GetBankByBankIdentificationCardNumbersAsync_WitValidIdentificationNumber_ShouldReturnCorrectEntity()
+        public async Task
+            GetBankByBankIdentificationCardNumbersAsync_WitValidIdentificationNumber_ShouldReturnCorrectEntity()
         {
             // Arrange
             const string expectedId = "1";
-            await this.dbContext.Banks.AddAsync(new Bank { Id = expectedId, BankIdentificationCardNumbers = SampleIdentificationNumbers });
+            await this.dbContext.Banks.AddAsync(new Bank
+                { Id = expectedId, BankIdentificationCardNumbers = SampleIdentificationNumbers });
             await this.dbContext.SaveChangesAsync();
 
             // Act
-            var result = await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankListingServiceModel>(SampleIdentificationNumbers);
+            var result =
+                await this.banksService.GetBankByBankIdentificationCardNumbersAsync<BankListingServiceModel>(
+                    SampleIdentificationNumbers);
 
             // Assert
             result

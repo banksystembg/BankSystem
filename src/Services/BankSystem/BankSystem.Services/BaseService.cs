@@ -1,4 +1,4 @@
-namespace BankSystem.Services.Implementations
+namespace BankSystem.Services
 {
     using Common.Utils;
     using Data;

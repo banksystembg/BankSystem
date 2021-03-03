@@ -1,18 +1,17 @@
-﻿namespace BankSystem.Services.Implementations
+﻿namespace BankSystem.Services.MoneyTransfer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
     using Common;
     using Common.EmailSender.Interface;
     using Data;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.MoneyTransfer;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class MoneyTransferService : BaseService, IMoneyTransferService
     {

@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Services.Implementations
+﻿namespace BankSystem.Services.Card
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,7 +7,6 @@
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
     using Data;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Card;
 
@@ -98,7 +97,6 @@
 
             var card = await this.Context
                 .Cards
-                .AsNoTracking()
                 .Where(c => c.Id == id)
                 .SingleOrDefaultAsync();
 

@@ -1,8 +1,7 @@
-﻿namespace BankSystem.Services.Implementations
+﻿namespace BankSystem.Services.User
 {
     using System.Threading.Tasks;
     using Data;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
 
     public class UserService : BaseService, IUserService

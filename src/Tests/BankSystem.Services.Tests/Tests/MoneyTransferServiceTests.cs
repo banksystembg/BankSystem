@@ -9,10 +9,9 @@
     using Common.EmailSender.Interface;
     using Data;
     using FluentAssertions;
-    using Implementations;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.MoneyTransfer;
+    using MoneyTransfer;
     using Moq;
     using Xunit;
 

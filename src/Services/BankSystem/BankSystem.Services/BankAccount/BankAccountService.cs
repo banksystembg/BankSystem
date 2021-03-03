@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Services.Implementations
+﻿namespace BankSystem.Services.BankAccount
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,7 +7,6 @@
     using AutoMapper.QueryableExtensions;
     using BankSystem.Models;
     using Data;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.BankAccount;
 

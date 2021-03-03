@@ -1,10 +1,9 @@
-namespace BankSystem.Services.Implementations
+namespace BankSystem.Services.BankAccount
 {
     using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using Common.Configuration;
-    using Interfaces;
     using Microsoft.Extensions.Options;
 
     public class BankAccountUniqueIdHelper : IBankAccountUniqueIdHelper

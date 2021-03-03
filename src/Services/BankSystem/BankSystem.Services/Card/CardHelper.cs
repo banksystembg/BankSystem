@@ -1,10 +1,9 @@
-﻿namespace BankSystem.Services.Implementations
+﻿namespace BankSystem.Services.Card
 {
     using System;
     using System.Linq;
     using System.Text;
     using Common.Configuration;
-    using Interfaces;
     using Microsoft.Extensions.Options;
 
     public class CardHelper : ICardHelper

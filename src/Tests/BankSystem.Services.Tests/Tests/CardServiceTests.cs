@@ -4,11 +4,10 @@
     using System.Linq;
     using System.Threading.Tasks;
     using BankSystem.Models;
+    using Card;
     using Common;
     using Data;
     using FluentAssertions;
-    using Implementations;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Card;
     using Xunit;
