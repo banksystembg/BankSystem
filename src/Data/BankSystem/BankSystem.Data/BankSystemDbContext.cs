@@ -22,6 +22,14 @@
         {
             builder.ApplyConfiguration(new UserConfiguration());
 
+            builder.Entity<BankAccount>()
+                .Property(e => e.Balance)
+                .HasPrecision(18, 4);
+
+            builder.Entity<MoneyTransfer>()
+                .Property(e => e.Amount)
+                .HasPrecision(18, 4);
+
             base.OnModelCreating(builder);
         }
     }

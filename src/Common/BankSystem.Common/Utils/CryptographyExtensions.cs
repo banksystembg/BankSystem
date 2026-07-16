@@ -8,7 +8,7 @@
     {
         public static string[] GenerateKey()
         {
-            using (AesManaged aes = new AesManaged())
+            using (Aes aes = Aes.Create())
             {
                 aes.GenerateKey();
                 aes.GenerateIV();
@@ -20,8 +20,8 @@
         public static byte[] Encrypt(string plainText, byte[] Key, byte[] IV)
         {
             byte[] encrypted;
-            // Create a new AesManaged.    
-            using (AesManaged aes = new AesManaged())
+            // Create a new Aes instance.    
+            using (Aes aes = Aes.Create())
             {
                 // Create encryptor    
                 ICryptoTransform encryptor = aes.CreateEncryptor(Key, IV);
@@ -48,8 +48,8 @@
         public static string Decrypt(byte[] cipherText, byte[] Key, byte[] IV)
         {
             string plaintext = null;
-            // Create AesManaged    
-            using (AesManaged aes = new AesManaged())
+            // Create Aes instance    
+            using (Aes aes = Aes.Create())
             {
                 // Create a decryptor    
                 ICryptoTransform decryptor = aes.CreateDecryptor(Key, IV);
