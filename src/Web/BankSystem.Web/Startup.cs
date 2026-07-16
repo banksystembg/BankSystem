@@ -42,6 +42,8 @@
                 options.UseSqlServer(
                     this.Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             services
                 .Configure<CookieTempDataProviderOptions>(options => { options.Cookie.IsEssential = true; });
 
@@ -117,7 +119,7 @@
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {
